@@ -2,8 +2,9 @@
 Cypress Browser Testing for Shopware 6 Plugins.
 
 ## Usage
-- Clone this repo into your plugin folder path should be: ./YourPlugin/Shopware6PluginTester
-- Fire ./run.sh
+- Clone this repo anywehere
+- Fire npm install
+- Fire ./run.sh /path/to/your/plugin/ YourPluginName
 
 ## Add new shopware version to this repo
 Use ./tools/shopware-downloader.sh 6.1.4
