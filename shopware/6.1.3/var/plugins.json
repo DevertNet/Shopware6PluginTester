@@ -128,12 +128,12 @@
             "styleFiles": []
         }
     },
-    "SwagPlatformDemoData": {
-        "basePath": "custom\/plugins\/SwagPlatformDemoData\/src\/",
+    "DevertAutoMetaDetails": {
+        "basePath": "custom\/plugins\/DevertAutoMetaDetails\/src\/",
         "views": [
             "Resources\/views"
         ],
-        "technicalName": "swag-platform-demo-data",
+        "technicalName": "devert-auto-meta-details",
         "administration": {
             "path": "Resources\/app\/administration\/src",
             "entryFilePath": null,
