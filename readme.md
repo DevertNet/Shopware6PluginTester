@@ -17,6 +17,11 @@ With the magic of ddev on every run of this tool the shopware 6 instances will b
 Your plugin directory (e.g. ```/path/to/your/plugin/```) should contain the hole plugin. So the composer.json should be here: ```/path/to/your/plugin/composer.json```
 The directory will be copied to every shopware instance e.g. ```shopware/6.1.3/custom/plugins/YourPluginName```
 
+### Cypress Tests
+Cypress search the tests in your plugin directory (e.g. ```/path/to/your/plugin/```). So in the background cypress will be launched with your plugin directory as project path.
+- ```/path/to/your/plugin/cypress```
+- ```/path/to/your/plugin/cypress.json```
+
 ### Save Time
 If you want to run the tests a few times in a row, you can save time by skipping the setup of shopware and launch of ddev.
 This is possible with a extra parameter:
