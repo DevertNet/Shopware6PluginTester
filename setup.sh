@@ -26,7 +26,7 @@ if [ -z "$TESTER_MODE" ]; then
     TESTER_MODE='all'
 fi
 
-SHOPWARE_VERSIONS=(6.1.3 6.1.4 6.1.5)
+SHOPWARE_VERSIONS=(6.1.4)
 
 # Launch & run Shopware Versions
 for i in "${SHOPWARE_VERSIONS[@]}"
@@ -43,5 +43,5 @@ do
     fi
 
     # Run Cypress Test
-    $DIR/dev-ops/run-cypress.sh $DIR https://sw$SW_SHORT_VERSION.ddev.site/ $PLUGIN_PATH run $SW_PATH
+    $DIR/dev-ops/run-cypress.sh $DIR https://sw$SW_SHORT_VERSION.ddev.site/ $PLUGIN_PATH open $SW_PATH
 done

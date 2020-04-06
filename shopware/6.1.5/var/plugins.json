@@ -127,5 +127,23 @@
             "webpack": null,
             "styleFiles": []
         }
+    },
+    "DevertTaxSwitch": {
+        "basePath": "custom\/plugins\/DevertTaxSwitch\/src\/",
+        "views": [
+            "Resources\/views"
+        ],
+        "technicalName": "devert-tax-switch",
+        "administration": {
+            "path": "Resources\/app\/administration\/src",
+            "entryFilePath": null,
+            "webpack": null
+        },
+        "storefront": {
+            "path": "Resources\/app\/storefront\/src",
+            "entryFilePath": "Resources\/app\/storefront\/src\/main.js",
+            "webpack": null,
+            "styleFiles": []
+        }
     }
 }

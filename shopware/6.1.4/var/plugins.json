@@ -128,12 +128,12 @@
             "styleFiles": []
         }
     },
-    "DevertAutoMetaDetails": {
-        "basePath": "custom\/plugins\/DevertAutoMetaDetails\/src\/",
+    "DevertRichSnippets": {
+        "basePath": "custom\/plugins\/DevertRichSnippets\/src\/",
         "views": [
             "Resources\/views"
         ],
-        "technicalName": "devert-auto-meta-details",
+        "technicalName": "devert-rich-snippets",
         "administration": {
             "path": "Resources\/app\/administration\/src",
             "entryFilePath": null,

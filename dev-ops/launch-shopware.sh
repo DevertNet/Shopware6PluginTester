@@ -16,6 +16,7 @@ cd $SW_PATH && ddev start
 cd $SW_PATH && ddev import-db --src=.ddev/dump.sql
 cd $SW_PATH && ddev exec ./bin/console cache:clear
 cd $SW_PATH && ddev exec ./bin/console assets:install
+cd $SW_PATH && ddev exec ./bin/console database:migrate --all
 
 # Activate plugin
 cd $SW_PATH && ddev exec ./bin/console plugin:refresh

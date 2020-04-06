@@ -39,6 +39,7 @@ cd $SW_PATH && ddev import-db --src=.ddev/dump.sql
 cd $SW_PATH && ddev exec ./bin/console cache:clear
 cd $SW_PATH && ddev exec ./bin/console plugin:refresh
 cd $SW_PATH && ddev exec ./bin/console database:migrate --all core
+cd $SW_PATH && ddev exec ./bin/console database:migrate --all
 cd $SW_PATH && ddev exec ./bin/console dal:refresh:index
 cd $SW_PATH && ddev exec ./bin/console scheduled-task:register
 cd $SW_PATH && ddev exec ./bin/console theme:refresh

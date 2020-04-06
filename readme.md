@@ -11,7 +11,8 @@ With the magic of ddev on every run of this tool the shopware 6 instances will b
 ## Usage
 - Clone this repo anywehere
 - Fire ```npm install```
-- Fire ```./run.sh /path/to/your/plugin/ YourPluginName``` e.g. ```./run.sh /home/leon/htdocs/git/DevertAutoMetaDetails/ DevertAutoMetaDetails```
+- Open cypress to write tests: ```./setup.sh /path/to/your/plugin/ YourPluginName``` e.g. ```./run.sh /home/leon/htdocs/git/DevertAutoMetaDetails/ DevertAutoMetaDetails```
+- Test against all shopware 6 versions in cli: ```./run.sh /path/to/your/plugin/ YourPluginName``` e.g. ```./run.sh /home/leon/htdocs/git/DevertAutoMetaDetails/ DevertAutoMetaDetails```
 
 ### Plugin path
 Your plugin directory (e.g. ```/path/to/your/plugin/```) should contain the hole plugin. So the composer.json should be here: ```/path/to/your/plugin/composer.json```

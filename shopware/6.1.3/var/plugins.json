@@ -128,12 +128,12 @@
             "styleFiles": []
         }
     },
-    "DevertAutoMetaDetails": {
-        "basePath": "custom\/plugins\/DevertAutoMetaDetails\/src\/",
+    "DevertTaxSwitch": {
+        "basePath": "custom\/plugins\/DevertTaxSwitch\/src\/",
         "views": [
             "Resources\/views"
         ],
-        "technicalName": "devert-auto-meta-details",
+        "technicalName": "devert-tax-switch",
         "administration": {
             "path": "Resources\/app\/administration\/src",
             "entryFilePath": null,
@@ -141,7 +141,7 @@
         },
         "storefront": {
             "path": "Resources\/app\/storefront\/src",
-            "entryFilePath": null,
+            "entryFilePath": "Resources\/app\/storefront\/src\/main.js",
             "webpack": null,
             "styleFiles": []
         }
