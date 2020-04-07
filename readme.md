@@ -31,3 +31,90 @@ This is possible with a extra parameter:
 ## Add new shopware version to this repo
 1. Use ```./tools/shopware-downloader.sh 6.1.4```
 2. Add new version to ```run.sh```
+
+
+## Keep & Clear Cookies
+
+By default Cypress does not keep cookies across tests.
+```cypress/support/commands.js```
+
+Keep all cookies
+```js
+Cypress.Cookies.defaults({
+	whitelist: function(cookie) {
+		return true;
+	}
+})
+```
+
+Clearing all cookies with one command does not work. Use this in your tests:
+```js
+cy.clearCookie('tax_switch') //Custom cookie
+cy.clearCookie('cookie-preference') //Cookie Consent Bar
+cy.clearCookie('session-') //User Session
+ ```
+## Keep LocalStorage
+By default Cypress does not keep the local storage across tests.
+```cypress/support/commands.js```
+
+(Source: https://stackoverflow.com/a/55234197)
+```js
+Cypress.Commands.add("saveLocalStorage", () => {
+    cy.log('saveLocalStorage')
+    Object.keys(localStorage).forEach(key => {
+        LOCAL_STORAGE_MEMORY[key] = localStorage[key];
+    });
+});
+
+Cypress.Commands.add("restoreLocalStorage", () => {
+    cy.log('restoreLocalStorage')
+    Object.keys(LOCAL_STORAGE_MEMORY).forEach(key => {
+        localStorage.setItem(key, LOCAL_STORAGE_MEMORY[key]);
+    });
+});
+
+beforeEach(() => {
+    cy.restoreLocalStorage();
+});
+
+afterEach(() => {
+    cy.saveLocalStorage();
+});
+```
+
+## Clear shopware Cache during a test
+```cypress/support/commands.js```
+
+```js
+Cypress.Commands.add('clearShopwareCache', () => {
+    cy.exec('cd ' + Cypress.env('SW_PATH') +' && ddev exec ./bin/console cache:clear');
+})
+```
+Use this in your tests:
+```js
+cy.clearShopwareCache().wait(500);
+ ```
+
+## Change shopware configuration
+```cypress/support/commands.js```
+
+```js
+Cypress.Commands.add('setShopwareConfiguration', (key, value) => {
+    if (typeof value === 'string' || value instanceof String)
+    {
+        value = '\\"' + value + '\\"';
+    }
+
+    cy.exec('cd ' + Cypress.env('SW_PATH') +' && echo "UPDATE system_config SET configuration_value=\'{\\"_value\\":' + value + '}\' WHERE configuration_key=\'' + key + '\'" | ddev mysql').then((result) => {
+        cy.log(result.stderr);
+        cy.log(result.stdout);
+    })
+})
+```
+Use this in your tests.
+Your can find your keys in the database table "system_config".
+```js
+cy.setShopwareConfiguration('DevertRichSnippets.config.homename', 'Home');
+cy.setShopwareConfiguration('DevertRichSnippets.config.hideBreadcrumb', 0);
+cy.clearShopwareCache().wait(500); // Don't forget to clear the shopware cache ;)
+ ```
