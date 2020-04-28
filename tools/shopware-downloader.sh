@@ -44,7 +44,7 @@ cd $SW_PATH && ddev exec ./bin/console dal:refresh:index
 cd $SW_PATH && ddev exec ./bin/console scheduled-task:register
 cd $SW_PATH && ddev exec ./bin/console theme:refresh
 cd $SW_PATH && ddev exec ./bin/console theme:compile
-cd $SW_PATH && echo "UPDATE sales_channel_domain SET url=\"https://sw${SW_SHORT_VERSION}.ddev.site\";" | ddev mysql
+cd $SW_PATH && echo "UPDATE sales_channel_domain SET url=LOWER(\"https://sw${SW_SHORT_VERSION}.ddev.site\");" | ddev mysql
 cd $SW_PATH && ddev exec ./bin/console assets:install
 cd $SW_PATH && ddev exec ./bin/console theme:compile
 cd $SW_PATH && ddev exec ./bin/console cache:clear
