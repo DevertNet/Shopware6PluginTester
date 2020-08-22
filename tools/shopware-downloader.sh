@@ -25,17 +25,18 @@ rm -rf $SW_PATH/.git
 #Setup DDEV
 cd $SW_PATH && ddev config --project-name=sw$SW_SHORT_VERSION --docroot=public --project-type=php
 cp $DIR/dev-ops/launch-shopware/.ddev/dump.sql $SW_PATH/.ddev/dump.sql
-cp $DIR/dev-ops/launch-shopware/.ddev/nginx-site.conf $SW_PATH/.ddev/nginx-site.conf
+mkdir $SW_PATH/.ddev/nginx_full
+cp $DIR/dev-ops/launch-shopware/.ddev/nginx-site.conf $SW_PATH/.ddev/nginx_full/nginx-site.conf
 cp $DIR/dev-ops/launch-shopware/.env.plugintester $SW_PATH/.env.plugintester
 cp $DIR/dev-ops/launch-shopware/jwt/private.pem $SW_PATH/config/jwt/private.pem
 cp $DIR/dev-ops/launch-shopware/jwt/public.pem $SW_PATH/config/jwt/public.pem
 touch $SW_PATH/install.lock
 
 # Launch Shopware & Upgrade Database
-cd $SW_PATH && composer install
 cd $SW_PATH && cp .env.plugintester .env
 cd $SW_PATH && ddev start
 cd $SW_PATH && ddev import-db --src=.ddev/dump.sql
+cd $SW_PATH && ddev composer install
 cd $SW_PATH && ddev exec ./bin/console cache:clear
 cd $SW_PATH && ddev exec ./bin/console plugin:refresh
 cd $SW_PATH && ddev exec ./bin/console database:migrate --all core
