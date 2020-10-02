@@ -32,6 +32,11 @@ This is possible with a extra parameter:
 1. Use ```./tools/shopware-downloader.sh 6.1.4```
 2. Add new version to ```run.sh```
 
+### add a prereleased version
+1. Clone shopware/development with the latest version into e.g. shopware/6.3.2.0pre
+2. modify composer.json: replace ```"shopware/platform": "6.3.x@dev"``` with ```"shopware/platform": "6.3.2.0-dev"``` (maybe check the result with ```composer install --dry-run```)
+3. modify ```tools/shopware-downloader.sh```: remove the "git clone" line
+4. Fire ```tools/shopware-downloader.sh 6.3.2.0pre```
 
 ## Keep & Clear Cookies
 

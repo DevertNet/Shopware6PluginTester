@@ -7,6 +7,7 @@ SW_SHORT_VERSION=${SW_VERSION//./}
 
 if [ -z "$SW_VERSION" ]; then
     echo "Version parameter is missing e.g. ./tools/shopware-downloader.sh 6.1.4"
+    exit;
 fi
 
 # get aboslute path of plugintester dir
