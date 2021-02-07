@@ -26,7 +26,7 @@ if [ -z "$TESTER_MODE" ]; then
     TESTER_MODE='all'
 fi
 
-SHOPWARE_VERSIONS=(6.2.0 6.2.1 6.2.2 6.2.3 6.3.0.2 6.3.1.0 6.3.1.1 6.3.2.0 6.3.2.1 6.3.4.0 6.3.4.1)
+SHOPWARE_VERSIONS=(6.2.0 6.2.1 6.2.2 6.2.3 6.3.0.2 6.3.1.0 6.3.1.1 6.3.2.0 6.3.2.1 6.3.4.0 6.3.4.1 6.3.5.0)
 
 # Launch & run Shopware Versions
 for i in "${SHOPWARE_VERSIONS[@]}"
