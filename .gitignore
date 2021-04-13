@@ -1,3 +1,4 @@
 node_modules
 shopware/*/.ddev/commands/
 shopware/*/.ddev/homeadditions/
+shopware/*/var/plugins.json
