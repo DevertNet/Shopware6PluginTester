@@ -24,7 +24,7 @@ git clone --branch v$SW_VERSION https://github.com/shopware/production.git $SW_P
 rm -rf $SW_PATH/.git
 
 #Setup DDEV
-cd $SW_PATH && ddev config --project-name=sw$SW_SHORT_VERSION --docroot=public --project-type=php
+cd $SW_PATH && ddev config --project-name=sw$SW_SHORT_VERSION --docroot=public --project-type=php --composer-version=2
 cp $DIR/dev-ops/launch-shopware/.ddev/dump.sql $SW_PATH/.ddev/dump.sql
 mkdir $SW_PATH/.ddev/nginx_full
 cp $DIR/dev-ops/launch-shopware/.ddev/nginx-site.conf $SW_PATH/.ddev/nginx_full/nginx-site.conf
