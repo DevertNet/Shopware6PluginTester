@@ -18,9 +18,14 @@ cd $SW_PATH && ddev exec ./bin/console cache:clear
 cd $SW_PATH && ddev exec ./bin/console assets:install
 cd $SW_PATH && ddev exec ./bin/console database:migrate --all
 
-# Activate plugin
-cd $SW_PATH && ddev exec ./bin/console plugin:refresh
-cd $SW_PATH && ddev exec ./bin/console plugin:install --activate $PLUGIN_NAME
-cd $SW_PATH && ddev exec ./bin/console theme:refresh
-cd $SW_PATH && ddev exec ./bin/console theme:compile
-cd $SW_PATH && ddev exec ./bin/console cache:clear
+if [ $PLUGIN_NAME != "no" ]; then
+    # Activate plugin
+    cd $SW_PATH && ddev exec ./bin/console plugin:refresh
+    cd $SW_PATH && ddev exec ./bin/console plugin:install --activate $PLUGIN_NAME
+    cd $SW_PATH && ddev exec ./bin/console theme:refresh
+    cd $SW_PATH && ddev exec ./bin/console theme:compile
+    cd $SW_PATH && ddev exec ./bin/console cache:clear
+fi
+
+# Print URLs
+cd $SW_PATH && ddev describe
