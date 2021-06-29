@@ -175,3 +175,11 @@ web_environment: []
 # information on the commands that can be extended and the tasks you can define
 # for them. Example:
 #hooks:
+no_project_mount: true
+hooks:
+  post-start:
+    # Start the mutagen sync process for this project.
+    - exec-host: "ddev mutagen start"
+  pre-stop:
+    # Terminate the mutagen sync process for this project.
+    - exec-host: "ddev mutagen stop"
