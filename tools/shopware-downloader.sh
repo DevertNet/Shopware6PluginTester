@@ -19,11 +19,15 @@ SW_PATH=$DIR/shopware/$SW_VERSION
 #echo $DIR
 #echo $SW_PATH
 
+# Delete Old Version
+rm -rf $SW_PATH
+
 # Clone SW
 git clone --branch v$SW_VERSION https://github.com/shopware/production.git $SW_PATH
 rm -rf $SW_PATH/.git
 
 #Setup DDEV
+cd $SW_PATH && ddev stop --unlist sw$SW_SHORT_VERSION
 cd $SW_PATH && ddev config --project-name=sw$SW_SHORT_VERSION --docroot=public --project-type=php --composer-version=2
 cp $DIR/dev-ops/launch-shopware/.ddev/dump.sql $SW_PATH/.ddev/dump.sql
 mkdir $SW_PATH/.ddev/nginx_full
@@ -37,6 +41,7 @@ touch $SW_PATH/install.lock
 cd $SW_PATH && cp .env.plugintester .env
 cd $SW_PATH && ddev start
 cd $SW_PATH && ddev import-db --src=.ddev/dump.sql
+cd $SW_PATH && echo "UPDATE sales_channel_domain SET url=LOWER(\"https://sw${SW_SHORT_VERSION}.ddev.site\");" | ddev mysql
 cd $SW_PATH && ddev composer install
 cd $SW_PATH && ddev exec ./bin/console cache:clear
 cd $SW_PATH && ddev exec ./bin/console plugin:refresh
@@ -46,7 +51,6 @@ cd $SW_PATH && ddev exec ./bin/console dal:refresh:index
 cd $SW_PATH && ddev exec ./bin/console scheduled-task:register
 cd $SW_PATH && ddev exec ./bin/console theme:refresh
 cd $SW_PATH && ddev exec ./bin/console theme:compile
-cd $SW_PATH && echo "UPDATE sales_channel_domain SET url=LOWER(\"https://sw${SW_SHORT_VERSION}.ddev.site\");" | ddev mysql
 cd $SW_PATH && ddev exec ./bin/console assets:install
 cd $SW_PATH && ddev exec ./bin/console theme:compile
 cd $SW_PATH && ddev exec ./bin/console cache:clear
