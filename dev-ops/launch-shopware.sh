@@ -5,6 +5,7 @@ SW_PATH=$1/shopware/$2;
 PLUGIN_NAME=$3
 
 # Launch Shopware
+cd $SW_PATH && ddev stop
 cd $SW_PATH && ddev start
 cd $SW_PATH && rm -rf .env
 cd $SW_PATH && ddev composer install
