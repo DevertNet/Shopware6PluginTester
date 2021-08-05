@@ -20,14 +20,16 @@ SW_PATH=$DIR/shopware/$SW_VERSION
 #echo $SW_PATH
 
 # Delete Old Version
-rm -rf $SW_PATH
+if [ -d "$SW_PATH" ]; then
+    cd $SW_PATH && ddev stop --unlist sw$SW_SHORT_VERSION
+    rm -rf $SW_PATH
+fi
 
 # Clone SW
 git clone --branch v$SW_VERSION https://github.com/shopware/production.git $SW_PATH
 rm -rf $SW_PATH/.git
 
 #Setup DDEV
-cd $SW_PATH && ddev stop --unlist sw$SW_SHORT_VERSION
 cd $SW_PATH && ddev config --project-name=sw$SW_SHORT_VERSION --docroot=public --project-type=php --composer-version=2
 cp $DIR/dev-ops/launch-shopware/.ddev/dump.sql $SW_PATH/.ddev/dump.sql
 mkdir $SW_PATH/.ddev/nginx_full
