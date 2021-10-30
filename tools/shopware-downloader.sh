@@ -43,7 +43,7 @@ touch $SW_PATH/install.lock
 cd $SW_PATH && cp .env.plugintester .env
 cd $SW_PATH && ddev start
 cd $SW_PATH && ddev import-db --src=.ddev/dump.sql
-cd $SW_PATH && echo "UPDATE sales_channel_domain SET url=LOWER(\"https://sw${SW_SHORT_VERSION}.ddev.site\");" | ddev mysql
+cd $SW_PATH && echo "UPDATE sales_channel_domain SET url=LOWER(\"https://sw${SW_SHORT_VERSION}.ddev.site\") WHERE url LIKE '%ddev%';" | ddev mysql
 cd $SW_PATH && ddev composer install
 cd $SW_PATH && ddev exec ./bin/console cache:clear
 cd $SW_PATH && ddev exec ./bin/console plugin:refresh
