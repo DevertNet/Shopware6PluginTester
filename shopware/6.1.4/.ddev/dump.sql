@@ -1,5952 +1,0 @@
--- MySQL dump 10.16  Distrib 10.2.30-MariaDB, for debian-linux-gnu (x86_64)
---
--- Host: localhost    Database: db
--- ------------------------------------------------------
--- Server version	10.2.30-MariaDB-1:10.2.30+maria~bionic-log
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
---
--- Table structure for table `acl_resource`
---
-
-DROP TABLE IF EXISTS `acl_resource`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `acl_resource` (
-  `resource` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `privilege` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `acl_role_id` binary(16) NOT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`resource`,`privilege`,`acl_role_id`),
-  KEY `fk.acl_resource.acl_role_id` (`acl_role_id`),
-  CONSTRAINT `fk.acl_resource.acl_role_id` FOREIGN KEY (`acl_role_id`) REFERENCES `acl_role` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `acl_resource`
---
-
-LOCK TABLES `acl_resource` WRITE;
-/*!40000 ALTER TABLE `acl_resource` DISABLE KEYS */;
-/*!40000 ALTER TABLE `acl_resource` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `acl_role`
---
-
-DROP TABLE IF EXISTS `acl_role`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `acl_role` (
-  `id` binary(16) NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `acl_role`
---
-
-LOCK TABLES `acl_role` WRITE;
-/*!40000 ALTER TABLE `acl_role` DISABLE KEYS */;
-/*!40000 ALTER TABLE `acl_role` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `acl_user_role`
---
-
-DROP TABLE IF EXISTS `acl_user_role`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `acl_user_role` (
-  `user_id` binary(16) NOT NULL,
-  `acl_role_id` binary(16) NOT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`user_id`,`acl_role_id`),
-  KEY `fk.acl_user_role.acl_role_id` (`acl_role_id`),
-  CONSTRAINT `fk.acl_user_role.acl_role_id` FOREIGN KEY (`acl_role_id`) REFERENCES `acl_role` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `fk.acl_user_role.user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `acl_user_role`
---
-
-LOCK TABLES `acl_user_role` WRITE;
-/*!40000 ALTER TABLE `acl_user_role` DISABLE KEYS */;
-/*!40000 ALTER TABLE `acl_user_role` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `app_config`
---
-
-DROP TABLE IF EXISTS `app_config`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `app_config` (
-  `key` varchar(50) COLLATE utf8mb4_bin NOT NULL,
-  `value` longtext COLLATE utf8mb4_bin NOT NULL,
-  PRIMARY KEY (`key`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `app_config`
---
-
-LOCK TABLES `app_config` WRITE;
-/*!40000 ALTER TABLE `app_config` DISABLE KEYS */;
-INSERT INTO `app_config` VALUES ('cache-id','319ea3ae54fb4455940c5d4d6459da3d');
-/*!40000 ALTER TABLE `app_config` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `cart`
---
-
-DROP TABLE IF EXISTS `cart`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cart` (
-  `token` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` varchar(500) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `cart` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `price` float NOT NULL,
-  `line_item_count` varchar(42) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `currency_id` binary(16) NOT NULL,
-  `shipping_method_id` binary(16) NOT NULL,
-  `payment_method_id` binary(16) NOT NULL,
-  `country_id` binary(16) NOT NULL,
-  `customer_id` binary(16) DEFAULT NULL,
-  `sales_channel_id` binary(16) NOT NULL,
-  `created_at` datetime(3) NOT NULL,
-  PRIMARY KEY (`token`),
-  KEY `fk.cart.country_id` (`country_id`),
-  KEY `fk.cart.currency_id` (`currency_id`),
-  KEY `fk.cart.customer_id` (`customer_id`),
-  KEY `fk.cart.payment_method_id` (`payment_method_id`),
-  KEY `fk.cart.shipping_method_id` (`shipping_method_id`),
-  KEY `fk.cart.sales_channel_id` (`sales_channel_id`),
-  CONSTRAINT `fk.cart.country_id` FOREIGN KEY (`country_id`) REFERENCES `country` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.cart.currency_id` FOREIGN KEY (`currency_id`) REFERENCES `currency` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.cart.customer_id` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.cart.payment_method_id` FOREIGN KEY (`payment_method_id`) REFERENCES `payment_method` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.cart.sales_channel_id` FOREIGN KEY (`sales_channel_id`) REFERENCES `sales_channel` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.cart.shipping_method_id` FOREIGN KEY (`shipping_method_id`) REFERENCES `shipping_method` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `cart`
---
-
-LOCK TABLES `cart` WRITE;
-/*!40000 ALTER TABLE `cart` DISABLE KEYS */;
-/*!40000 ALTER TABLE `cart` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `category`
---
-
-DROP TABLE IF EXISTS `category`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `category` (
-  `id` binary(16) NOT NULL,
-  `version_id` binary(16) NOT NULL,
-  `auto_increment` int(11) NOT NULL AUTO_INCREMENT,
-  `parent_id` binary(16) DEFAULT NULL,
-  `parent_version_id` binary(16) DEFAULT NULL,
-  `media_id` binary(16) DEFAULT NULL,
-  `cms_page_id` binary(16) DEFAULT NULL,
-  `path` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `after_category_id` binary(16) DEFAULT NULL,
-  `after_category_version_id` binary(16) DEFAULT NULL,
-  `level` int(11) unsigned NOT NULL DEFAULT 1,
-  `active` tinyint(1) NOT NULL DEFAULT 1,
-  `child_count` int(11) unsigned NOT NULL DEFAULT 0,
-  `display_nested_products` tinyint(1) unsigned NOT NULL DEFAULT 1,
-  `visible` tinyint(1) unsigned NOT NULL DEFAULT 1,
-  `type` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`,`version_id`),
-  UNIQUE KEY `auto_increment` (`auto_increment`),
-  KEY `idx.level` (`level`),
-  KEY `fk.category.media_id` (`media_id`),
-  KEY `fk.category.parent_id` (`parent_id`,`parent_version_id`),
-  KEY `fk.category.after_category_id` (`after_category_id`,`after_category_version_id`),
-  KEY `fk.category.cms_page_id` (`cms_page_id`),
-  CONSTRAINT `fk.category.after_category_id` FOREIGN KEY (`after_category_id`, `after_category_version_id`) REFERENCES `category` (`id`, `version_id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `fk.category.cms_page_id` FOREIGN KEY (`cms_page_id`) REFERENCES `cms_page` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `fk.category.media_id` FOREIGN KEY (`media_id`) REFERENCES `media` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `fk.category.parent_id` FOREIGN KEY (`parent_id`, `parent_version_id`) REFERENCES `category` (`id`, `version_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `category`
---
-
-LOCK TABLES `category` WRITE;
-/*!40000 ALTER TABLE `category` DISABLE KEYS */;
-INSERT INTO `category` VALUES ('ƒ¼¢ÀA‚2ÛNŸ(','©ãéjKÂ¾KÙÎu,4%',1,NULL,NULL,NULL,'iTwà.öCå ¸>ÔÍö:',NULL,NULL,NULL,1,1,3,1,1,'page','2020-04-04 21:03:14.391','2020-04-04 21:05:17.619'),('Ê@WÿOªÈÅ™Ô1xh','©ãéjKÂ¾KÙÎu,4%',3,'w¹YÏfŞLÇù·Ú9‚ó','©ãéjKÂ¾KÙÎu,4%',NULL,'RuÚÎıEB)nªÂC£ı','|0c8312bca2c0411d82320304db4e9f28|77b959cf66de4c1590c7f9b7da3982f3|',NULL,'©ãéjKÂ¾KÙÎu,4%',3,1,0,1,1,'page','2020-04-04 21:05:17.625',NULL),('!…,»ÔF.¨D«ë*C‹3','©ãéjKÂ¾KÙÎu,4%',8,'¥®&#Fo7G\'d','©ãéjKÂ¾KÙÎu,4%',NULL,'RuÚÎıEB)nªÂC£ı','|0c8312bca2c0411d82320304db4e9f28|a515ae260223466f8e37471d279e6406|','é´„ÅOD‰Gtåõ~H\\','©ãéjKÂ¾KÙÎu,4%',3,1,0,1,1,'page','2020-04-04 21:05:17.637',NULL),('%H¹ÇBŞ…d?_ÌØQ','©ãéjKÂ¾KÙÎu,4%',9,'ƒ¼¢ÀA‚2ÛNŸ(','©ãéjKÂ¾KÙÎu,4%',NULL,'RuÚÎıEB)nªÂC£ı','|0c8312bca2c0411d82320304db4e9f28|','¥®&#Fo7G\'d','©ãéjKÂ¾KÙÎu,4%',2,1,0,1,1,'page','2020-04-04 21:05:17.641',NULL),('HùC/ĞA8‹&0A9Ï','©ãéjKÂ¾KÙÎu,4%',4,'w¹YÏfŞLÇù·Ú9‚ó','©ãéjKÂ¾KÙÎu,4%',NULL,'RuÚÎıEB)nªÂC£ı','|0c8312bca2c0411d82320304db4e9f28|77b959cf66de4c1590c7f9b7da3982f3|','Ê@WÿOªÈÅ™Ô1xh','©ãéjKÂ¾KÙÎu,4%',3,1,0,1,1,'page','2020-04-04 21:05:17.628',NULL),('w¹YÏfŞLÇù·Ú9‚ó','©ãéjKÂ¾KÙÎu,4%',2,'ƒ¼¢ÀA‚2ÛNŸ(','©ãéjKÂ¾KÙÎu,4%',NULL,'RuÚÎıEB)nªÂC£ı','|0c8312bca2c0411d82320304db4e9f28|',NULL,'©ãéjKÂ¾KÙÎu,4%',2,0,3,1,1,'page','2020-04-04 21:05:17.622',NULL),('é´„ÅOD‰Gtåõ~H\\','©ãéjKÂ¾KÙÎu,4%',7,'¥®&#Fo7G\'d','©ãéjKÂ¾KÙÎu,4%',NULL,'RuÚÎıEB)nªÂC£ı','|0c8312bca2c0411d82320304db4e9f28|a515ae260223466f8e37471d279e6406|',NULL,'©ãéjKÂ¾KÙÎu,4%',3,1,0,1,1,'page','2020-04-04 21:05:17.634',NULL),('¥®&#Fo7G\'d','©ãéjKÂ¾KÙÎu,4%',6,'ƒ¼¢ÀA‚2ÛNŸ(','©ãéjKÂ¾KÙÎu,4%',NULL,'RuÚÎıEB)nªÂC£ı','|0c8312bca2c0411d82320304db4e9f28|','w¹YÏfŞLÇù·Ú9‚ó','©ãéjKÂ¾KÙÎu,4%',2,1,2,1,1,'page','2020-04-04 21:05:17.632',NULL),('»\"°[ÿ‘@ó€‹ÿ—[uë','©ãéjKÂ¾KÙÎu,4%',5,'w¹YÏfŞLÇù·Ú9‚ó','©ãéjKÂ¾KÙÎu,4%',NULL,'RuÚÎıEB)nªÂC£ı','|0c8312bca2c0411d82320304db4e9f28|77b959cf66de4c1590c7f9b7da3982f3|','HùC/ĞA8‹&0A9Ï','©ãéjKÂ¾KÙÎu,4%',3,1,0,1,1,'page','2020-04-04 21:05:17.630',NULL);
-/*!40000 ALTER TABLE `category` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `category_tag`
---
-
-DROP TABLE IF EXISTS `category_tag`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `category_tag` (
-  `category_id` binary(16) NOT NULL,
-  `category_version_id` binary(16) NOT NULL,
-  `tag_id` binary(16) NOT NULL,
-  PRIMARY KEY (`category_id`,`category_version_id`,`tag_id`),
-  KEY `fk.category_tag.tag_id` (`tag_id`),
-  CONSTRAINT `fk.category_tag.category_tag__category_version_id` FOREIGN KEY (`category_id`, `category_version_id`) REFERENCES `category` (`id`, `version_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.category_tag.tag_id` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `category_tag`
---
-
-LOCK TABLES `category_tag` WRITE;
-/*!40000 ALTER TABLE `category_tag` DISABLE KEYS */;
-/*!40000 ALTER TABLE `category_tag` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `category_translation`
---
-
-DROP TABLE IF EXISTS `category_translation`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `category_translation` (
-  `category_id` binary(16) NOT NULL,
-  `category_version_id` binary(16) NOT NULL,
-  `language_id` binary(16) NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `breadcrumb` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `external_link` mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `description` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `meta_title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `meta_description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `keywords` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  `slot_config` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  PRIMARY KEY (`category_id`,`category_version_id`,`language_id`),
-  KEY `fk.category_translation.language_id` (`language_id`),
-  CONSTRAINT `fk.category_translation.category_id` FOREIGN KEY (`category_id`, `category_version_id`) REFERENCES `category` (`id`, `version_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.category_translation.language_id` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `json.category_translation.custom_fields` CHECK (json_valid(`custom_fields`)),
-  CONSTRAINT `json.category_translation.slot_config` CHECK (json_valid(`slot_config`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `category_translation`
---
-
-LOCK TABLES `category_translation` WRITE;
-/*!40000 ALTER TABLE `category_translation` DISABLE KEYS */;
-INSERT INTO `category_translation` VALUES ('ƒ¼¢ÀA‚2ÛNŸ(','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','Catalogue #1','{\"0c8312bca2c0411d82320304db4e9f28\":\"Catalogue #1\"}',NULL,NULL,NULL,NULL,NULL,NULL,'2020-04-04 21:03:14.392','2020-04-04 21:05:17.619',NULL),('ƒ¼¢ÀA‚2ÛNŸ(','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','Katalog #1','{\"0c8312bca2c0411d82320304db4e9f28\":\"Katalog #1\"}',NULL,NULL,NULL,NULL,NULL,NULL,'2020-04-04 21:03:14.393','2020-04-04 21:05:17.618',NULL),('Ê@WÿOªÈÅ™Ô1xh','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','Bakery products','{\"0c8312bca2c0411d82320304db4e9f28\":\"Catalogue #1\",\"77b959cf66de4c1590c7f9b7da3982f3\":\"Food\",\"19ca405790ff4f07aac8c599d4317868\":\"Bakery products\"}',NULL,NULL,NULL,NULL,NULL,NULL,'2020-04-04 21:05:17.625',NULL,NULL),('Ê@WÿOªÈÅ™Ô1xh','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','Backwaren','{\"0c8312bca2c0411d82320304db4e9f28\":\"Katalog #1\",\"77b959cf66de4c1590c7f9b7da3982f3\":\"Lebensmittel\",\"19ca405790ff4f07aac8c599d4317868\":\"Backwaren\"}',NULL,NULL,NULL,NULL,NULL,NULL,'2020-04-04 21:05:17.624',NULL,NULL),('!…,»ÔF.¨D«ë*C‹3','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','Men','{\"0c8312bca2c0411d82320304db4e9f28\":\"Catalogue #1\",\"a515ae260223466f8e37471d279e6406\":\"Clothing\",\"2185182cbbd4462ea844abeb2a438b33\":\"Men\"}',NULL,NULL,NULL,NULL,NULL,NULL,'2020-04-04 21:05:17.637',NULL,NULL),('!…,»ÔF.¨D«ë*C‹3','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','Herren','{\"0c8312bca2c0411d82320304db4e9f28\":\"Katalog #1\",\"a515ae260223466f8e37471d279e6406\":\"Bekleidung\",\"2185182cbbd4462ea844abeb2a438b33\":\"Herren\"}',NULL,NULL,NULL,NULL,NULL,NULL,'2020-04-04 21:05:17.636',NULL,NULL),('%H¹ÇBŞ…d?_ÌØQ','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','Free time & electronics','{\"0c8312bca2c0411d82320304db4e9f28\":\"Catalogue #1\",\"251448b91bc742de85643f5fccd89051\":\"Free time & electronics\"}',NULL,NULL,NULL,NULL,NULL,NULL,'2020-04-04 21:05:17.641',NULL,NULL),('%H¹ÇBŞ…d?_ÌØQ','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','Freizeit & Elektro','{\"0c8312bca2c0411d82320304db4e9f28\":\"Katalog #1\",\"251448b91bc742de85643f5fccd89051\":\"Freizeit & Elektro\"}',NULL,NULL,NULL,NULL,NULL,NULL,'2020-04-04 21:05:17.640',NULL,NULL),('HùC/ĞA8‹&0A9Ï','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','Fish','{\"0c8312bca2c0411d82320304db4e9f28\":\"Catalogue #1\",\"77b959cf66de4c1590c7f9b7da3982f3\":\"Food\",\"48f97f432fd041388b2630184139cf0e\":\"Fish\"}',NULL,NULL,NULL,NULL,NULL,NULL,'2020-04-04 21:05:17.627',NULL,NULL),('HùC/ĞA8‹&0A9Ï','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','Fisch','{\"0c8312bca2c0411d82320304db4e9f28\":\"Katalog #1\",\"77b959cf66de4c1590c7f9b7da3982f3\":\"Lebensmittel\",\"48f97f432fd041388b2630184139cf0e\":\"Fisch\"}',NULL,NULL,NULL,NULL,NULL,NULL,'2020-04-04 21:05:17.627',NULL,NULL),('w¹YÏfŞLÇù·Ú9‚ó','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','Food','{\"0c8312bca2c0411d82320304db4e9f28\":\"Catalogue #1\",\"77b959cf66de4c1590c7f9b7da3982f3\":\"Food\"}',NULL,NULL,NULL,NULL,NULL,NULL,'2020-04-04 21:05:17.622',NULL,NULL),('w¹YÏfŞLÇù·Ú9‚ó','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','Lebensmittel','{\"0c8312bca2c0411d82320304db4e9f28\":\"Katalog #1\",\"77b959cf66de4c1590c7f9b7da3982f3\":\"Lebensmittel\"}',NULL,NULL,NULL,NULL,NULL,NULL,'2020-04-04 21:05:17.621',NULL,NULL),('é´„ÅOD‰Gtåõ~H\\','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','Women','{\"0c8312bca2c0411d82320304db4e9f28\":\"Catalogue #1\",\"a515ae260223466f8e37471d279e6406\":\"Clothing\",\"8de9b484c54f441c894774e5f57e485c\":\"Women\"}',NULL,NULL,NULL,NULL,NULL,NULL,'2020-04-04 21:05:17.634',NULL,NULL),('é´„ÅOD‰Gtåõ~H\\','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','Damen','{\"0c8312bca2c0411d82320304db4e9f28\":\"Katalog #1\",\"a515ae260223466f8e37471d279e6406\":\"Bekleidung\",\"8de9b484c54f441c894774e5f57e485c\":\"Damen\"}',NULL,NULL,NULL,NULL,NULL,NULL,'2020-04-04 21:05:17.633',NULL,NULL),('¥®&#Fo7G\'d','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','Clothing','{\"0c8312bca2c0411d82320304db4e9f28\":\"Catalogue #1\",\"a515ae260223466f8e37471d279e6406\":\"Clothing\"}',NULL,NULL,NULL,NULL,NULL,NULL,'2020-04-04 21:05:17.631',NULL,NULL),('¥®&#Fo7G\'d','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','Bekleidung','{\"0c8312bca2c0411d82320304db4e9f28\":\"Katalog #1\",\"a515ae260223466f8e37471d279e6406\":\"Bekleidung\"}',NULL,NULL,NULL,NULL,NULL,NULL,'2020-04-04 21:05:17.631',NULL,NULL),('»\"°[ÿ‘@ó€‹ÿ—[uë','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','Sweets','{\"0c8312bca2c0411d82320304db4e9f28\":\"Catalogue #1\",\"77b959cf66de4c1590c7f9b7da3982f3\":\"Food\",\"bb22b05bff9140f3808b1cff975b75eb\":\"Sweets\"}',NULL,NULL,NULL,NULL,NULL,NULL,'2020-04-04 21:05:17.629',NULL,NULL),('»\"°[ÿ‘@ó€‹ÿ—[uë','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','SÃ¼ÃŸes','{\"0c8312bca2c0411d82320304db4e9f28\":\"Katalog #1\",\"77b959cf66de4c1590c7f9b7da3982f3\":\"Lebensmittel\",\"bb22b05bff9140f3808b1cff975b75eb\":\"S\\u00fc\\u00dfes\"}',NULL,NULL,NULL,NULL,NULL,NULL,'2020-04-04 21:05:17.629',NULL,NULL);
-/*!40000 ALTER TABLE `category_translation` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `cms_block`
---
-
-DROP TABLE IF EXISTS `cms_block`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cms_block` (
-  `id` binary(16) NOT NULL,
-  `cms_section_id` binary(16) DEFAULT NULL,
-  `position` int(11) NOT NULL,
-  `section_position` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT 'main',
-  `type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `locked` tinyint(1) NOT NULL DEFAULT 0,
-  `margin_top` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `margin_bottom` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `margin_left` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `margin_right` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `background_color` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `background_media_id` binary(16) DEFAULT NULL,
-  `background_media_mode` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `css_class` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk.cms_block.background_media_id` (`background_media_id`),
-  KEY `fk.cms_block.cms_section_id` (`cms_section_id`),
-  CONSTRAINT `fk.cms_block.background_media_id` FOREIGN KEY (`background_media_id`) REFERENCES `media` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `fk.cms_block.cms_section_id` FOREIGN KEY (`cms_section_id`) REFERENCES `cms_section` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `json.cms_block.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `cms_block`
---
-
-LOCK TABLES `cms_block` WRITE;
-/*!40000 ALTER TABLE `cms_block` DISABLE KEYS */;
-INSERT INTO `cms_block` VALUES ('\0¯RÎ‚L\r¡Qç¯0£ :','b`ŞÒOİJË¬ÎoR4‹ˆ=',0,'main','text',NULL,0,'20px','20px','20px','20px',NULL,NULL,'cover',NULL,NULL,'2020-04-04 21:03:23.089',NULL),('t®ÀCW¼`\rŒ¢8Ê','ÓB‡aEn‡êM>«U/±',0,'main','image-text','Category info',1,'20px','20px','20px','20px',NULL,NULL,'cover',NULL,NULL,'2020-04-04 21:03:18.723',NULL),('>P·\nC´JÃå±ÔÆ','\0FùC\"¦™RY',0,'main','text',NULL,0,'20px','20px','20px','20px',NULL,NULL,'cover',NULL,NULL,'2020-04-04 21:03:23.079',NULL),('\"¿éNx1Lï˜@ˆ÷2È¢Î','	v`ZÌæAP¼zí—Å@hN',2,'main','product-listing','Category listing',1,'20px','20px','20px','20px',NULL,NULL,'cover',NULL,NULL,'2020-04-04 21:03:18.723',NULL),('=í=ĞzK¦•k^&½@\"','&¢y&.¥OMšµ—d^5Q)',0,'main','text',NULL,0,'20px','20px','20px','20px',NULL,NULL,'cover',NULL,NULL,'2020-04-04 21:03:23.050',NULL),('A÷v|šO –ÌÜO}ÊS','	v`ZÌæAP¼zí—Å@hN',1,'sidebar','category-navigation','Sidebar navigation',1,NULL,'30px',NULL,NULL,NULL,NULL,'cover',NULL,NULL,'2020-04-04 21:03:18.723',NULL),('CÙèÒ£¹L¬sÑÌH#°E','	v`ZÌæAP¼zí—Å@hN',2,'sidebar','sidebar-filter','Sidebar filter',1,NULL,NULL,NULL,NULL,NULL,NULL,'cover',NULL,NULL,'2020-04-04 21:03:18.723',NULL),('T™id nGÕª‡¹—ÿõK','¦PX¿(1B¤+g–>Ôş',0,'main','text',NULL,0,'20px','20px','20px','20px',NULL,NULL,'cover',NULL,NULL,'2020-04-04 21:03:23.070',NULL),('|à/<ğıDõ†—Æ!†Où','0‘/ÅCŞŠsÓF‘zZ1',0,'main','text',NULL,0,'20px','20px','20px','20px',NULL,NULL,'cover',NULL,NULL,'2020-04-04 21:03:23.060',NULL),('»>‰¿¦Hí´Û±\r\nò\r%','“Twà.öCå ¸>ÔÍö:',0,'main','image-cover',NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,'cover',NULL,NULL,'2020-04-04 21:05:17.593',NULL),('•Ø¥ùßì@6Ÿ”£Ø[¥œÎ','Xİn+KnE>Œ¾™©x8Œ{',1,'main','form','Contact form',1,'20px','20px','20px','20px',NULL,NULL,'cover',NULL,NULL,'2020-04-04 21:03:21.755',NULL),('àJ>Ğ}H°Œš»','ò/†˜ušBÚµiÄÂÜÁƒ',0,'main','image-text','Category info',1,'20px','20px','20px','20px',NULL,NULL,'cover',NULL,NULL,'2020-04-04 21:03:14.486',NULL),('í¨0D@ªŸ4dÃNÏ_','ò/†˜ušBÚµiÄÂÜÁƒ',2,'main','product-listing','Category listing',1,'20px','20px','20px','20px',NULL,NULL,'cover',NULL,NULL,'2020-04-04 21:03:14.486',NULL),('óıî¶FĞO•”0x@YÏ','ò/†˜ušBÚµiÄÂÜÁƒ',1,'main','sidebar-filter','Filter',1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2020-04-04 21:03:18.713',NULL),('ùç.»Ñ¶Lƒ˜œƒŠ×uè','ß?…àxmK„\r‰:—m=P',1,'main','form','Newsletter form',1,'20px','20px','20px','20px',NULL,NULL,'cover',NULL,NULL,'2020-04-04 21:03:21.763',NULL);
-/*!40000 ALTER TABLE `cms_block` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `cms_page`
---
-
-DROP TABLE IF EXISTS `cms_page`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cms_page` (
-  `id` binary(16) NOT NULL,
-  `type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `entity` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `preview_media_id` binary(16) DEFAULT NULL,
-  `locked` tinyint(1) NOT NULL DEFAULT 0,
-  `config` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk.cms_page.preview_media_id` (`preview_media_id`),
-  CONSTRAINT `fk.cms_page.preview_media_id` FOREIGN KEY (`preview_media_id`) REFERENCES `media` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `json.cms_page.config` CHECK (json_valid(`config`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `cms_page`
---
-
-LOCK TABLES `cms_page` WRITE;
-/*!40000 ALTER TABLE `cms_page` DISABLE KEYS */;
-INSERT INTO `cms_page` VALUES (':* QöN¬‘Ìà•çÖ','page',NULL,NULL,0,NULL,'2020-04-04 21:03:23.047',NULL),('$aÛøıCO†PÉNg|','page',NULL,NULL,0,NULL,'2020-04-04 21:03:23.057',NULL),('RuÚÎıEB)nªÂC£ı','product_list',NULL,NULL,1,NULL,'2020-04-04 21:03:14.485',NULL),('iTwà.öCå ¸>ÔÍö:','landingpage',NULL,NULL,0,NULL,'2020-04-04 21:05:17.593',NULL),('}ÕVñúZOm˜^ÉŞ~ö*','page',NULL,NULL,0,NULL,'2020-04-04 21:03:23.086',NULL),('¨İQ\rËBkºğoOFi±','product_list',NULL,NULL,1,NULL,'2020-04-04 21:03:18.716',NULL),('°Üqˆ~ÙFt²?o,p=','page',NULL,NULL,0,NULL,'2020-04-04 21:03:23.076',NULL),('´í–×Ò@{£ï)IæS%ï','page',NULL,NULL,1,NULL,'2020-04-04 21:03:21.760',NULL),('Û&nBdl@²šgê™i%','page',NULL,NULL,0,NULL,'2020-04-04 21:03:23.067',NULL),('ú›Põ	íI¹·‹^.¢É2','page',NULL,NULL,1,NULL,'2020-04-04 21:03:21.752',NULL);
-/*!40000 ALTER TABLE `cms_page` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `cms_page_translation`
---
-
-DROP TABLE IF EXISTS `cms_page_translation`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cms_page_translation` (
-  `cms_page_id` binary(16) NOT NULL,
-  `language_id` binary(16) NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`cms_page_id`,`language_id`),
-  KEY `fk.cms_page_translation.language_id` (`language_id`),
-  CONSTRAINT `fk.cms_page_translation.cms_page_id` FOREIGN KEY (`cms_page_id`) REFERENCES `cms_page` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.cms_page_translation.language_id` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `json.cms_page_translation.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `cms_page_translation`
---
-
-LOCK TABLES `cms_page_translation` WRITE;
-/*!40000 ALTER TABLE `cms_page_translation` DISABLE KEYS */;
-INSERT INTO `cms_page_translation` VALUES (':* QöN¬‘Ìà•çÖ','/»_ââšMpªXTÎ|ãâ','Payment / Shipping',NULL,'2020-04-04 21:03:23.048',NULL),(':* QöN¬‘Ìà•çÖ','‹/pó¡L†…Mã4Ó8','Versand und Zahlung',NULL,'2020-04-04 21:03:23.049',NULL),('$aÛøıCO†PÉNg|','/»_ââšMpªXTÎ|ãâ','Terms of service',NULL,'2020-04-04 21:03:23.058',NULL),('$aÛøıCO†PÉNg|','‹/pó¡L†…Mã4Ó8','AGB',NULL,'2020-04-04 21:03:23.059',NULL),('RuÚÎıEB)nªÂC£ı','/»_ââšMpªXTÎ|ãâ','Default category layout',NULL,'2020-04-04 21:03:14.485',NULL),('RuÚÎıEB)nªÂC£ı','‹/pó¡L†…Mã4Ó8','Standard Kategorie-Layout',NULL,'2020-04-04 21:03:14.485',NULL),('iTwà.öCå ¸>ÔÍö:','/»_ââšMpªXTÎ|ãâ','Homepage',NULL,'2020-04-04 21:05:17.587',NULL),('iTwà.öCå ¸>ÔÍö:','‹/pó¡L†…Mã4Ó8','Startseite',NULL,'2020-04-04 21:05:17.586',NULL),('}ÕVñúZOm˜^ÉŞ~ö*','/»_ââšMpªXTÎ|ãâ','Imprint',NULL,'2020-04-04 21:03:23.086',NULL),('}ÕVñúZOm˜^ÉŞ~ö*','‹/pó¡L†…Mã4Ó8','Impressum',NULL,'2020-04-04 21:03:23.087',NULL),('¨İQ\rËBkºğoOFi±','/»_ââšMpªXTÎ|ãâ','Default category layout with sidebar',NULL,'2020-04-04 21:03:18.716',NULL),('¨İQ\rËBkºğoOFi±','‹/pó¡L†…Mã4Ó8','Standard Kategorie-Layout mit Sidebar',NULL,'2020-04-04 21:03:18.716',NULL),('°Üqˆ~ÙFt²?o,p=','/»_ââšMpªXTÎ|ãâ','Privacy',NULL,'2020-04-04 21:03:23.077',NULL),('°Üqˆ~ÙFt²?o,p=','‹/pó¡L†…Mã4Ó8','Datenschutz',NULL,'2020-04-04 21:03:23.078',NULL),('´í–×Ò@{£ï)IæS%ï','/»_ââšMpªXTÎ|ãâ','Default shop page layout with newsletter form',NULL,'2020-04-04 21:03:21.760',NULL),('´í–×Ò@{£ï)IæS%ï','‹/pó¡L†…Mã4Ó8','Standard Shopseiten-Layout mit Newsletterformular',NULL,'2020-04-04 21:03:21.760',NULL),('Û&nBdl@²šgê™i%','/»_ââšMpªXTÎ|ãâ','Right of rescission',NULL,'2020-04-04 21:03:23.068',NULL),('Û&nBdl@²šgê™i%','‹/pó¡L†…Mã4Ó8','Widerrufsbelehrungen',NULL,'2020-04-04 21:03:23.068',NULL),('ú›Põ	íI¹·‹^.¢É2','/»_ââšMpªXTÎ|ãâ','Default shop page layout with contact form',NULL,'2020-04-04 21:03:21.752',NULL),('ú›Põ	íI¹·‹^.¢É2','‹/pó¡L†…Mã4Ó8','Standard Shopseiten-Layout mit Kontaktformular',NULL,'2020-04-04 21:03:21.752',NULL);
-/*!40000 ALTER TABLE `cms_page_translation` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `cms_section`
---
-
-DROP TABLE IF EXISTS `cms_section`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cms_section` (
-  `id` binary(16) NOT NULL,
-  `cms_page_id` binary(16) NOT NULL,
-  `position` int(11) NOT NULL,
-  `type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'default',
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `locked` tinyint(1) NOT NULL DEFAULT 0,
-  `sizing_mode` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'boxed',
-  `mobile_behavior` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'wrap',
-  `background_color` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `background_media_id` binary(16) DEFAULT NULL,
-  `background_media_mode` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `css_class` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk.cms_section.cms_page_id` (`cms_page_id`),
-  KEY `fk.cms_section.background_media_id` (`background_media_id`),
-  CONSTRAINT `fk.cms_section.background_media_id` FOREIGN KEY (`background_media_id`) REFERENCES `media` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `fk.cms_section.cms_page_id` FOREIGN KEY (`cms_page_id`) REFERENCES `cms_page` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `json.cms_section.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `cms_section`
---
-
-LOCK TABLES `cms_section` WRITE;
-/*!40000 ALTER TABLE `cms_section` DISABLE KEYS */;
-INSERT INTO `cms_section` VALUES ('\0FùC\"¦™RY','°Üqˆ~ÙFt²?o,p=',0,'default',NULL,0,'boxed','wrap',NULL,NULL,NULL,NULL,NULL,'2020-04-04 21:03:23.079',NULL),('	v`ZÌæAP¼zí—Å@hN','¨İQ\rËBkºğoOFi±',1,'sidebar',NULL,0,'boxed','wrap',NULL,NULL,NULL,NULL,NULL,'2020-04-04 21:03:18.719',NULL),('0‘/ÅCŞŠsÓF‘zZ1','$aÛøıCO†PÉNg|',0,'default',NULL,0,'boxed','wrap',NULL,NULL,NULL,NULL,NULL,'2020-04-04 21:03:23.060',NULL),('&¢y&.¥OMšµ—d^5Q)',':* QöN¬‘Ìà•çÖ',0,'default',NULL,0,'boxed','wrap',NULL,NULL,NULL,NULL,NULL,'2020-04-04 21:03:23.049',NULL),('Xİn+KnE>Œ¾™©x8Œ{','ú›Põ	íI¹·‹^.¢É2',0,'default',NULL,0,'boxed','wrap',NULL,NULL,NULL,NULL,NULL,'2020-04-04 21:03:21.754',NULL),('b`ŞÒOİJË¬ÎoR4‹ˆ=','}ÕVñúZOm˜^ÉŞ~ö*',0,'default',NULL,0,'boxed','wrap',NULL,NULL,NULL,NULL,NULL,'2020-04-04 21:03:23.088',NULL),('“Twà.öCå ¸>ÔÍö:','iTwà.öCå ¸>ÔÍö:',1,'default',NULL,0,'boxed','wrap',NULL,NULL,NULL,NULL,NULL,'2020-04-04 21:05:17.593',NULL),('¦PX¿(1B¤+g–>Ôş','Û&nBdl@²šgê™i%',0,'default',NULL,0,'boxed','wrap',NULL,NULL,NULL,NULL,NULL,'2020-04-04 21:03:23.069',NULL),('ÓB‡aEn‡êM>«U/±','¨İQ\rËBkºğoOFi±',0,'default',NULL,0,'boxed','wrap',NULL,NULL,NULL,NULL,NULL,'2020-04-04 21:03:18.719',NULL),('ß?…àxmK„\r‰:—m=P','´í–×Ò@{£ï)IæS%ï',0,'default',NULL,0,'boxed','wrap',NULL,NULL,NULL,NULL,NULL,'2020-04-04 21:03:21.762',NULL),('ò/†˜ušBÚµiÄÂÜÁƒ','RuÚÎıEB)nªÂC£ı',0,'default',NULL,0,'boxed','wrap',NULL,NULL,NULL,NULL,NULL,'2020-04-04 21:03:18.002',NULL);
-/*!40000 ALTER TABLE `cms_section` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `cms_slot`
---
-
-DROP TABLE IF EXISTS `cms_slot`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cms_slot` (
-  `id` binary(16) NOT NULL,
-  `version_id` binary(16) NOT NULL,
-  `cms_block_id` binary(16) NOT NULL,
-  `type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `slot` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `locked` tinyint(1) NOT NULL DEFAULT 0,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`,`version_id`),
-  KEY `fk.cms_slot.cms_block_id` (`cms_block_id`),
-  CONSTRAINT `fk.cms_slot.cms_block_id` FOREIGN KEY (`cms_block_id`) REFERENCES `cms_block` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `cms_slot`
---
-
-LOCK TABLES `cms_slot` WRITE;
-/*!40000 ALTER TABLE `cms_slot` DISABLE KEYS */;
-INSERT INTO `cms_slot` VALUES ('øâÓÆêOgŸêø?-æ\në','©ãéjKÂ¾KÙÎu,4%','=í=ĞzK¦•k^&½@\"','text','content',0,'2020-04-04 21:03:23.051',NULL),('%ĞôÊÉÇAç¢ø¿Ü¦@H','©ãéjKÂ¾KÙÎu,4%','•Ø¥ùßì@6Ÿ”£Ø[¥œÎ','form','content',1,'2020-04-04 21:03:21.756',NULL),('8t™Z îB•:~u]¸‰','©ãéjKÂ¾KÙÎu,4%','>P·\nC´JÃå±ÔÆ','text','content',0,'2020-04-04 21:03:23.080',NULL),('D)9ÃæG=Œõlaßb','©ãéjKÂ¾KÙÎu,4%','àJ>Ğ}H°Œš»','image','left',1,'2020-04-04 21:03:14.486',NULL),('G\0ôîÿLC7[PNW','©ãéjKÂ¾KÙÎu,4%','í¨0D@ªŸ4dÃNÏ_','product-listing','content',1,'2020-04-04 21:03:14.486',NULL),('Jg™ÿFó—šÛÕÔbóp','©ãéjKÂ¾KÙÎu,4%','\0¯RÎ‚L\r¡Qç¯0£ :','text','content',0,'2020-04-04 21:03:23.089',NULL),('ZÜPxÄ©A™¿84t4>•','©ãéjKÂ¾KÙÎu,4%','\"¿éNx1Lï˜@ˆ÷2È¢Î','product-listing','content',1,'2020-04-04 21:03:18.727',NULL),('j¬dû-‚JF¼YÉIKL:\r','©ãéjKÂ¾KÙÎu,4%','CÙèÒ£¹L¬sÑÌH#°E','sidebar-filter','content',1,'2020-04-04 21:03:18.727',NULL),('kš®\ZTKå·‹ş¹Gfkã','©ãéjKÂ¾KÙÎu,4%','CÙèÒ£¹L¬sÑÌH#°E','sidebar-filter','content',1,'2020-04-04 21:03:18.727',NULL),('yÕ’×Aî ´\'\\yóÛÖ','©ãéjKÂ¾KÙÎu,4%','óıî¶FĞO•”0x@YÏ','sidebar-filter','content',1,'2020-04-04 21:03:18.714',NULL),('y/Ñ{™G+œNösìW‚j','©ãéjKÂ¾KÙÎu,4%','t®ÀCW¼`\rŒ¢8Ê','image','left',1,'2020-04-04 21:03:18.727',NULL),('ÿåy5Ft”•Ñ‹Ònz','©ãéjKÂ¾KÙÎu,4%','A÷v|šO –ÌÜO}ÊS','category-navigation','content',1,'2020-04-04 21:03:18.727',NULL),('¼.K…æ&Hp˜Jp#ü\'','©ãéjKÂ¾KÙÎu,4%','t®ÀCW¼`\rŒ¢8Ê','text','right',1,'2020-04-04 21:03:18.727',NULL),('¼Nú’¶ZNô‡Öf°ÿc/²','©ãéjKÂ¾KÙÎu,4%','»>‰¿¦Hí´Û±\r\nò\r%','image','image',0,'2020-04-04 21:05:17.593',NULL),('ÒŠaAmL¡‰€\n9s$Q','©ãéjKÂ¾KÙÎu,4%','àJ>Ğ}H°Œš»','text','right',1,'2020-04-04 21:03:14.486',NULL),('ìz®«~ILˆCqEAÚÌğ','©ãéjKÂ¾KÙÎu,4%','|à/<ğıDõ†—Æ!†Où','text','content',0,'2020-04-04 21:03:23.061',NULL),('ñsÉ;Õ@£1¿/\\ö¢','©ãéjKÂ¾KÙÎu,4%','ùç.»Ñ¶Lƒ˜œƒŠ×uè','form','content',1,'2020-04-04 21:03:21.764',NULL),('öD†²à‚GŸåaœ¥o|','©ãéjKÂ¾KÙÎu,4%','T™id nGÕª‡¹—ÿõK','text','content',0,'2020-04-04 21:03:23.071',NULL);
-/*!40000 ALTER TABLE `cms_slot` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `cms_slot_translation`
---
-
-DROP TABLE IF EXISTS `cms_slot_translation`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cms_slot_translation` (
-  `cms_slot_id` binary(16) NOT NULL,
-  `cms_slot_version_id` binary(16) NOT NULL,
-  `language_id` binary(16) NOT NULL,
-  `config` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`cms_slot_id`,`cms_slot_version_id`,`language_id`),
-  KEY `fk.cms_slot_translation.language_id` (`language_id`),
-  CONSTRAINT `fk.cms_slot_translation.cms_slot_id` FOREIGN KEY (`cms_slot_id`, `cms_slot_version_id`) REFERENCES `cms_slot` (`id`, `version_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.cms_slot_translation.language_id` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `json.cms_slot_translation.config` CHECK (json_valid(`config`)),
-  CONSTRAINT `json.cms_slot_translation.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `cms_slot_translation`
---
-
-LOCK TABLES `cms_slot_translation` WRITE;
-/*!40000 ALTER TABLE `cms_slot_translation` DISABLE KEYS */;
-INSERT INTO `cms_slot_translation` VALUES ('øâÓÆêOgŸêø?-æ\në','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','{\"content\":{\"value\":\"<h2>Payment \\/ Shipping<\\/h2><hr><p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.<\\/p>\",\"source\":\"static\"},\"verticalAlign\":{\"value\":null,\"source\":\"static\"}}',NULL,'2020-04-04 21:03:23.052',NULL),('øâÓÆêOgŸêø?-æ\në','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','{\"content\":{\"value\":\"<h2>Versand und Zahlung<\\/h2><hr><p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.<\\/p>\",\"source\":\"static\"},\"verticalAlign\":{\"value\":null,\"source\":\"static\"}}',NULL,'2020-04-04 21:03:23.053',NULL),('%ĞôÊÉÇAç¢ø¿Ü¦@H','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','{\"type\":{\"source\":\"static\",\"value\":\"contact\"},\"mailReceiver\":{\"source\":\"static\",\"value\":[]},\"confirmationText\":{\"source\":\"static\",\"value\":\"\"}}',NULL,'2020-04-04 21:03:21.756',NULL),('%ĞôÊÉÇAç¢ø¿Ü¦@H','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','{\"type\":{\"source\":\"static\",\"value\":\"contact\"},\"mailReceiver\":{\"source\":\"static\",\"value\":[]},\"confirmationText\":{\"source\":\"static\",\"value\":\"\"}}',NULL,'2020-04-04 21:03:21.756',NULL),('8t™Z îB•:~u]¸‰','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','{\"content\":{\"value\":\"<h2>Privacy<\\/h2><hr><p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.<\\/p>\",\"source\":\"static\"},\"verticalAlign\":{\"value\":null,\"source\":\"static\"}}',NULL,'2020-04-04 21:03:23.081',NULL),('8t™Z îB•:~u]¸‰','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','{\"content\":{\"value\":\"<h2>Datenschutz<\\/h2><hr><p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.<\\/p>\",\"source\":\"static\"},\"verticalAlign\":{\"value\":null,\"source\":\"static\"}}',NULL,'2020-04-04 21:03:23.082',NULL),('D)9ÃæG=Œõlaßb','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','{\"media\":{\"source\":\"mapped\",\"value\":\"category.media\"},\"displayMode\":{\"source\":\"static\",\"value\":\"cover\"},\"url\":{\"source\":\"static\",\"value\":null},\"newTab\":{\"source\":\"static\",\"value\":false},\"minHeight\":{\"source\":\"static\",\"value\":\"320px\"}}',NULL,'2020-04-04 21:03:14.486',NULL),('D)9ÃæG=Œõlaßb','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','{\"media\":{\"source\":\"mapped\",\"value\":\"category.media\"},\"displayMode\":{\"source\":\"static\",\"value\":\"cover\"},\"url\":{\"source\":\"static\",\"value\":null},\"newTab\":{\"source\":\"static\",\"value\":false},\"minHeight\":{\"source\":\"static\",\"value\":\"320px\"}}',NULL,'2020-04-04 21:03:14.486',NULL),('G\0ôîÿLC7[PNW','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','{\"boxLayout\":{\"source\":\"static\",\"value\":\"standard\"}}',NULL,'2020-04-04 21:03:14.486',NULL),('G\0ôîÿLC7[PNW','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','{\"boxLayout\":{\"source\":\"static\",\"value\":\"standard\"}}',NULL,'2020-04-04 21:03:14.486',NULL),('Jg™ÿFó—šÛÕÔbóp','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','{\"content\":{\"value\":\"<h2>Imprint<\\/h2><hr><p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.<\\/p>\",\"source\":\"static\"},\"verticalAlign\":{\"value\":null,\"source\":\"static\"}}',NULL,'2020-04-04 21:03:23.090',NULL),('Jg™ÿFó—šÛÕÔbóp','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','{\"content\":{\"value\":\"<h2>Impressum<\\/h2><hr><p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.<\\/p>\",\"source\":\"static\"},\"verticalAlign\":{\"value\":null,\"source\":\"static\"}}',NULL,'2020-04-04 21:03:23.091',NULL),('j¬dû-‚JF¼YÉIKL:\r','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','{\"boxLayout\":{\"source\":\"static\",\"value\":\"standard\"}}',NULL,'2020-04-04 21:03:18.727',NULL),('j¬dû-‚JF¼YÉIKL:\r','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','{\"boxLayout\":{\"source\":\"static\",\"value\":\"standard\"}}',NULL,'2020-04-04 21:03:18.727',NULL),('yÕ’×Aî ´\'\\yóÛÖ','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ',NULL,NULL,'2020-04-04 21:03:18.714',NULL),('y/Ñ{™G+œNösìW‚j','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','{\"media\":{\"source\":\"mapped\",\"value\":\"category.media\"},\"displayMode\":{\"source\":\"static\",\"value\":\"cover\"},\"url\":{\"source\":\"static\",\"value\":null},\"newTab\":{\"source\":\"static\",\"value\":false},\"minHeight\":{\"source\":\"static\",\"value\":\"320px\"}}',NULL,'2020-04-04 21:03:18.727',NULL),('y/Ñ{™G+œNösìW‚j','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','{\"media\":{\"source\":\"mapped\",\"value\":\"category.media\"},\"displayMode\":{\"source\":\"static\",\"value\":\"cover\"},\"url\":{\"source\":\"static\",\"value\":null},\"newTab\":{\"source\":\"static\",\"value\":false},\"minHeight\":{\"source\":\"static\",\"value\":\"320px\"}}',NULL,'2020-04-04 21:03:18.727',NULL),('ÿåy5Ft”•Ñ‹Ònz','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ',NULL,NULL,'2020-04-04 21:03:18.727',NULL),('ÿåy5Ft”•Ñ‹Ònz','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8',NULL,NULL,'2020-04-04 21:03:18.727',NULL),('¼.K…æ&Hp˜Jp#ü\'','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','{\"content\":{\"source\":\"mapped\",\"value\":\"category.description\"}}',NULL,'2020-04-04 21:03:18.727',NULL),('¼.K…æ&Hp˜Jp#ü\'','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','{\"content\":{\"source\":\"mapped\",\"value\":\"category.description\"}}',NULL,'2020-04-04 21:03:18.727',NULL),('¼Nú’¶ZNô‡Öf°ÿc/²','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','{\"url\":{\"value\":null,\"source\":\"static\"},\"media\":{\"value\":\"de4b7dbe9d95435092cb85ce146ced28\",\"source\":\"static\"},\"newTab\":{\"value\":false,\"source\":\"static\"},\"minHeight\":{\"value\":\"340px\",\"source\":\"static\"},\"displayMode\":{\"value\":\"standard\",\"source\":\"static\"}}',NULL,'2020-04-04 21:05:17.593',NULL),('¼Nú’¶ZNô‡Öf°ÿc/²','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','{\"url\":{\"value\":null,\"source\":\"static\"},\"media\":{\"value\":\"de4b7dbe9d95435092cb85ce146ced28\",\"source\":\"static\"},\"newTab\":{\"value\":false,\"source\":\"static\"},\"minHeight\":{\"value\":\"340px\",\"source\":\"static\"},\"displayMode\":{\"value\":\"standard\",\"source\":\"static\"}}',NULL,'2020-04-04 21:05:17.592',NULL),('ÒŠaAmL¡‰€\n9s$Q','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','{\"content\":{\"source\":\"mapped\",\"value\":\"category.description\"}}',NULL,'2020-04-04 21:03:14.486',NULL),('ÒŠaAmL¡‰€\n9s$Q','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','{\"content\":{\"source\":\"mapped\",\"value\":\"category.description\"}}',NULL,'2020-04-04 21:03:14.486',NULL),('ìz®«~ILˆCqEAÚÌğ','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','{\"content\":{\"value\":\"<h2>Terms of service<\\/h2><hr><p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.<\\/p>\",\"source\":\"static\"},\"verticalAlign\":{\"value\":null,\"source\":\"static\"}}',NULL,'2020-04-04 21:03:23.062',NULL),('ìz®«~ILˆCqEAÚÌğ','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','{\"content\":{\"value\":\"<h2>AGB<\\/h2><hr><p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.<\\/p>\",\"source\":\"static\"},\"verticalAlign\":{\"value\":null,\"source\":\"static\"}}',NULL,'2020-04-04 21:03:23.063',NULL),('ñsÉ;Õ@£1¿/\\ö¢','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','{\"type\":{\"source\":\"static\",\"value\":\"newsletter\"},\"mailReceiver\":{\"source\":\"static\",\"value\":[]},\"confirmationText\":{\"source\":\"static\",\"value\":\"\"}}',NULL,'2020-04-04 21:03:21.764',NULL),('ñsÉ;Õ@£1¿/\\ö¢','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','{\"type\":{\"source\":\"static\",\"value\":\"newsletter\"},\"mailReceiver\":{\"source\":\"static\",\"value\":[]},\"confirmationText\":{\"source\":\"static\",\"value\":\"\"}}',NULL,'2020-04-04 21:03:21.764',NULL),('öD†²à‚GŸåaœ¥o|','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','{\"content\":{\"value\":\"<h2>Right of rescission<\\/h2><hr><p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.<\\/p>\",\"source\":\"static\"},\"verticalAlign\":{\"value\":null,\"source\":\"static\"}}',NULL,'2020-04-04 21:03:23.072',NULL),('öD†²à‚GŸåaœ¥o|','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','{\"content\":{\"value\":\"<h2>Widerrufsbelehrungen<\\/h2><hr><p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.<\\/p>\",\"source\":\"static\"},\"verticalAlign\":{\"value\":null,\"source\":\"static\"}}',NULL,'2020-04-04 21:03:23.072',NULL);
-/*!40000 ALTER TABLE `cms_slot_translation` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `country`
---
-
-DROP TABLE IF EXISTS `country`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `country` (
-  `id` binary(16) NOT NULL,
-  `iso` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `position` int(11) NOT NULL DEFAULT 1,
-  `tax_free` tinyint(1) NOT NULL DEFAULT 0,
-  `active` tinyint(1) NOT NULL DEFAULT 1,
-  `iso3` varchar(45) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `display_state_in_registration` tinyint(1) NOT NULL DEFAULT 0,
-  `force_state_in_registration` tinyint(1) NOT NULL DEFAULT 0,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  `shipping_available` tinyint(1) NOT NULL DEFAULT 1,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `country`
---
-
-LOCK TABLES `country` WRITE;
-/*!40000 ALTER TABLE `country` DISABLE KEYS */;
-INSERT INTO `country` VALUES ('\0j†>¿NY†cI·H%Ù¢','HU',10,0,1,'HUN',0,0,'2020-04-04 21:03:14.376',NULL,1),('\r™¬Zµ#N†5Bäì¤ùw','IE',10,0,1,'IRL',0,0,'2020-04-04 21:03:14.360',NULL,1),('VäŠ\Zd@È¢MÇ´qÆŞ','AT',10,0,1,'AUT',0,0,'2020-04-04 21:03:14.363',NULL,1),('\Z!~äK’ˆ³?ä÷}“','GB',5,0,1,'GBR',0,0,'2020-04-04 21:03:14.291',NULL,1),('\Zrpá”ÈH5ª3\\=¹\"«˜','SE',10,0,1,'SWE',0,0,'2020-04-04 21:03:14.363',NULL,1),('\"fœJöèBF´DÙ3a®cH','RO',10,0,1,'ROU',0,0,'2020-04-04 21:03:14.377',NULL,1),('&>3	BAõ¶Ûƒé+¶','ES',10,0,1,'ESP',0,0,'2020-04-04 21:03:14.364',NULL,1),('.R)fMT„ïş.…(½','LU',10,0,1,'LUX',0,0,'2020-04-04 21:03:14.361',NULL,1),('3PpâiGæ«4Á‘=G:ø','FR',10,0,1,'FRA',0,0,'2020-04-04 21:03:14.380',NULL,1),(';[çÄ$Jüº\Z\n,–ƒ«9','CA',10,0,1,'CAN',0,0,'2020-04-04 21:03:14.361',NULL,1),('Hv¡ş¯Gœ”²;Ì¸tú¸','LI',10,0,1,'LIE',0,0,'2020-04-04 21:03:14.375',NULL,1),('LM\Z×Hr–é$lsZ‘¬','AU',10,0,1,'AUS',0,0,'2020-04-04 21:03:14.378',NULL,1),('PÌ¯Ó[í@Õ¡A!\rÔ¬','FI',10,0,1,'FIN',0,0,'2020-04-04 21:03:14.379',NULL,1),('bEîÛ¢ BfÈ\\ûßÛ','JP',10,0,1,'JPN',0,0,'2020-04-04 21:03:14.361',NULL,1),('oÍ9?s™F‹­­÷´™]','PT',10,0,1,'PRT',0,0,'2020-04-04 21:03:14.363',NULL,1),('…ó>,J²˜¾#Øÿa','DE',1,0,1,'DEU',0,0,'2020-04-04 21:03:14.263',NULL,1),('‰‹G“‰A*’¢èMX;','AE',10,0,1,'ARE',0,0,'2020-04-04 21:03:14.375',NULL,1),('¸\n˜ÌN°Pd(é','IL',10,0,1,'ISR',0,0,'2020-04-04 21:03:14.378',NULL,1),('¸±oÇÙOæ–9|-¥¥f','IS',10,0,1,'ISL',0,0,'2020-04-04 21:03:14.360',NULL,1),('¸aÓÑpºG3ˆ,˜ÜZ·ã','NL',10,0,1,'NLD',0,0,'2020-04-04 21:03:14.362',NULL,1),('ºvŠQWF¯3í\rK¨6Í','US',10,0,1,'USA',0,0,'2020-04-04 21:03:14.364',NULL,1),('Ãp®ğæB£·Y’`Â6','IT',10,0,1,'ITA',0,0,'2020-04-04 21:03:14.360',NULL,1),('Æ·­äœìH?D‚\n@¿o','GR',10,0,1,'GRC',0,0,'2020-04-04 21:03:14.289',NULL,1),('ÆÅÆr\'Fn¹eÁ|Ps¿µ','PL',10,0,1,'POL',0,0,'2020-04-04 21:03:14.376',NULL,1),('ÇæòÇ@ë‡ôbt§L$ó','BR',10,0,1,'BRA',0,0,'2020-04-04 21:03:14.378',NULL,1),('Ñk‘§ßC„¤:ˆÿ¶L¢','NO',10,0,1,'NOR',0,0,'2020-04-04 21:03:14.362',NULL,1),('Ø9RÙdmGº¼á¦è‹,­','DK',10,0,1,'DNK',0,0,'2020-04-04 21:03:14.379',NULL,1),('ámNÒ†ü@e¬ÎR*¦bP\r','BE',10,0,1,'BEL',0,0,'2020-04-04 21:03:14.379',NULL,1),('éÅFmCe¡ÜåÃRÆ','CH',10,1,1,'CHE',0,0,'2020-04-04 21:03:14.364',NULL,1),('ôÂ¼¥òßLG›ñfˆX','TR',10,0,1,'TUR',0,0,'2020-04-04 21:03:14.376',NULL,1),('ö)È8€Di‡”:¹tìäù','NA',10,0,1,'NAM',0,0,'2020-04-04 21:03:14.362',NULL,1),('úU‹O!¶t\ZK˜¿','SK',10,0,1,'SVK',0,0,'2020-04-04 21:03:14.377',NULL,1),('ıÕ^klCœQµ–7È','CZ',10,0,1,'CZE',0,0,'2020-04-04 21:03:14.377',NULL,1);
-/*!40000 ALTER TABLE `country` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `country_state`
---
-
-DROP TABLE IF EXISTS `country_state`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `country_state` (
-  `id` binary(16) NOT NULL,
-  `country_id` binary(16) NOT NULL,
-  `short_code` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `position` int(11) NOT NULL DEFAULT 1,
-  `active` tinyint(1) NOT NULL DEFAULT 1,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk.country_state.country_id` (`country_id`),
-  CONSTRAINT `fk.country_state.country_id` FOREIGN KEY (`country_id`) REFERENCES `country` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `country_state`
---
-
-LOCK TABLES `country_state` WRITE;
-/*!40000 ALTER TABLE `country_state` DISABLE KEYS */;
-INSERT INTO `country_state` VALUES ('\0ßZã4G¿°?ºpÑ*','\Z!~äK’ˆ³?ä÷}“','GB-DGY',1,1,'2020-04-04 21:03:14.350',NULL),('g8¥ÔOÍ¾ÃB!ŸH‚','…ó>,J²˜¾#Øÿa','DE-BE',1,1,'2020-04-04 21:03:14.270',NULL),('…¤!ÌG¹€)?ç`Á','ºvŠQWF¯3í\rK¨6Í','US-NH',1,1,'2020-04-04 21:03:14.370',NULL),('­>ÜmA0£XÆmBÇ¾\Z','ºvŠQWF¯3í\rK¨6Í','US-MA',1,1,'2020-04-04 21:03:14.369',NULL),('ÿM*IdH„³NOÔ\Z·','\Z!~äK’ˆ³?ä÷}“','GB-ABD',1,1,'2020-04-04 21:03:14.349',NULL),('làÄ¼QA:³zÅ”ù½õ','\Z!~äK’ˆ³?ä÷}“','GB-BRD',1,1,'2020-04-04 21:03:14.328',NULL),(')C+èMv™º†2íá$','\Z!~äK’ˆ³?ä÷}“','GB-SCT',1,1,'2020-04-04 21:03:14.295',NULL),('’Áä8ÅH/…±\"I0ê­Á','\Z!~äK’ˆ³?ä÷}“','GB-KIR',1,1,'2020-04-04 21:03:14.330',NULL),('%UÉÏF‡Rªë`­›','\Z!~äK’ˆ³?ä÷}“','GB-SKP',1,1,'2020-04-04 21:03:14.333',NULL),('=Ã_ÉI*¡r¾5İó\n\\','\Z!~äK’ˆ³?ä÷}“','GB-WSX',1,1,'2020-04-04 21:03:14.318',NULL),('%–	·ËA²¾¸Ö5Óz«','ºvŠQWF¯3í\rK¨6Í','US-MN',1,1,'2020-04-04 21:03:14.369',NULL),('Œ|mA1§M®4,°','\Z!~äK’ˆ³?ä÷}“','GB-IOW',1,1,'2020-04-04 21:03:14.339',NULL),('	3–_”Mù´Ä#ºw¼â~','\Z!~äK’ˆ³?ä÷}“','GB-BIR',1,1,'2020-04-04 21:03:14.328',NULL),('	Uê&ä¯Aİ•Vi€V+Ğ','\Z!~äK’ˆ³?ä÷}“','GB-YOR',1,1,'2020-04-04 21:03:14.346',NULL),('=\n(VD½\'¤ZÏ>…','ºvŠQWF¯3í\rK¨6Í','US-MS',1,1,'2020-04-04 21:03:14.369',NULL),('øßÉ‚ïOô«VÒ3YÛ','…ó>,J²˜¾#Øÿa','DE-BW',1,1,'2020-04-04 21:03:14.266',NULL),('ş~MKÅE$º^a‘E½G','ºvŠQWF¯3í\rK¨6Í','US-WY',1,1,'2020-04-04 21:03:14.375',NULL),('¶)9Iğ•@†æ','ºvŠQWF¯3í\rK¨6Í','US-AL',1,1,'2020-04-04 21:03:14.365',NULL),(')ë§vaO,3¬ér³1i','ºvŠQWF¯3í\rK¨6Í','US-ME',1,1,'2020-04-04 21:03:14.368',NULL),('\rG\0ûí¬F\0•8P«†gg4','\Z!~äK’ˆ³?ä÷}“','GB-NET',1,1,'2020-04-04 21:03:14.331',NULL),('\rş±£õIPµœ‹š™Üm*','…ó>,J²˜¾#Øÿa','DE-TH',1,1,'2020-04-04 21:03:14.288',NULL),('6ÖãÃUFt­›yóÃê','\Z!~äK’ˆ³?ä÷}“','GB-SGC',1,1,'2020-04-04 21:03:14.343',NULL),('×Ç=A’§­X 3¡','\Z!~äK’ˆ³?ä÷}“','GB-HMF',1,1,'2020-04-04 21:03:14.322',NULL),('õ?0Gb¡a~ùBù','\Z!~äK’ˆ³?ä÷}“','GB-CHW',1,1,'2020-04-04 21:03:14.337',NULL),('–1ˆˆ@Tš.q©ºT','\Z!~äK’ˆ³?ä÷}“','GB-MLN',1,1,'2020-04-04 21:03:14.352',NULL),('ŠoŠ+Ld­Äõäm','\Z!~äK’ˆ³?ä÷}“','GB-DNC',1,1,'2020-04-04 21:03:14.329',NULL),('À8ˆ|F~¢#ªä9£[ı','…ó>,J²˜¾#Øÿa','DE-SN',1,1,'2020-04-04 21:03:14.284',NULL),('KS$cO£­8WŞÃkçØ','\Z!~äK’ˆ³?ä÷}“','GB-SHR',1,1,'2020-04-04 21:03:14.343',NULL),('åsi`O›üÄ‹(/','ºvŠQWF¯3í\rK¨6Í','US-HI',1,1,'2020-04-04 21:03:14.367',NULL),('FNñ\Z9@–¦íú™Iù','\Z!~äK’ˆ³?ä÷}“','GB-ESS',1,1,'2020-04-04 21:03:14.307',NULL),('przÕLR«”Ò5Ö‘f','\Z!~äK’ˆ³?ä÷}“','GB-NFK',1,1,'2020-04-04 21:03:14.312',NULL),('\Z3}âG€@â°=Ä¾ı£','\Z!~äK’ˆ³?ä÷}“','GB-WSM',1,1,'2020-04-04 21:03:14.327',NULL),('>õ}(*O¹©’=O¹®','\Z!~äK’ˆ³?ä÷}“','GB-BGE',1,1,'2020-04-04 21:03:14.355',NULL),('U¡r±ÆAo°Ãæ^Ú.N','\Z!~äK’ˆ³?ä÷}“','GB-CRY',1,1,'2020-04-04 21:03:14.321',NULL),('Áâş›Aì²&×ÀxÂ','\Z!~äK’ˆ³?ä÷}“','GB-NIR',1,1,'2020-04-04 21:03:14.294',NULL),(':üÅLJ™×KÆB\"5','ºvŠQWF¯3í\rK¨6Í','US-OR',1,1,'2020-04-04 21:03:14.372',NULL),('tûeK¤N¶´Jt…ªıÏ','\Z!~äK’ˆ³?ä÷}“','GB-SOL',1,1,'2020-04-04 21:03:14.333',NULL),('},òaM÷…²ÛŞÚ&.^','…ó>,J²˜¾#Øÿa','DE-MV',1,1,'2020-04-04 21:03:14.278',NULL),('şCf\0CHÍ¾Åb,ìë\n','\Z!~äK’ˆ³?ä÷}“','GB-NWP',1,1,'2020-04-04 21:03:14.358',NULL),(' Eê%dKw¶è²ââ|k','\Z!~äK’ˆ³?ä÷}“','GB-LND',1,1,'2020-04-04 21:03:14.318',NULL),(' R¿©ŸCÈ­:®A’£Kü','ºvŠQWF¯3í\rK¨6Í','US-KS',1,1,'2020-04-04 21:03:14.368',NULL),(' ë‹®Osˆ¦¹«T‘¦','\Z!~äK’ˆ³?ä÷}“','GB-LIV',1,1,'2020-04-04 21:03:14.330',NULL),('$Qú.N@Fôº²–UI²À','\Z!~äK’ˆ³?ä÷}“','GB-SFK',1,1,'2020-04-04 21:03:14.316',NULL),('$†79]CR›jšuSíA','\Z!~äK’ˆ³?ä÷}“','GB-AGY',1,1,'2020-04-04 21:03:14.357',NULL),('%÷şP] B¸hnıòúÔ ','\Z!~äK’ˆ³?ä÷}“','GB-WBK',1,1,'2020-04-04 21:03:14.345',NULL),('&}ãt K¶¸æÆ*ãÒ','\Z!~äK’ˆ³?ä÷}“','GB-ERY',1,1,'2020-04-04 21:03:14.338',NULL),('\'g-K0…C•×f	y\\r”','\Z!~äK’ˆ³?ä÷}“','GB-UKM',1,1,'2020-04-04 21:03:14.299',NULL),('\'{±×|O’²œ//ôE›°','\Z!~äK’ˆ³?ä÷}“','GB-HIL',1,1,'2020-04-04 21:03:14.323',NULL),(')¦½íy~A`•º	C+ÙSá','\Z!~äK’ˆ³?ä÷}“','GB-BDG',1,1,'2020-04-04 21:03:14.319',NULL),('+ë7°’I:™XSl½wË','\Z!~äK’ˆ³?ä÷}“','GB-STE',1,1,'2020-04-04 21:03:14.344',NULL),('-nK*ğ„JÒ‹¯•I•Š','\Z!~äK’ˆ³?ä÷}“','GB-IVC',1,1,'2020-04-04 21:03:14.352',NULL),('.&ØmbÌEË­Å°…?\\^','\Z!~äK’ˆ³?ä÷}“','GB-RDB',1,1,'2020-04-04 21:03:14.326',NULL),('.<—G_DÉ©‚¸×ºS¡','\Z!~äK’ˆ³?ä÷}“','GB-PEM',1,1,'2020-04-04 21:03:14.358',NULL),('.”iš)H/—‡İP_‰','ºvŠQWF¯3í\rK¨6Í','US-ID',1,1,'2020-04-04 21:03:14.367',NULL),('.Õä4OT£œáîŞ‰[~','\Z!~äK’ˆ³?ä÷}“','GB-BAS',1,1,'2020-04-04 21:03:14.335',NULL),('/XhÏFC\0ªïjN«Û¥G','\Z!~äK’ˆ³?ä÷}“','GB-WRL',1,1,'2020-04-04 21:03:14.335',NULL),('014k)IÍ¸›åA&ğHs','\Z!~äK’ˆ³?ä÷}“','GB-ENG',1,1,'2020-04-04 21:03:14.293',NULL),('0ĞsÓ@˜­Ò™V¢ÔeŒ','\Z!~äK’ˆ³?ä÷}“','GB-ESX',1,1,'2020-04-04 21:03:14.306',NULL),('1òõaKGW»‡%>÷¢1','ºvŠQWF¯3í\rK¨6Í','US-OH',1,1,'2020-04-04 21:03:14.372',NULL),('11	3ìHµüˆt.,É¤','\Z!~äK’ˆ³?ä÷}“','GB-PLY',1,1,'2020-04-04 21:03:14.342',NULL),('1°åÀk0J ˜4çãÊU','ºvŠQWF¯3í\rK¨6Í','US-MI',1,1,'2020-04-04 21:03:14.369',NULL),('2‡°}ÖB’“²¹,ÿF','\Z!~äK’ˆ³?ä÷}“','GB-KEN',1,1,'2020-04-04 21:03:14.310',NULL),('3IK·$ÔC¶g°\\Íõ»','\Z!~äK’ˆ³?ä÷}“','GB-CWY',1,1,'2020-04-04 21:03:14.356',NULL),('3¶:¦KWBà·ÆÓÇ\'º°','\Z!~äK’ˆ³?ä÷}“','GB-MEA',1,1,'2020-04-04 21:03:14.348',NULL),('4aÕKáN”ê%ä','\Z!~äK’ˆ³?ä÷}“','GB-SFT',1,1,'2020-04-04 21:03:14.332',NULL),('5ş>l¼Cp¹Å*ı$”M','\Z!~äK’ˆ³?ä÷}“','GB-STS',1,1,'2020-04-04 21:03:14.315',NULL),('6õ–æ{nIæ§¢şæiöaõ','\Z!~äK’ˆ³?ä÷}“','GB-RDG',1,1,'2020-04-04 21:03:14.342',NULL),('7rU\rœfHğ«SÍİêš','\Z!~äK’ˆ³?ä÷}“','GB-TFW',1,1,'2020-04-04 21:03:14.345',NULL),('7İfA2Kë‹SÍ\r¢\0¹','\Z!~äK’ˆ³?ä÷}“','GB-CBF',1,1,'2020-04-04 21:03:14.337',NULL),('8ÇFıM¼¤QšßC\Z','\Z!~äK’ˆ³?ä÷}“','GB-BEN',1,1,'2020-04-04 21:03:14.320',NULL),('9Ò©–6 H>Œ»$x«Arˆ','…ó>,J²˜¾#Øÿa','DE-SL',1,1,'2020-04-04 21:03:14.283',NULL),(':Ã,$,M·¦È‘[°uâ','\Z!~äK’ˆ³?ä÷}“','GB-BBD',1,1,'2020-04-04 21:03:14.335',NULL),(';Â2ÓmB7‰«ö±zw•','\Z!~äK’ˆ³?ä÷}“','GB-STT',1,1,'2020-04-04 21:03:14.344',NULL),('<Œ´â6VG·–Û”O$°i','\Z!~äK’ˆ³?ä÷}“','GB-BMH',1,1,'2020-04-04 21:03:14.336',NULL),('=‚ s¼5AÀ¤Ó3¾W€“','\Z!~äK’ˆ³?ä÷}“','GB-AGB',1,1,'2020-04-04 21:03:14.349',NULL),('>şz=ìN\rê°J.]ë','\Z!~äK’ˆ³?ä÷}“','GB-NGM',1,1,'2020-04-04 21:03:14.341',NULL),('?µq¯AA«”¯Ôä»áNV','\Z!~äK’ˆ³?ä÷}“','GB-BRY',1,1,'2020-04-04 21:03:14.320',NULL),('@¶ÔÛ—«O­–ª¡+‰BYæ','\Z!~äK’ˆ³?ä÷}“','GB-SWK',1,1,'2020-04-04 21:03:14.326',NULL),('A’\nÉD&D[“íÊ½]Æä‡','\Z!~äK’ˆ³?ä÷}“','GB-CGN',1,1,'2020-04-04 21:03:14.356',NULL),('Böh•KÙ˜ı¦(0÷;','\Z!~äK’ˆ³?ä÷}“','GB-SAW',1,1,'2020-04-04 21:03:14.332',NULL),('C5ªœ\\@›®ûÇØV6','…ó>,J²˜¾#Øÿa','DE-HH',1,1,'2020-04-04 21:03:14.274',NULL),('D‚€ÅRÈMø·Fğ›‘`L','\Z!~äK’ˆ³?ä÷}“','GB-DUD',1,1,'2020-04-04 21:03:14.329',NULL),('Fñ©u\"HğŒØÁeeY$¾','ºvŠQWF¯3í\rK¨6Í','US-UT',1,1,'2020-04-04 21:03:14.373',NULL),('H/hÂ„ÔH¥ª\r`‰›','\Z!~äK’ˆ³?ä÷}“','GB-VGL',1,1,'2020-04-04 21:03:14.359',NULL),('HRóŠßõCÎ¥ä:‚H%pO','\Z!~äK’ˆ³?ä÷}“','GB-MDB',1,1,'2020-04-04 21:03:14.340',NULL),('Häş‹OKã•N¯ø¤\0L','\Z!~äK’ˆ³?ä÷}“','GB-WAR',1,1,'2020-04-04 21:03:14.317',NULL),('I#ö\\¿J‘ªÛB!¦ã}','\Z!~äK’ˆ³?ä÷}“','GB-WGN',1,1,'2020-04-04 21:03:14.334',NULL),('J§dÒjoK/%œÕÌ','ºvŠQWF¯3í\rK¨6Í','US-TN',1,1,'2020-04-04 21:03:14.373',NULL),('Jã‘g®’L)„û:?Yk\"”','ºvŠQWF¯3í\rK¨6Í','US-VA',1,1,'2020-04-04 21:03:14.374',NULL),('M/‹\\İÛNí³…Aúğ×','ºvŠQWF¯3í\rK¨6Í','US-NE',1,1,'2020-04-04 21:03:14.370',NULL),('N‚Ü.hND•}¸Ë3wA','\Z!~äK’ˆ³?ä÷}“','GB-GRE',1,1,'2020-04-04 21:03:14.322',NULL),('NÌF*ï@KÅŸ-«êHÚÀ','ºvŠQWF¯3í\rK¨6Í','US-CO',1,1,'2020-04-04 21:03:14.366',NULL),('OhVx*CJ³×¹Î-Û','\Z!~äK’ˆ³?ä÷}“','GB-SHF',1,1,'2020-04-04 21:03:14.333',NULL),('Pe×ğÙZCI³_\'‘qYèP','\Z!~äK’ˆ³?ä÷}“','GB-HRT',1,1,'2020-04-04 21:03:14.309',NULL),('P°ØJf‹\ZåŞWqa)','\Z!~äK’ˆ³?ä÷}“','GB-DBY',1,1,'2020-04-04 21:03:14.302',NULL),('Q”‰ªô}Nw´ú›¹¸˜—','\Z!~äK’ˆ³?ä÷}“','GB-BNH',1,1,'2020-04-04 21:03:14.336',NULL),('R§C\0}OşŠ¡.6\'ñÔ,','ºvŠQWF¯3í\rK¨6Í','US-IL',1,1,'2020-04-04 21:03:14.367',NULL),('S»n¸i@…‡]RTìp(z','\Z!~äK’ˆ³?ä÷}“','GB-MIK',1,1,'2020-04-04 21:03:14.340',NULL),('ShÈ6©AĞ§îvú\\m´','\Z!~äK’ˆ³?ä÷}“','GB-ELS',1,1,'2020-04-04 21:03:14.351',NULL),('SÃJøÎEß¿¶ÌÓÈAp','\Z!~äK’ˆ³?ä÷}“','GB-CAM',1,1,'2020-04-04 21:03:14.301',NULL),('SÅ—­zN2ˆQ¾uÈŠ^','\Z!~äK’ˆ³?ä÷}“','GB-GAT',1,1,'2020-04-04 21:03:14.329',NULL),('Uf«øË-IK€PkJŠúIS','\Z!~äK’ˆ³?ä÷}“','GB-FAL',1,1,'2020-04-04 21:03:14.351',NULL),('VÇ\rCUOx¾4G:êöB','ºvŠQWF¯3í\rK¨6Í','US-IA',1,1,'2020-04-04 21:03:14.368',NULL),('X3f‡9iK„²=*KdšĞ','\Z!~äK’ˆ³?ä÷}“','GB-AND',1,1,'2020-04-04 21:03:14.347',NULL),('XŠàá!ÅJX‘‹»TÔ\"§','ºvŠQWF¯3í\rK¨6Í','US-MT',1,1,'2020-04-04 21:03:14.370',NULL),('Y~§å&]D‡ƒ:\"\r—|','ºvŠQWF¯3í\rK¨6Í','US-TX',1,1,'2020-04-04 21:03:14.373',NULL),('YÇAóšğMö¨»w/ÊÁPñ','\Z!~äK’ˆ³?ä÷}“','GB-SLG',1,1,'2020-04-04 21:03:14.343',NULL),('ZÌÅêh,B»à»˜\r¥Hë','\Z!~äK’ˆ³?ä÷}“','GB-DOR',1,1,'2020-04-04 21:03:14.305',NULL),('\\½0“Æ´E§·˜\"µõw','\Z!~äK’ˆ³?ä÷}“','GB-SHN',1,1,'2020-04-04 21:03:14.332',NULL),(']êRÛHC&‚ûÀF\\g(','\Z!~äK’ˆ³?ä÷}“','GB-MRT',1,1,'2020-04-04 21:03:14.325',NULL),('_Ã%Ò æE_ŸÈ&Àµ,{','\Z!~äK’ˆ³?ä÷}“','GB-SOM',1,1,'2020-04-04 21:03:14.315',NULL),('ccƒ˜jL¸¼VŒ{Ö0+','\Z!~äK’ˆ³?ä÷}“','GB-ENF',1,1,'2020-04-04 21:03:14.321',NULL),('cjÌ2½¥BÒ¢\0tŸ6oÌÙ','\Z!~äK’ˆ³?ä÷}“','GB-STN',1,1,'2020-04-04 21:03:14.326',NULL),('c~P<$UA ‰õ1ıNä','\Z!~äK’ˆ³?ä÷}“','GB-TOB',1,1,'2020-04-04 21:03:14.345',NULL),('eX†Q§íAo’ï¨\r‚pÛ','\Z!~äK’ˆ³?ä÷}“','GB-TWH',1,1,'2020-04-04 21:03:14.327',NULL),('f,Ñ&O”Aù…·Çñ³.e','\Z!~äK’ˆ³?ä÷}“','GB-BUR',1,1,'2020-04-04 21:03:14.328',NULL),('gŸ¤_ÂµI%¡‚$lİ1½;','\Z!~äK’ˆ³?ä÷}“','GB-NYK',1,1,'2020-04-04 21:03:14.313',NULL),('g÷ŞÚò\\Oµ«H–‚(<4F','\Z!~äK’ˆ³?ä÷}“','GB-BNE',1,1,'2020-04-04 21:03:14.319',NULL),('iùét´\ZEm Û7ÅD\06G','\Z!~äK’ˆ³?ä÷}“','GB-BDF',1,1,'2020-04-04 21:03:14.335',NULL),('jcm=³&F¾5—\Z!Ü¡','\Z!~äK’ˆ³?ä÷}“','GB-POW',1,1,'2020-04-04 21:03:14.359',NULL),('kj¬7\"GNºÏµğI£N','ºvŠQWF¯3í\rK¨6Í','US-NY',1,1,'2020-04-04 21:03:14.371',NULL),('kÃĞœnKŸ†Ğä_$\'ë','ºvŠQWF¯3í\rK¨6Í','US-NV',1,1,'2020-04-04 21:03:14.370',NULL),('lú††}O˜ĞBÅÑÛ>','\Z!~äK’ˆ³?ä÷}“','GB-STY',1,1,'2020-04-04 21:03:14.333',NULL),('lT$íYĞIÕ+„«Q½Oı','\Z!~äK’ˆ³?ä÷}“','GB-SWD',1,1,'2020-04-04 21:03:14.344',NULL),('n®±n?çJ´§İúğ‰^','\Z!~äK’ˆ³?ä÷}“','GB-ISL',1,1,'2020-04-04 21:03:14.324',NULL),('nÎÒ¼=RJ)¿ğöîåHŸ½','ºvŠQWF¯3í\rK¨6Í','US-PA',1,1,'2020-04-04 21:03:14.372',NULL),('p;üqÀKí…ñ~ÍÃmu?','\Z!~äK’ˆ³?ä÷}“','GB-GLG',1,1,'2020-04-04 21:03:14.352',NULL),('pQ¾†tçB±}uâxãq','ºvŠQWF¯3í\rK¨6Í','US-AK',1,1,'2020-04-04 21:03:14.365',NULL),('pä	cüD*œœs\\Õl`','…ó>,J²˜¾#Øÿa','DE-BY',1,1,'2020-04-04 21:03:14.268',NULL),('qGo~Ì–A™¢`{b}j','\Z!~äK’ˆ³?ä÷}“','GB-LUT',1,1,'2020-04-04 21:03:14.340',NULL),('rÉ£˜¼N{O/I®¯D¸','\Z!~äK’ˆ³?ä÷}“','GB-SWA',1,1,'2020-04-04 21:03:14.359',NULL),('rM¨SæA´§ã­GS…š','\Z!~äK’ˆ³?ä÷}“','GB-WIL',1,1,'2020-04-04 21:03:14.346',NULL),('t\nĞ­ÚO)±¤±à{Œ.','ºvŠQWF¯3í\rK¨6Í','US-GA',1,1,'2020-04-04 21:03:14.366',NULL),('t@ÌpìMwÀÛz2÷Á@','\Z!~äK’ˆ³?ä÷}“','GB-BKM',1,1,'2020-04-04 21:03:14.300',NULL),('tmjªN6…¯W‘\'¢','…ó>,J²˜¾#Øÿa','DE-HB',1,1,'2020-04-04 21:03:14.273',NULL),('tó4Á@ä–J‚mÂ§á','\Z!~äK’ˆ³?ä÷}“','GB-WKF',1,1,'2020-04-04 21:03:14.334',NULL),('tíF/ÕƒGƒ˜¢ °}£\'','\Z!~äK’ˆ³?ä÷}“','GB-MRY',1,1,'2020-04-04 21:03:14.352',NULL),('vLÔ²#ñAÜ¬óòÂ×óğ','\Z!~äK’ˆ³?ä÷}“','GB-NTL',1,1,'2020-04-04 21:03:14.358',NULL),('v¼Ağî4B3µóòÚg,\'8','\Z!~äK’ˆ³?ä÷}“','GB-ABE',1,1,'2020-04-04 21:03:14.349',NULL),('x³WúÆ¼D§¹‘}\Zô\\ƒ','\Z!~äK’ˆ³?ä÷}“','GB-SCB',1,1,'2020-04-04 21:03:14.354',NULL),('y˜3–ÜSBAª„Ñèü8','\Z!~äK’ˆ³?ä÷}“','GB-SLF',1,1,'2020-04-04 21:03:14.332',NULL),('zòdªˆbAY•ç‚ÏÁ\"©','\Z!~äK’ˆ³?ä÷}“','GB-SRY',1,1,'2020-04-04 21:03:14.317',NULL),('{SìzvGC­h?¤1;','\Z!~äK’ˆ³?ä÷}“','GB-PKN',1,1,'2020-04-04 21:03:14.353',NULL),('{àµ”ù?NV‡E{‚ŒÖˆ','\Z!~äK’ˆ³?ä÷}“','GB-WOR',1,1,'2020-04-04 21:03:14.318',NULL),('}§M«°F‚v»Ábh','\Z!~äK’ˆ³?ä÷}“','GB-ORK',1,1,'2020-04-04 21:03:14.353',NULL),('}u¸É/[B¨“	İL¹~','\Z!~äK’ˆ³?ä÷}“','GB-DAL',1,1,'2020-04-04 21:03:14.338',NULL),('f$ïİA‡£¼wnçhbv','\Z!~äK’ˆ³?ä÷}“','GB-STG',1,1,'2020-04-04 21:03:14.355',NULL),('jÜ©FâAY˜TÑvÏªS','ºvŠQWF¯3í\rK¨6Í','US-IN',1,1,'2020-04-04 21:03:14.367',NULL),('Õæûı×A8‰<R8ÔÉ','ºvŠQWF¯3í\rK¨6Í','US-SC',1,1,'2020-04-04 21:03:14.373',NULL),('æ¦HTKEÍ®ësy$§`b','\Z!~äK’ˆ³?ä÷}“','GB-LCE',1,1,'2020-04-04 21:03:14.340',NULL),('‚TßŞ.B½\"Û•rJÙ','\Z!~äK’ˆ³?ä÷}“','GB-WDU',1,1,'2020-04-04 21:03:14.355',NULL),('„t¹uqJ—±°â­Ïd»','\Z!~äK’ˆ³?ä÷}“','GB-HRY',1,1,'2020-04-04 21:03:14.323',NULL),('‡‹±ÁC€}\'‰a¤ó','\Z!~äK’ˆ³?ä÷}“','GB-DEV',1,1,'2020-04-04 21:03:14.304',NULL),('‡ü{ëéB`j€\0ôº÷','\Z!~äK’ˆ³?ä÷}“','GB-RCH',1,1,'2020-04-04 21:03:14.331',NULL),('ˆ\"šHBY½Ë5Ùí','\Z!~äK’ˆ³?ä÷}“','GB-LAN',1,1,'2020-04-04 21:03:14.311',NULL),('ˆYëå6MÕ–­`’\"qáÍ','ºvŠQWF¯3í\rK¨6Í','US-VT',1,1,'2020-04-04 21:03:14.374',NULL),('ˆøAáHÔµ¦\0à†Ä','\Z!~äK’ˆ³?ä÷}“','GB-EDH',1,1,'2020-04-04 21:03:14.351',NULL),('‰pHæåC)>%óú&ù','\Z!~äK’ˆ³?ä÷}“','GB-CLK',1,1,'2020-04-04 21:03:14.349',NULL),('‰ºÜ\r}NM¼˜M­74ú³X','\Z!~äK’ˆ³?ä÷}“','GB-HEF',1,1,'2020-04-04 21:03:14.339',NULL),('‹ÇIöºtI³ºkAñyALÏ','\Z!~äK’ˆ³?ä÷}“','GB-ROT',1,1,'2020-04-04 21:03:14.332',NULL),('ŒTWÌO½Ge´à˜lŒ¬şS','ºvŠQWF¯3í\rK¨6Í','US-RI',1,1,'2020-04-04 21:03:14.372',NULL),('Œ~â¸ÇàFe¥áÛeª<','\Z!~äK’ˆ³?ä÷}“','GB-CON',1,1,'2020-04-04 21:03:14.337',NULL),('>OÔ“J ¼à\Z•‘\r\Z','\Z!~äK’ˆ³?ä÷}“','GB-CHE',1,1,'2020-04-04 21:03:14.337',NULL),('ò£—’ÊN:1{ùa','\Z!~äK’ˆ³?ä÷}“','GB-MTY',1,1,'2020-04-04 21:03:14.357',NULL),('4^ AU² Ö‚‰4\\–','\Z!~äK’ˆ³?ä÷}“','GB-DUR',1,1,'2020-04-04 21:03:14.338',NULL),('ydqhFD…Ù‘€iñŒ','\Z!~äK’ˆ³?ä÷}“','GB-CMN',1,1,'2020-04-04 21:03:14.356',NULL),('‘,…âyIÑƒ‘¯4¾ ·','\Z!~äK’ˆ³?ä÷}“','GB-CAY',1,1,'2020-04-04 21:03:14.356',NULL),('‘\'qxCˆ©.ˆ­š-É','\Z!~äK’ˆ³?ä÷}“','GB-SLK',1,1,'2020-04-04 21:03:14.354',NULL),('’e9áRKL’0¤²ÿ*x','\Z!~äK’ˆ³?ä÷}“','GB-RFW',1,1,'2020-04-04 21:03:14.353',NULL),('’øÀ¬ñ\\@,ŒLİÆş$:','\Z!~äK’ˆ³?ä÷}“','GB-MUL',1,1,'2020-04-04 21:03:14.348',NULL),('“@rk Nf¡³À½í(','\Z!~äK’ˆ³?ä÷}“','GB-CMA',1,1,'2020-04-04 21:03:14.302',NULL),('“‘ÑÙ5:Il¤$­ı:*<\'','\Z!~äK’ˆ³?ä÷}“','GB-FMO',1,1,'2020-04-04 21:03:14.348',NULL),('“²\Z\rÂB#„uÍ9&o/','\Z!~äK’ˆ³?ä÷}“','GB-MAN',1,1,'2020-04-04 21:03:14.331',NULL),('”w˜\ncIÅ«£¯MÎeÄ','…ó>,J²˜¾#Øÿa','DE-ST',1,1,'2020-04-04 21:03:14.285',NULL),('™^š«^B6ªØ&U<½Ü','\Z!~äK’ˆ³?ä÷}“','GB-RIC',1,1,'2020-04-04 21:03:14.326',NULL),('™:«`ÕùD®´ uNï®¡','\Z!~äK’ˆ³?ä÷}“','GB-NTH',1,1,'2020-04-04 21:03:14.313',NULL),('š2ĞÆgZG¨¸ñ@„qj\0','\Z!~äK’ˆ³?ä÷}“','GB-CMD',1,1,'2020-04-04 21:03:14.321',NULL),('šJ‘x˜Mï§YoK,JÎ','\Z!~äK’ˆ³?ä÷}“','GB-POL',1,1,'2020-04-04 21:03:14.342',NULL),('š¼ãvFH§µŞ¿¶åIè','\Z!~äK’ˆ³?ä÷}“','GB-ELN',1,1,'2020-04-04 21:03:14.350',NULL),('œm8­Ü…Ow•™#ˆ&_jz','\Z!~äK’ˆ³?ä÷}“','GB-NLN',1,1,'2020-04-04 21:03:14.341',NULL),('œÖ¦)L•‡ Ø:õÍ¾A','\Z!~äK’ˆ³?ä÷}“','GB-FIF',1,1,'2020-04-04 21:03:14.351',NULL),('ËÌèğ I=½ÑIÉ_œ ¸','\Z!~äK’ˆ³?ä÷}“','GB-IOS',1,1,'2020-04-04 21:03:14.339',NULL),('Ÿ’óíCA’<ùüÕı','ºvŠQWF¯3í\rK¨6Í','US-OK',1,1,'2020-04-04 21:03:14.372',NULL),(' ×ØaI„ª	BæKæP','\Z!~äK’ˆ³?ä÷}“','GB-SAY',1,1,'2020-04-04 21:03:14.354',NULL),('¢r»Š5÷CS•á=õÜ^NM','\Z!~äK’ˆ³?ä÷}“','GB-RCT',1,1,'2020-04-04 21:03:14.359',NULL),('£°ı.Ó™HLˆlê9','\Z!~äK’ˆ³?ä÷}“','GB-WRX',1,1,'2020-04-04 21:03:14.360',NULL),('£ù}SÓ‹GMó£İLØX‚','ºvŠQWF¯3í\rK¨6Í','US-WI',1,1,'2020-04-04 21:03:14.374',NULL),('¤6„e>Htµèû?yÄ¬','\Z!~äK’ˆ³?ä÷}“','GB-WNM',1,1,'2020-04-04 21:03:14.346',NULL),('¤S@ä@iKÚ§4™ÂËzñ','\Z!~äK’ˆ³?ä÷}“','GB-BPL',1,1,'2020-04-04 21:03:14.336',NULL),('¤©7tDN½şñ›k¢L','ºvŠQWF¯3í\rK¨6Í','US-NC',1,1,'2020-04-04 21:03:14.371',NULL),('¥uaÍÅDCœVÍtÌç–`','\Z!~äK’ˆ³?ä÷}“','GB-WOK',1,1,'2020-04-04 21:03:14.346',NULL),('¦t¯E\\±Ñ2)£Ñ','ºvŠQWF¯3í\rK¨6Í','US-DE',1,1,'2020-04-04 21:03:14.366',NULL),('¦	ª­êgES‘çU÷Œz','\Z!~äK’ˆ³?ä÷}“','GB-KWL',1,1,'2020-04-04 21:03:14.330',NULL),('©&F3>Gb°iÂŞ\ZoÍ','\Z!~äK’ˆ³?ä÷}“','GB-DEN',1,1,'2020-04-04 21:03:14.357',NULL),('®ïï®L:•$Æ¾ê','\Z!~äK’ˆ³?ä÷}“','GB-THR',1,1,'2020-04-04 21:03:14.345',NULL),('®Q£êö.Iˆ¨ãµØEP','\Z!~äK’ˆ³?ä÷}“','GB-WFT',1,1,'2020-04-04 21:03:14.327',NULL),('±±Ã„ñ£A¤l¬MÏ\"ƒ','\Z!~äK’ˆ³?ä÷}“','GB-WLL',1,1,'2020-04-04 21:03:14.334',NULL),('²T’}OË™xFg±<‹','\Z!~äK’ˆ³?ä÷}“','GB-GBN',1,1,'2020-04-04 21:03:14.297',NULL),('²>æÕJªOwºÊè‚õ»','ºvŠQWF¯3í\rK¨6Í','US-MO',1,1,'2020-04-04 21:03:14.370',NULL),('³˜Lİ—I=¤¶Ô¯pµw','\Z!~äK’ˆ³?ä÷}“','GB-BGW',1,1,'2020-04-04 21:03:14.355',NULL),('³µ£Øì0B[»ŒÙ±<s','\Z!~äK’ˆ³?ä÷}“','GB-SND',1,1,'2020-04-04 21:03:14.333',NULL),('´|2ÑMº[¯õâ$µ','\Z!~äK’ˆ³?ä÷}“','GB-DER',1,1,'2020-04-04 21:03:14.338',NULL),('µÅr‰³üA×·T›’ö´Êë','\Z!~äK’ˆ³?ä÷}“','GB-ABC',1,1,'2020-04-04 21:03:14.347',NULL),('¶Á^¬ªA\"°øºCHùñ','\Z!~äK’ˆ³?ä÷}“','GB-DRS',1,1,'2020-04-04 21:03:14.347',NULL),('·S7İHRŠ’èß¹9­','\Z!~äK’ˆ³?ä÷}“','GB-WLS',1,1,'2020-04-04 21:03:14.296',NULL),('¸@Áı“A¼WøEò<®','\Z!~äK’ˆ³?ä÷}“','GB-LDS',1,1,'2020-04-04 21:03:14.330',NULL),('¸´äoHù¨Dç†uf:•','\Z!~äK’ˆ³?ä÷}“','GB-OLD',1,1,'2020-04-04 21:03:14.331',NULL),('¸în­—+C1Š)A‰C¦!«','\Z!~äK’ˆ³?ä÷}“','GB-ANS',1,1,'2020-04-04 21:03:14.349',NULL),('ºK}¸ËJA±5)á¶0N','\Z!~äK’ˆ³?ä÷}“','GB-MON',1,1,'2020-04-04 21:03:14.358',NULL),('º\ZÍ\n7|F ½—QU?\05','\Z!~äK’ˆ³?ä÷}“','GB-CCG',1,1,'2020-04-04 21:03:14.347',NULL),('º,ÔÂZâKğ¦ ŞAñ¯*,','\Z!~äK’ˆ³?ä÷}“','GB-MDW',1,1,'2020-04-04 21:03:14.340',NULL),('º¬®—ˆ@¥¶é;XôeP','\Z!~äK’ˆ³?ä÷}“','GB-GWN',1,1,'2020-04-04 21:03:14.357',NULL),('ºìáèEÄI‡…º+¬~€d','\Z!~äK’ˆ³?ä÷}“','GB-NSM',1,1,'2020-04-04 21:03:14.341',NULL),('»ı0]@ÛC@´$ºés','…ó>,J²˜¾#Øÿa','DE-BB',1,1,'2020-04-04 21:03:14.271',NULL),('¼}Â‘]bM„Š¤½æA0Æ','ºvŠQWF¯3í\rK¨6Í','US-KY',1,1,'2020-04-04 21:03:14.368',NULL),('¼ûät?Ã@l– ¶$ÿõ','…ó>,J²˜¾#Øÿa','DE-NW',1,1,'2020-04-04 21:03:14.280',NULL),('¾\0Ì­şB-…+Oãr\"İ','\Z!~äK’ˆ³?ä÷}“','GB-WLV',1,1,'2020-04-04 21:03:14.335',NULL),('¾»;tÜK/­‹¨>b4\Z','…ó>,J²˜¾#Øÿa','DE-HE',1,1,'2020-04-04 21:03:14.275',NULL),('¿#7HÉGô‰Ksš','ºvŠQWF¯3í\rK¨6Í','US-MD',1,1,'2020-04-04 21:03:14.369',NULL),('ÀUÕ\r6>GJàÅM¢C½¶','ºvŠQWF¯3í\rK¨6Í','US-FL',1,1,'2020-04-04 21:03:14.366',NULL),('Âq­pÏAõ¹H÷}À×','\Z!~äK’ˆ³?ä÷}“','GB-WND',1,1,'2020-04-04 21:03:14.327',NULL),('Ã+20–¬E\'=‘äC8','\Z!~äK’ˆ³?ä÷}“','GB-BOL',1,1,'2020-04-04 21:03:14.328',NULL),('ÄQÊ:*G’º@f†ã(','\Z!~äK’ˆ³?ä÷}“','GB-WLN',1,1,'2020-04-04 21:03:14.355',NULL),('Ä‘Æº3Lç¡Ë|ÿ$÷6','\Z!~äK’ˆ³?ä÷}“','GB-NEL',1,1,'2020-04-04 21:03:14.341',NULL),('Ä¿(%ÎäG÷‡A°ª!p£Ş','\Z!~äK’ˆ³?ä÷}“','GB-DND',1,1,'2020-04-04 21:03:14.350',NULL),('Å &¯,I°¢›îïL“¸','\Z!~äK’ˆ³?ä÷}“','GB-HNS',1,1,'2020-04-04 21:03:14.324',NULL),('ÆJÒ?N·¶Z˜üBT','\Z!~äK’ˆ³?ä÷}“','GB-GLS',1,1,'2020-04-04 21:03:14.308',NULL),('Æ’z>=G«<.µ*X¸','\Z!~äK’ˆ³?ä÷}“','GB-TAM',1,1,'2020-04-04 21:03:14.334',NULL),('ÆºıùÛC|›;\Z}ãÙ:','\Z!~äK’ˆ³?ä÷}“','GB-NMD',1,1,'2020-04-04 21:03:14.348',NULL),('È¥k°–AÎŸ+şÊG¥','ºvŠQWF¯3í\rK¨6Í','US-NM',1,1,'2020-04-04 21:03:14.371',NULL),('ÉÅÄ®î“Nİ­`©:Æ{','ºvŠQWF¯3í\rK¨6Í','US-ND',1,1,'2020-04-04 21:03:14.371',NULL),('Ë¯P²Å°G8„ÿşú‘®','\Z!~äK’ˆ³?ä÷}“','GB-KHL',1,1,'2020-04-04 21:03:14.339',NULL),('ÌF+„BZ¡rÛ/Tö¶©','\Z!~äK’ˆ³?ä÷}“','GB-FLN',1,1,'2020-04-04 21:03:14.357',NULL),('Í}§oOO–®IÀqœÖ','\Z!~äK’ˆ³?ä÷}“','GB-ANN',1,1,'2020-04-04 21:03:14.346',NULL),('ÍÃ&Œ`–LN­ÓŞÚ«”¦','\Z!~äK’ˆ³?ä÷}“','GB-NTT',1,1,'2020-04-04 21:03:14.314',NULL),('ÎgT¿%fJËY9)÷~æ','\Z!~äK’ˆ³?ä÷}“','GB-CRF',1,1,'2020-04-04 21:03:14.356',NULL),('Ï¾ø\'ØÒH	’A*G´°','\Z!~äK’ˆ³?ä÷}“','GB-EDU',1,1,'2020-04-04 21:03:14.350',NULL),('ÏÃô“‰O›°Ü£v›\Z\n','\Z!~äK’ˆ³?ä÷}“','GB-CLD',1,1,'2020-04-04 21:03:14.329',NULL),('Ñ‚×³q†@\n€ĞĞ@i©P ','\Z!~äK’ˆ³?ä÷}“','GB-LEC',1,1,'2020-04-04 21:03:14.311',NULL),('ÒÕ+S@¥›]‹EâlÆY','ºvŠQWF¯3í\rK¨6Í','US-CT',1,1,'2020-04-04 21:03:14.366',NULL),('Õ+ ê£ìC–…vÑ$}v','ºvŠQWF¯3í\rK¨6Í','US-WV',1,1,'2020-04-04 21:03:14.374',NULL),('ÕG“Å?@6ŒZØ˜¿â','\Z!~äK’ˆ³?ä÷}“','GB-HCK',1,1,'2020-04-04 21:03:14.322',NULL),('Õ½ùühEé·‰î)İü!','ºvŠQWF¯3í\rK¨6Í','US-SD',1,1,'2020-04-04 21:03:14.373',NULL),('Ö50É×§Ll¬{v£îá“­','\Z!~äK’ˆ³?ä÷}“','GB-STH',1,1,'2020-04-04 21:03:14.344',NULL),('Öü8ˆó˜O­…«ù÷Œšğs','\Z!~äK’ˆ³?ä÷}“','GB-BEX',1,1,'2020-04-04 21:03:14.320',NULL),('Úmv2²\ZIØ´ŸÌöŒ^','\Z!~äK’ˆ³?ä÷}“','GB-HAM',1,1,'2020-04-04 21:03:14.308',NULL),('ÚÁ\ráæA:ŠOç*=ÅLJ','\Z!~äK’ˆ³?ä÷}“','GB-HAV',1,1,'2020-04-04 21:03:14.323',NULL),('ÛÍºÑ@rœVzµM]´','\Z!~äK’ˆ³?ä÷}“','GB-KTT',1,1,'2020-04-04 21:03:14.324',NULL),('Û­h<~UM„¿_êİ’ª‡','ºvŠQWF¯3í\rK¨6Í','US-LA',1,1,'2020-04-04 21:03:14.368',NULL),('Ü5;KÓáF_«Áu%µ¹','ºvŠQWF¯3í\rK¨6Í','US-CA',1,1,'2020-04-04 21:03:14.365',NULL),('İ¶˜¡åIÏÈä»Z3','\Z!~äK’ˆ³?ä÷}“','GB-ERW',1,1,'2020-04-04 21:03:14.351',NULL),('ŞÊ(RCŠ¸¸\"a¿ëI','\Z!~äK’ˆ³?ä÷}“','GB-HLD',1,1,'2020-04-04 21:03:14.352',NULL),('ß.e5œJ ¢u¨@ÛÃÀ’','\Z!~äK’ˆ³?ä÷}“','GB-SOS',1,1,'2020-04-04 21:03:14.344',NULL),('ß¼M\\jkO¬@…º/öGØ','\Z!~äK’ˆ³?ä÷}“','GB-WRT',1,1,'2020-04-04 21:03:14.345',NULL),('åL\'“ÌîG…¬€zçÕ÷0','\Z!~äK’ˆ³?ä÷}“','GB-TRF',1,1,'2020-04-04 21:03:14.334',NULL),('å™\"Ä\"DêŸ#\r¬\"T\\s','…ó>,J²˜¾#Øÿa','DE-RP',1,1,'2020-04-04 21:03:14.281',NULL),('è3˜´V‡N‚Óp<÷','ºvŠQWF¯3í\rK¨6Í','US-NJ',1,1,'2020-04-04 21:03:14.371',NULL),('ès¤&·KªœÇ¯X®n','\Z!~äK’ˆ³?ä÷}“','GB-TOF',1,1,'2020-04-04 21:03:14.359',NULL),('èúFu§F”‘Úru`½\"','\Z!~äK’ˆ³?ä÷}“','GB-KEC',1,1,'2020-04-04 21:03:14.324',NULL),('ëœÎ@åÂN·¸mUXçW','\Z!~äK’ˆ³?ä÷}“','GB-NAY',1,1,'2020-04-04 21:03:14.353',NULL),('ë½{ÅBĞOÇ„Mm\"Tª4ô','\Z!~äK’ˆ³?ä÷}“','GB-PTE',1,1,'2020-04-04 21:03:14.342',NULL),('ìúr›CÙ‘üÕ‰Åª','\Z!~äK’ˆ³?ä÷}“','GB-EAL',1,1,'2020-04-04 21:03:14.321',NULL),('ì<xåÆ;A>¬!eKr\"','ºvŠQWF¯3í\rK¨6Í','US-WA',1,1,'2020-04-04 21:03:14.374',NULL),('í\0^÷O]1bû‚EV','\Z!~äK’ˆ³?ä÷}“','GB-RCC',1,1,'2020-04-04 21:03:14.343',NULL),('íÁì¨äEKF–ô¬M¾É3','\Z!~äK’ˆ³?ä÷}“','GB-LIN',1,1,'2020-04-04 21:03:14.312',NULL),('î¼‹×u}I·4àYW5:','\Z!~äK’ˆ³?ä÷}“','GB-HRW',1,1,'2020-04-04 21:03:14.323',NULL),('ï´6ƒ=J¶ƒ¨Ğk ~ã','\Z!~äK’ˆ³?ä÷}“','GB-HPL',1,1,'2020-04-04 21:03:14.339',NULL),('ïøÌ’N‘Iğª~\0ì¥¾','ºvŠQWF¯3í\rK¨6Í','US-AZ',1,1,'2020-04-04 21:03:14.365',NULL),('ğq-¾\nkA.±ä«lF±ù','…ó>,J²˜¾#Øÿa','DE-NI',1,1,'2020-04-04 21:03:14.277',NULL),('ğ{+É3´Aü¤JKc5¶Ú','\Z!~äK’ˆ³?ä÷}“','GB-OXF',1,1,'2020-04-04 21:03:14.314',NULL),('ñEê¶qCB´y~]úÈ','\Z!~äK’ˆ³?ä÷}“','GB-BNS',1,1,'2020-04-04 21:03:14.327',NULL),('ñûƒ§nRM$˜:Ø\Z^Ğ','ºvŠQWF¯3í\rK¨6Í','US-AR',1,1,'2020-04-04 21:03:14.365',NULL),('òÑm[´K²‚ÄêÎI5Ùì','\Z!~äK’ˆ³?ä÷}“','GB-RUT',1,1,'2020-04-04 21:03:14.343',NULL),('ò4D™h%A/¾ƒg÷E·Ê','\Z!~äK’ˆ³?ä÷}“','GB-HAL',1,1,'2020-04-04 21:03:14.338',NULL),('ò´ÃhàE0¼ÁßÒ\'9Š','\Z!~äK’ˆ³?ä÷}“','GB-BST',1,1,'2020-04-04 21:03:14.337',NULL),('óZ\\\r°J—Š\'ë­SØ','\Z!~äK’ˆ³?ä÷}“','GB-BFS',1,1,'2020-04-04 21:03:14.347',NULL),('óÕ#ršÈK¿‰ß-Ÿ«EØ','\Z!~äK’ˆ³?ä÷}“','GB-NWM',1,1,'2020-04-04 21:03:14.325',NULL),('õ;T¦‘G‚|êJí¿Òœ','\Z!~äK’ˆ³?ä÷}“','GB-LBH',1,1,'2020-04-04 21:03:14.325',NULL),('÷@@/`·Læû¡v\"Æ','\Z!~äK’ˆ³?ä÷}“','GB-NTY',1,1,'2020-04-04 21:03:14.331',NULL),('÷wG¢ iG\rœ±%vÅ EÌ','\Z!~äK’ˆ³?ä÷}“','GB-LEW',1,1,'2020-04-04 21:03:14.325',NULL),('÷ƒLA{@7½z`y>Ö','\Z!~äK’ˆ³?ä÷}“','GB-LBC',1,1,'2020-04-04 21:03:14.348',NULL),('ø‰0[jÉA°œqû‰¢','\Z!~äK’ˆ³?ä÷}“','GB-COV',1,1,'2020-04-04 21:03:14.329',NULL),('ø³]nzAFoƒîR?d†ã','\Z!~äK’ˆ³?ä÷}“','GB-BRC',1,1,'2020-04-04 21:03:14.336',NULL),('ùA˜\ZJ‹MÚ¿K‚ÏZ»Æl','…ó>,J²˜¾#Øÿa','DE-SH',1,1,'2020-04-04 21:03:14.287',NULL),('ùD²ˆfBv¿úÆµÍğƒ','\Z!~äK’ˆ³?ä÷}“','GB-EAY',1,1,'2020-04-04 21:03:14.350',NULL),('ùb=ãÑçC_»á¥WÍ]A','\Z!~äK’ˆ³?ä÷}“','GB-NBL',1,1,'2020-04-04 21:03:14.341',NULL),('úñ%ªûF$”‚2ÔñÄ&','\Z!~äK’ˆ³?ä÷}“','GB-POR',1,1,'2020-04-04 21:03:14.342',NULL),('ûo}‘WXG£¹ß»=´u','\Z!~äK’ˆ³?ä÷}“','GB-NLK',1,1,'2020-04-04 21:03:14.353',NULL),('ıÄYgûDF€Áú‚³-','\Z!~äK’ˆ³?ä÷}“','GB-EAW',1,1,'2020-04-04 21:03:14.297',NULL),('ÿ[Õ§¿À@‚OoñQ-Ñ','ºvŠQWF¯3í\rK¨6Í','US-DC',1,1,'2020-04-04 21:03:14.375',NULL),('ÿáÅJIş«a)áE','\Z!~äK’ˆ³?ä÷}“','GB-ZET',1,1,'2020-04-04 21:03:14.354',NULL);
-/*!40000 ALTER TABLE `country_state` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `country_state_translation`
---
-
-DROP TABLE IF EXISTS `country_state_translation`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `country_state_translation` (
-  `country_state_id` binary(16) NOT NULL,
-  `language_id` binary(16) NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`country_state_id`,`language_id`),
-  KEY `fk.country_state_translation.language_id` (`language_id`),
-  CONSTRAINT `fk.country_state_translation.country_state_id` FOREIGN KEY (`country_state_id`) REFERENCES `country_state` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.country_state_translation.language_id` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `json.country_state_translation.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `country_state_translation`
---
-
-LOCK TABLES `country_state_translation` WRITE;
-/*!40000 ALTER TABLE `country_state_translation` DISABLE KEYS */;
-INSERT INTO `country_state_translation` VALUES ('\0ßZã4G¿°?ºpÑ*','/»_ââšMpªXTÎ|ãâ','Dumfries and Galloway',NULL,'2020-04-04 21:03:14.350',NULL),('g8¥ÔOÍ¾ÃB!ŸH‚','/»_ââšMpªXTÎ|ãâ','Berlin',NULL,'2020-04-04 21:03:14.270',NULL),('g8¥ÔOÍ¾ÃB!ŸH‚','‹/pó¡L†…Mã4Ó8','Berlin',NULL,'2020-04-04 21:03:14.270',NULL),('…¤!ÌG¹€)?ç`Á','/»_ââšMpªXTÎ|ãâ','New Hampshire',NULL,'2020-04-04 21:03:14.370',NULL),('­>ÜmA0£XÆmBÇ¾\Z','/»_ââšMpªXTÎ|ãâ','Massachusetts',NULL,'2020-04-04 21:03:14.369',NULL),('ÿM*IdH„³NOÔ\Z·','/»_ââšMpªXTÎ|ãâ','Aberdeenshire',NULL,'2020-04-04 21:03:14.349',NULL),('làÄ¼QA:³zÅ”ù½õ','/»_ââšMpªXTÎ|ãâ','Bradford',NULL,'2020-04-04 21:03:14.328',NULL),(')C+èMv™º†2íá$','/»_ââšMpªXTÎ|ãâ','Scotland',NULL,'2020-04-04 21:03:14.295',NULL),('’Áä8ÅH/…±\"I0ê­Á','/»_ââšMpªXTÎ|ãâ','Kirklees',NULL,'2020-04-04 21:03:14.330',NULL),('%UÉÏF‡Rªë`­›','/»_ââšMpªXTÎ|ãâ','Stockport',NULL,'2020-04-04 21:03:14.333',NULL),('=Ã_ÉI*¡r¾5İó\n\\','/»_ââšMpªXTÎ|ãâ','West Sussex',NULL,'2020-04-04 21:03:14.318',NULL),('%–	·ËA²¾¸Ö5Óz«','/»_ââšMpªXTÎ|ãâ','Minnesota',NULL,'2020-04-04 21:03:14.369',NULL),('Œ|mA1§M®4,°','/»_ââšMpªXTÎ|ãâ','Isle of Wight',NULL,'2020-04-04 21:03:14.339',NULL),('	3–_”Mù´Ä#ºw¼â~','/»_ââšMpªXTÎ|ãâ','Birmingham',NULL,'2020-04-04 21:03:14.328',NULL),('	Uê&ä¯Aİ•Vi€V+Ğ','/»_ââšMpªXTÎ|ãâ','York',NULL,'2020-04-04 21:03:14.346',NULL),('=\n(VD½\'¤ZÏ>…','/»_ââšMpªXTÎ|ãâ','Mississippi',NULL,'2020-04-04 21:03:14.369',NULL),('øßÉ‚ïOô«VÒ3YÛ','/»_ââšMpªXTÎ|ãâ','Baden-WÃ¼rttemberg',NULL,'2020-04-04 21:03:14.266',NULL),('øßÉ‚ïOô«VÒ3YÛ','‹/pó¡L†…Mã4Ó8','Baden-WÃ¼rttemberg',NULL,'2020-04-04 21:03:14.266',NULL),('ş~MKÅE$º^a‘E½G','/»_ââšMpªXTÎ|ãâ','Wyoming',NULL,'2020-04-04 21:03:14.375',NULL),('¶)9Iğ•@†æ','/»_ââšMpªXTÎ|ãâ','Alabama',NULL,'2020-04-04 21:03:14.365',NULL),(')ë§vaO,3¬ér³1i','/»_ââšMpªXTÎ|ãâ','Maine',NULL,'2020-04-04 21:03:14.368',NULL),('\rG\0ûí¬F\0•8P«†gg4','/»_ââšMpªXTÎ|ãâ','Newcastle upon Tyne',NULL,'2020-04-04 21:03:14.331',NULL),('\rş±£õIPµœ‹š™Üm*','/»_ââšMpªXTÎ|ãâ','Thuringia',NULL,'2020-04-04 21:03:14.288',NULL),('\rş±£õIPµœ‹š™Üm*','‹/pó¡L†…Mã4Ó8','Thuringia',NULL,'2020-04-04 21:03:14.288',NULL),('6ÖãÃUFt­›yóÃê','/»_ââšMpªXTÎ|ãâ','South Gloucestershire',NULL,'2020-04-04 21:03:14.343',NULL),('×Ç=A’§­X 3¡','/»_ââšMpªXTÎ|ãâ','Hammersmith and Fulham',NULL,'2020-04-04 21:03:14.322',NULL),('õ?0Gb¡a~ùBù','/»_ââšMpªXTÎ|ãâ','Cheshire West and Chester',NULL,'2020-04-04 21:03:14.337',NULL),('–1ˆˆ@Tš.q©ºT','/»_ââšMpªXTÎ|ãâ','Midlothian',NULL,'2020-04-04 21:03:14.352',NULL),('ŠoŠ+Ld­Äõäm','/»_ââšMpªXTÎ|ãâ','Doncaster',NULL,'2020-04-04 21:03:14.329',NULL),('À8ˆ|F~¢#ªä9£[ı','/»_ââšMpªXTÎ|ãâ','Saxony',NULL,'2020-04-04 21:03:14.284',NULL),('À8ˆ|F~¢#ªä9£[ı','‹/pó¡L†…Mã4Ó8','Saxony',NULL,'2020-04-04 21:03:14.284',NULL),('KS$cO£­8WŞÃkçØ','/»_ââšMpªXTÎ|ãâ','Shropshire',NULL,'2020-04-04 21:03:14.343',NULL),('åsi`O›üÄ‹(/','/»_ââšMpªXTÎ|ãâ','Hawaii',NULL,'2020-04-04 21:03:14.367',NULL),('FNñ\Z9@–¦íú™Iù','/»_ââšMpªXTÎ|ãâ','Essex',NULL,'2020-04-04 21:03:14.307',NULL),('przÕLR«”Ò5Ö‘f','/»_ââšMpªXTÎ|ãâ','Norfolk',NULL,'2020-04-04 21:03:14.312',NULL),('\Z3}âG€@â°=Ä¾ı£','/»_ââšMpªXTÎ|ãâ','Westminster',NULL,'2020-04-04 21:03:14.327',NULL),('>õ}(*O¹©’=O¹®','/»_ââšMpªXTÎ|ãâ','Bridgend',NULL,'2020-04-04 21:03:14.355',NULL),('U¡r±ÆAo°Ãæ^Ú.N','/»_ââšMpªXTÎ|ãâ','Croydon',NULL,'2020-04-04 21:03:14.321',NULL),('Áâş›Aì²&×ÀxÂ','/»_ââšMpªXTÎ|ãâ','Northern Ireland',NULL,'2020-04-04 21:03:14.294',NULL),(':üÅLJ™×KÆB\"5','/»_ââšMpªXTÎ|ãâ','Oregon',NULL,'2020-04-04 21:03:14.372',NULL),('tûeK¤N¶´Jt…ªıÏ','/»_ââšMpªXTÎ|ãâ','Solihull',NULL,'2020-04-04 21:03:14.333',NULL),('},òaM÷…²ÛŞÚ&.^','/»_ââšMpªXTÎ|ãâ','Mecklenburg-Western Pomerania',NULL,'2020-04-04 21:03:14.278',NULL),('},òaM÷…²ÛŞÚ&.^','‹/pó¡L†…Mã4Ó8','Mecklenburg-Western Pomerania',NULL,'2020-04-04 21:03:14.278',NULL),('şCf\0CHÍ¾Åb,ìë\n','/»_ââšMpªXTÎ|ãâ','Newport',NULL,'2020-04-04 21:03:14.358',NULL),(' Eê%dKw¶è²ââ|k','/»_ââšMpªXTÎ|ãâ','London, City of',NULL,'2020-04-04 21:03:14.318',NULL),(' R¿©ŸCÈ­:®A’£Kü','/»_ââšMpªXTÎ|ãâ','Kansas',NULL,'2020-04-04 21:03:14.368',NULL),(' ë‹®Osˆ¦¹«T‘¦','/»_ââšMpªXTÎ|ãâ','Liverpool',NULL,'2020-04-04 21:03:14.330',NULL),('$Qú.N@Fôº²–UI²À','/»_ââšMpªXTÎ|ãâ','Suffolk',NULL,'2020-04-04 21:03:14.316',NULL),('$†79]CR›jšuSíA','/»_ââšMpªXTÎ|ãâ','Isle of Anglesey',NULL,'2020-04-04 21:03:14.357',NULL),('%÷şP] B¸hnıòúÔ ','/»_ââšMpªXTÎ|ãâ','West Berkshire',NULL,'2020-04-04 21:03:14.345',NULL),('&}ãt K¶¸æÆ*ãÒ','/»_ââšMpªXTÎ|ãâ','East Riding of Yorkshire',NULL,'2020-04-04 21:03:14.338',NULL),('\'g-K0…C•×f	y\\r”','/»_ââšMpªXTÎ|ãâ','United Kingdom',NULL,'2020-04-04 21:03:14.299',NULL),('\'{±×|O’²œ//ôE›°','/»_ââšMpªXTÎ|ãâ','Hillingdon',NULL,'2020-04-04 21:03:14.323',NULL),(')¦½íy~A`•º	C+ÙSá','/»_ââšMpªXTÎ|ãâ','Barking and Dagenham',NULL,'2020-04-04 21:03:14.319',NULL),('+ë7°’I:™XSl½wË','/»_ââšMpªXTÎ|ãâ','Stoke-on-Trent',NULL,'2020-04-04 21:03:14.344',NULL),('-nK*ğ„JÒ‹¯•I•Š','/»_ââšMpªXTÎ|ãâ','Inverclyde',NULL,'2020-04-04 21:03:14.352',NULL),('.&ØmbÌEË­Å°…?\\^','/»_ââšMpªXTÎ|ãâ','Redbridge',NULL,'2020-04-04 21:03:14.326',NULL),('.<—G_DÉ©‚¸×ºS¡','/»_ââšMpªXTÎ|ãâ','Pembrokeshire',NULL,'2020-04-04 21:03:14.358',NULL),('.”iš)H/—‡İP_‰','/»_ââšMpªXTÎ|ãâ','Idaho',NULL,'2020-04-04 21:03:14.367',NULL),('.Õä4OT£œáîŞ‰[~','/»_ââšMpªXTÎ|ãâ','Bath and North East Somerset',NULL,'2020-04-04 21:03:14.335',NULL),('/XhÏFC\0ªïjN«Û¥G','/»_ââšMpªXTÎ|ãâ','Wirral',NULL,'2020-04-04 21:03:14.335',NULL),('014k)IÍ¸›åA&ğHs','/»_ââšMpªXTÎ|ãâ','England',NULL,'2020-04-04 21:03:14.293',NULL),('0ĞsÓ@˜­Ò™V¢ÔeŒ','/»_ââšMpªXTÎ|ãâ','East Sussex',NULL,'2020-04-04 21:03:14.306',NULL),('1òõaKGW»‡%>÷¢1','/»_ââšMpªXTÎ|ãâ','Ohio',NULL,'2020-04-04 21:03:14.372',NULL),('11	3ìHµüˆt.,É¤','/»_ââšMpªXTÎ|ãâ','Plymouth',NULL,'2020-04-04 21:03:14.342',NULL),('1°åÀk0J ˜4çãÊU','/»_ââšMpªXTÎ|ãâ','Michigan',NULL,'2020-04-04 21:03:14.369',NULL),('2‡°}ÖB’“²¹,ÿF','/»_ââšMpªXTÎ|ãâ','Kent',NULL,'2020-04-04 21:03:14.310',NULL),('3IK·$ÔC¶g°\\Íõ»','/»_ââšMpªXTÎ|ãâ','Conwy',NULL,'2020-04-04 21:03:14.356',NULL),('3¶:¦KWBà·ÆÓÇ\'º°','/»_ââšMpªXTÎ|ãâ','Mid and East Antrim',NULL,'2020-04-04 21:03:14.348',NULL),('4aÕKáN”ê%ä','/»_ââšMpªXTÎ|ãâ','Sefton',NULL,'2020-04-04 21:03:14.332',NULL),('5ş>l¼Cp¹Å*ı$”M','/»_ââšMpªXTÎ|ãâ','Staffordshire',NULL,'2020-04-04 21:03:14.315',NULL),('6õ–æ{nIæ§¢şæiöaõ','/»_ââšMpªXTÎ|ãâ','Reading',NULL,'2020-04-04 21:03:14.342',NULL),('7rU\rœfHğ«SÍİêš','/»_ââšMpªXTÎ|ãâ','Telford and Wrekin',NULL,'2020-04-04 21:03:14.345',NULL),('7İfA2Kë‹SÍ\r¢\0¹','/»_ââšMpªXTÎ|ãâ','Central Bedfordshire',NULL,'2020-04-04 21:03:14.337',NULL),('8ÇFıM¼¤QšßC\Z','/»_ââšMpªXTÎ|ãâ','Brent',NULL,'2020-04-04 21:03:14.320',NULL),('9Ò©–6 H>Œ»$x«Arˆ','/»_ââšMpªXTÎ|ãâ','Saarland',NULL,'2020-04-04 21:03:14.283',NULL),('9Ò©–6 H>Œ»$x«Arˆ','‹/pó¡L†…Mã4Ó8','Saarland',NULL,'2020-04-04 21:03:14.283',NULL),(':Ã,$,M·¦È‘[°uâ','/»_ââšMpªXTÎ|ãâ','Blackburn with Darwen',NULL,'2020-04-04 21:03:14.335',NULL),(';Â2ÓmB7‰«ö±zw•','/»_ââšMpªXTÎ|ãâ','Stockton-on-Tees',NULL,'2020-04-04 21:03:14.344',NULL),('<Œ´â6VG·–Û”O$°i','/»_ââšMpªXTÎ|ãâ','Bournemouth',NULL,'2020-04-04 21:03:14.336',NULL),('=‚ s¼5AÀ¤Ó3¾W€“','/»_ââšMpªXTÎ|ãâ','Argyll and Bute',NULL,'2020-04-04 21:03:14.349',NULL),('>şz=ìN\rê°J.]ë','/»_ââšMpªXTÎ|ãâ','Nottingham',NULL,'2020-04-04 21:03:14.341',NULL),('?µq¯AA«”¯Ôä»áNV','/»_ââšMpªXTÎ|ãâ','Bromley',NULL,'2020-04-04 21:03:14.320',NULL),('@¶ÔÛ—«O­–ª¡+‰BYæ','/»_ââšMpªXTÎ|ãâ','Southwark',NULL,'2020-04-04 21:03:14.326',NULL),('A’\nÉD&D[“íÊ½]Æä‡','/»_ââšMpªXTÎ|ãâ','Ceredigion',NULL,'2020-04-04 21:03:14.356',NULL),('Böh•KÙ˜ı¦(0÷;','/»_ââšMpªXTÎ|ãâ','Sandwell',NULL,'2020-04-04 21:03:14.332',NULL),('C5ªœ\\@›®ûÇØV6','/»_ââšMpªXTÎ|ãâ','Hamburg',NULL,'2020-04-04 21:03:14.274',NULL),('C5ªœ\\@›®ûÇØV6','‹/pó¡L†…Mã4Ó8','Hamburg',NULL,'2020-04-04 21:03:14.274',NULL),('D‚€ÅRÈMø·Fğ›‘`L','/»_ââšMpªXTÎ|ãâ','Dudley',NULL,'2020-04-04 21:03:14.329',NULL),('Fñ©u\"HğŒØÁeeY$¾','/»_ââšMpªXTÎ|ãâ','Utah',NULL,'2020-04-04 21:03:14.373',NULL),('H/hÂ„ÔH¥ª\r`‰›','/»_ââšMpªXTÎ|ãâ','Vale of Glamorgan, The',NULL,'2020-04-04 21:03:14.359',NULL),('HRóŠßõCÎ¥ä:‚H%pO','/»_ââšMpªXTÎ|ãâ','Middlesbrough',NULL,'2020-04-04 21:03:14.340',NULL),('Häş‹OKã•N¯ø¤\0L','/»_ââšMpªXTÎ|ãâ','Warwickshire',NULL,'2020-04-04 21:03:14.317',NULL),('I#ö\\¿J‘ªÛB!¦ã}','/»_ââšMpªXTÎ|ãâ','Wigan',NULL,'2020-04-04 21:03:14.334',NULL),('J§dÒjoK/%œÕÌ','/»_ââšMpªXTÎ|ãâ','Tennessee',NULL,'2020-04-04 21:03:14.373',NULL),('Jã‘g®’L)„û:?Yk\"”','/»_ââšMpªXTÎ|ãâ','Virginia',NULL,'2020-04-04 21:03:14.374',NULL),('M/‹\\İÛNí³…Aúğ×','/»_ââšMpªXTÎ|ãâ','Nebraska',NULL,'2020-04-04 21:03:14.370',NULL),('N‚Ü.hND•}¸Ë3wA','/»_ââšMpªXTÎ|ãâ','Greenwich',NULL,'2020-04-04 21:03:14.322',NULL),('NÌF*ï@KÅŸ-«êHÚÀ','/»_ââšMpªXTÎ|ãâ','Colorado',NULL,'2020-04-04 21:03:14.366',NULL),('OhVx*CJ³×¹Î-Û','/»_ââšMpªXTÎ|ãâ','Sheffield',NULL,'2020-04-04 21:03:14.333',NULL),('Pe×ğÙZCI³_\'‘qYèP','/»_ââšMpªXTÎ|ãâ','Hertfordshire',NULL,'2020-04-04 21:03:14.309',NULL),('P°ØJf‹\ZåŞWqa)','/»_ââšMpªXTÎ|ãâ','Derbyshire',NULL,'2020-04-04 21:03:14.302',NULL),('Q”‰ªô}Nw´ú›¹¸˜—','/»_ââšMpªXTÎ|ãâ','Brighton and Hove',NULL,'2020-04-04 21:03:14.336',NULL),('R§C\0}OşŠ¡.6\'ñÔ,','/»_ââšMpªXTÎ|ãâ','Illinois',NULL,'2020-04-04 21:03:14.367',NULL),('S»n¸i@…‡]RTìp(z','/»_ââšMpªXTÎ|ãâ','Milton Keynes',NULL,'2020-04-04 21:03:14.340',NULL),('ShÈ6©AĞ§îvú\\m´','/»_ââšMpªXTÎ|ãâ','Eilean Siar',NULL,'2020-04-04 21:03:14.351',NULL),('SÃJøÎEß¿¶ÌÓÈAp','/»_ââšMpªXTÎ|ãâ','Cambridgeshire',NULL,'2020-04-04 21:03:14.301',NULL),('SÅ—­zN2ˆQ¾uÈŠ^','/»_ââšMpªXTÎ|ãâ','Gateshead',NULL,'2020-04-04 21:03:14.329',NULL),('Uf«øË-IK€PkJŠúIS','/»_ââšMpªXTÎ|ãâ','Falkirk',NULL,'2020-04-04 21:03:14.351',NULL),('VÇ\rCUOx¾4G:êöB','/»_ââšMpªXTÎ|ãâ','Iowa',NULL,'2020-04-04 21:03:14.368',NULL),('X3f‡9iK„²=*KdšĞ','/»_ââšMpªXTÎ|ãâ','Ards and North Down',NULL,'2020-04-04 21:03:14.347',NULL),('XŠàá!ÅJX‘‹»TÔ\"§','/»_ââšMpªXTÎ|ãâ','Montana',NULL,'2020-04-04 21:03:14.370',NULL),('Y~§å&]D‡ƒ:\"\r—|','/»_ââšMpªXTÎ|ãâ','Texas',NULL,'2020-04-04 21:03:14.373',NULL),('YÇAóšğMö¨»w/ÊÁPñ','/»_ââšMpªXTÎ|ãâ','Slough',NULL,'2020-04-04 21:03:14.343',NULL),('ZÌÅêh,B»à»˜\r¥Hë','/»_ââšMpªXTÎ|ãâ','Dorset',NULL,'2020-04-04 21:03:14.305',NULL),('\\½0“Æ´E§·˜\"µõw','/»_ââšMpªXTÎ|ãâ','St. Helens',NULL,'2020-04-04 21:03:14.332',NULL),(']êRÛHC&‚ûÀF\\g(','/»_ââšMpªXTÎ|ãâ','Merton',NULL,'2020-04-04 21:03:14.325',NULL),('_Ã%Ò æE_ŸÈ&Àµ,{','/»_ââšMpªXTÎ|ãâ','Somerset',NULL,'2020-04-04 21:03:14.315',NULL),('ccƒ˜jL¸¼VŒ{Ö0+','/»_ââšMpªXTÎ|ãâ','Enfield',NULL,'2020-04-04 21:03:14.321',NULL),('cjÌ2½¥BÒ¢\0tŸ6oÌÙ','/»_ââšMpªXTÎ|ãâ','Sutton',NULL,'2020-04-04 21:03:14.326',NULL),('c~P<$UA ‰õ1ıNä','/»_ââšMpªXTÎ|ãâ','Torbay',NULL,'2020-04-04 21:03:14.345',NULL),('eX†Q§íAo’ï¨\r‚pÛ','/»_ââšMpªXTÎ|ãâ','Tower Hamlets',NULL,'2020-04-04 21:03:14.327',NULL),('f,Ñ&O”Aù…·Çñ³.e','/»_ââšMpªXTÎ|ãâ','Bury',NULL,'2020-04-04 21:03:14.328',NULL),('gŸ¤_ÂµI%¡‚$lİ1½;','/»_ââšMpªXTÎ|ãâ','North Yorkshire',NULL,'2020-04-04 21:03:14.313',NULL),('g÷ŞÚò\\Oµ«H–‚(<4F','/»_ââšMpªXTÎ|ãâ','Barnet',NULL,'2020-04-04 21:03:14.319',NULL),('iùét´\ZEm Û7ÅD\06G','/»_ââšMpªXTÎ|ãâ','Bedford',NULL,'2020-04-04 21:03:14.335',NULL),('jcm=³&F¾5—\Z!Ü¡','/»_ââšMpªXTÎ|ãâ','Powys',NULL,'2020-04-04 21:03:14.359',NULL),('kj¬7\"GNºÏµğI£N','/»_ââšMpªXTÎ|ãâ','New York',NULL,'2020-04-04 21:03:14.371',NULL),('kÃĞœnKŸ†Ğä_$\'ë','/»_ââšMpªXTÎ|ãâ','Nevada',NULL,'2020-04-04 21:03:14.370',NULL),('lú††}O˜ĞBÅÑÛ>','/»_ââšMpªXTÎ|ãâ','South Tyneside',NULL,'2020-04-04 21:03:14.333',NULL),('lT$íYĞIÕ+„«Q½Oı','/»_ââšMpªXTÎ|ãâ','Swindon',NULL,'2020-04-04 21:03:14.344',NULL),('n®±n?çJ´§İúğ‰^','/»_ââšMpªXTÎ|ãâ','Islington',NULL,'2020-04-04 21:03:14.324',NULL),('nÎÒ¼=RJ)¿ğöîåHŸ½','/»_ââšMpªXTÎ|ãâ','Pennsylvania',NULL,'2020-04-04 21:03:14.372',NULL),('p;üqÀKí…ñ~ÍÃmu?','/»_ââšMpªXTÎ|ãâ','Glasgow City',NULL,'2020-04-04 21:03:14.352',NULL),('pQ¾†tçB±}uâxãq','/»_ââšMpªXTÎ|ãâ','Alaska',NULL,'2020-04-04 21:03:14.365',NULL),('pä	cüD*œœs\\Õl`','/»_ââšMpªXTÎ|ãâ','Bavaria',NULL,'2020-04-04 21:03:14.268',NULL),('pä	cüD*œœs\\Õl`','‹/pó¡L†…Mã4Ó8','Bavaria',NULL,'2020-04-04 21:03:14.268',NULL),('qGo~Ì–A™¢`{b}j','/»_ââšMpªXTÎ|ãâ','Luton',NULL,'2020-04-04 21:03:14.340',NULL),('rÉ£˜¼N{O/I®¯D¸','/»_ââšMpªXTÎ|ãâ','Swansea',NULL,'2020-04-04 21:03:14.359',NULL),('rM¨SæA´§ã­GS…š','/»_ââšMpªXTÎ|ãâ','Wiltshire',NULL,'2020-04-04 21:03:14.346',NULL),('t\nĞ­ÚO)±¤±à{Œ.','/»_ââšMpªXTÎ|ãâ','Georgia',NULL,'2020-04-04 21:03:14.366',NULL),('t@ÌpìMwÀÛz2÷Á@','/»_ââšMpªXTÎ|ãâ','Buckinghamshire',NULL,'2020-04-04 21:03:14.300',NULL),('tmjªN6…¯W‘\'¢','/»_ââšMpªXTÎ|ãâ','Bremen',NULL,'2020-04-04 21:03:14.273',NULL),('tmjªN6…¯W‘\'¢','‹/pó¡L†…Mã4Ó8','Bremen',NULL,'2020-04-04 21:03:14.273',NULL),('tó4Á@ä–J‚mÂ§á','/»_ââšMpªXTÎ|ãâ','Wakefield',NULL,'2020-04-04 21:03:14.334',NULL),('tíF/ÕƒGƒ˜¢ °}£\'','/»_ââšMpªXTÎ|ãâ','Moray',NULL,'2020-04-04 21:03:14.352',NULL),('vLÔ²#ñAÜ¬óòÂ×óğ','/»_ââšMpªXTÎ|ãâ','Neath Port Talbot',NULL,'2020-04-04 21:03:14.358',NULL),('v¼Ağî4B3µóòÚg,\'8','/»_ââšMpªXTÎ|ãâ','Aberdeen City',NULL,'2020-04-04 21:03:14.349',NULL),('x³WúÆ¼D§¹‘}\Zô\\ƒ','/»_ââšMpªXTÎ|ãâ','Scottish Borders, The',NULL,'2020-04-04 21:03:14.354',NULL),('y˜3–ÜSBAª„Ñèü8','/»_ââšMpªXTÎ|ãâ','Salford',NULL,'2020-04-04 21:03:14.332',NULL),('zòdªˆbAY•ç‚ÏÁ\"©','/»_ââšMpªXTÎ|ãâ','Surrey',NULL,'2020-04-04 21:03:14.317',NULL),('{SìzvGC­h?¤1;','/»_ââšMpªXTÎ|ãâ','Perth and Kinross',NULL,'2020-04-04 21:03:14.353',NULL),('{àµ”ù?NV‡E{‚ŒÖˆ','/»_ââšMpªXTÎ|ãâ','Worcestershire',NULL,'2020-04-04 21:03:14.318',NULL),('}§M«°F‚v»Ábh','/»_ââšMpªXTÎ|ãâ','Orkney Islands',NULL,'2020-04-04 21:03:14.353',NULL),('}u¸É/[B¨“	İL¹~','/»_ââšMpªXTÎ|ãâ','Darlington',NULL,'2020-04-04 21:03:14.338',NULL),('f$ïİA‡£¼wnçhbv','/»_ââšMpªXTÎ|ãâ','Stirling',NULL,'2020-04-04 21:03:14.355',NULL),('jÜ©FâAY˜TÑvÏªS','/»_ââšMpªXTÎ|ãâ','Indiana',NULL,'2020-04-04 21:03:14.367',NULL),('Õæûı×A8‰<R8ÔÉ','/»_ââšMpªXTÎ|ãâ','South Carolina',NULL,'2020-04-04 21:03:14.373',NULL),('æ¦HTKEÍ®ësy$§`b','/»_ââšMpªXTÎ|ãâ','Leicester',NULL,'2020-04-04 21:03:14.340',NULL),('‚TßŞ.B½\"Û•rJÙ','/»_ââšMpªXTÎ|ãâ','West Dunbartonshire',NULL,'2020-04-04 21:03:14.355',NULL),('„t¹uqJ—±°â­Ïd»','/»_ââšMpªXTÎ|ãâ','Haringey',NULL,'2020-04-04 21:03:14.323',NULL),('‡‹±ÁC€}\'‰a¤ó','/»_ââšMpªXTÎ|ãâ','Devon',NULL,'2020-04-04 21:03:14.304',NULL),('‡ü{ëéB`j€\0ôº÷','/»_ââšMpªXTÎ|ãâ','Rochdale',NULL,'2020-04-04 21:03:14.331',NULL),('ˆ\"šHBY½Ë5Ùí','/»_ââšMpªXTÎ|ãâ','Lancashire',NULL,'2020-04-04 21:03:14.311',NULL),('ˆYëå6MÕ–­`’\"qáÍ','/»_ââšMpªXTÎ|ãâ','Vermont',NULL,'2020-04-04 21:03:14.374',NULL),('ˆøAáHÔµ¦\0à†Ä','/»_ââšMpªXTÎ|ãâ','Edinburgh, City of',NULL,'2020-04-04 21:03:14.351',NULL),('‰pHæåC)>%óú&ù','/»_ââšMpªXTÎ|ãâ','Clackmannanshire',NULL,'2020-04-04 21:03:14.349',NULL),('‰ºÜ\r}NM¼˜M­74ú³X','/»_ââšMpªXTÎ|ãâ','Herefordshire',NULL,'2020-04-04 21:03:14.339',NULL),('‹ÇIöºtI³ºkAñyALÏ','/»_ââšMpªXTÎ|ãâ','Rotherham',NULL,'2020-04-04 21:03:14.332',NULL),('ŒTWÌO½Ge´à˜lŒ¬şS','/»_ââšMpªXTÎ|ãâ','Rhode Island',NULL,'2020-04-04 21:03:14.372',NULL),('Œ~â¸ÇàFe¥áÛeª<','/»_ââšMpªXTÎ|ãâ','Cornwall',NULL,'2020-04-04 21:03:14.337',NULL),('>OÔ“J ¼à\Z•‘\r\Z','/»_ââšMpªXTÎ|ãâ','Cheshire East',NULL,'2020-04-04 21:03:14.337',NULL),('ò£—’ÊN:1{ùa','/»_ââšMpªXTÎ|ãâ','Merthyr Tydfil',NULL,'2020-04-04 21:03:14.357',NULL),('4^ AU² Ö‚‰4\\–','/»_ââšMpªXTÎ|ãâ','Durham County',NULL,'2020-04-04 21:03:14.338',NULL),('ydqhFD…Ù‘€iñŒ','/»_ââšMpªXTÎ|ãâ','Carmarthenshire',NULL,'2020-04-04 21:03:14.356',NULL),('‘,…âyIÑƒ‘¯4¾ ·','/»_ââšMpªXTÎ|ãâ','Caerphilly',NULL,'2020-04-04 21:03:14.356',NULL),('‘\'qxCˆ©.ˆ­š-É','/»_ââšMpªXTÎ|ãâ','South Lanarkshire',NULL,'2020-04-04 21:03:14.354',NULL),('’e9áRKL’0¤²ÿ*x','/»_ââšMpªXTÎ|ãâ','Renfrewshire',NULL,'2020-04-04 21:03:14.353',NULL),('’øÀ¬ñ\\@,ŒLİÆş$:','/»_ââšMpªXTÎ|ãâ','Mid Ulster',NULL,'2020-04-04 21:03:14.348',NULL),('“@rk Nf¡³À½í(','/»_ââšMpªXTÎ|ãâ','Cumbria',NULL,'2020-04-04 21:03:14.302',NULL),('“‘ÑÙ5:Il¤$­ı:*<\'','/»_ââšMpªXTÎ|ãâ','Fermanagh and Omagh',NULL,'2020-04-04 21:03:14.348',NULL),('“²\Z\rÂB#„uÍ9&o/','/»_ââšMpªXTÎ|ãâ','Manchester',NULL,'2020-04-04 21:03:14.331',NULL),('”w˜\ncIÅ«£¯MÎeÄ','/»_ââšMpªXTÎ|ãâ','Saxony-Anhalt',NULL,'2020-04-04 21:03:14.285',NULL),('”w˜\ncIÅ«£¯MÎeÄ','‹/pó¡L†…Mã4Ó8','Saxony-Anhalt',NULL,'2020-04-04 21:03:14.285',NULL),('™^š«^B6ªØ&U<½Ü','/»_ââšMpªXTÎ|ãâ','Richmond upon Thames',NULL,'2020-04-04 21:03:14.326',NULL),('™:«`ÕùD®´ uNï®¡','/»_ââšMpªXTÎ|ãâ','Northamptonshire',NULL,'2020-04-04 21:03:14.313',NULL),('š2ĞÆgZG¨¸ñ@„qj\0','/»_ââšMpªXTÎ|ãâ','Camden',NULL,'2020-04-04 21:03:14.321',NULL),('šJ‘x˜Mï§YoK,JÎ','/»_ââšMpªXTÎ|ãâ','Poole',NULL,'2020-04-04 21:03:14.342',NULL),('š¼ãvFH§µŞ¿¶åIè','/»_ââšMpªXTÎ|ãâ','East Lothian',NULL,'2020-04-04 21:03:14.350',NULL),('œm8­Ü…Ow•™#ˆ&_jz','/»_ââšMpªXTÎ|ãâ','North Lincolnshire',NULL,'2020-04-04 21:03:14.341',NULL),('œÖ¦)L•‡ Ø:õÍ¾A','/»_ââšMpªXTÎ|ãâ','Fife',NULL,'2020-04-04 21:03:14.351',NULL),('ËÌèğ I=½ÑIÉ_œ ¸','/»_ââšMpªXTÎ|ãâ','Isles of Scilly',NULL,'2020-04-04 21:03:14.339',NULL),('Ÿ’óíCA’<ùüÕı','/»_ââšMpªXTÎ|ãâ','Oklahoma',NULL,'2020-04-04 21:03:14.372',NULL),(' ×ØaI„ª	BæKæP','/»_ââšMpªXTÎ|ãâ','South Ayrshire',NULL,'2020-04-04 21:03:14.354',NULL),('¢r»Š5÷CS•á=õÜ^NM','/»_ââšMpªXTÎ|ãâ','Rhondda, Cynon, Taff',NULL,'2020-04-04 21:03:14.359',NULL),('£°ı.Ó™HLˆlê9','/»_ââšMpªXTÎ|ãâ','Wrexham',NULL,'2020-04-04 21:03:14.360',NULL),('£ù}SÓ‹GMó£İLØX‚','/»_ââšMpªXTÎ|ãâ','Wisconsin',NULL,'2020-04-04 21:03:14.374',NULL),('¤6„e>Htµèû?yÄ¬','/»_ââšMpªXTÎ|ãâ','Windsor and Maidenhead',NULL,'2020-04-04 21:03:14.346',NULL),('¤S@ä@iKÚ§4™ÂËzñ','/»_ââšMpªXTÎ|ãâ','Blackpool',NULL,'2020-04-04 21:03:14.336',NULL),('¤©7tDN½şñ›k¢L','/»_ââšMpªXTÎ|ãâ','North Carolina',NULL,'2020-04-04 21:03:14.371',NULL),('¥uaÍÅDCœVÍtÌç–`','/»_ââšMpªXTÎ|ãâ','Wokingham',NULL,'2020-04-04 21:03:14.346',NULL),('¦t¯E\\±Ñ2)£Ñ','/»_ââšMpªXTÎ|ãâ','Delaware',NULL,'2020-04-04 21:03:14.366',NULL),('¦	ª­êgES‘çU÷Œz','/»_ââšMpªXTÎ|ãâ','Knowsley',NULL,'2020-04-04 21:03:14.330',NULL),('©&F3>Gb°iÂŞ\ZoÍ','/»_ââšMpªXTÎ|ãâ','Denbighshire',NULL,'2020-04-04 21:03:14.357',NULL),('®ïï®L:•$Æ¾ê','/»_ââšMpªXTÎ|ãâ','Thurrock',NULL,'2020-04-04 21:03:14.345',NULL),('®Q£êö.Iˆ¨ãµØEP','/»_ââšMpªXTÎ|ãâ','Waltham Forest',NULL,'2020-04-04 21:03:14.327',NULL),('±±Ã„ñ£A¤l¬MÏ\"ƒ','/»_ââšMpªXTÎ|ãâ','Walsall',NULL,'2020-04-04 21:03:14.334',NULL),('²T’}OË™xFg±<‹','/»_ââšMpªXTÎ|ãâ','Great Britain',NULL,'2020-04-04 21:03:14.297',NULL),('²>æÕJªOwºÊè‚õ»','/»_ââšMpªXTÎ|ãâ','Missouri',NULL,'2020-04-04 21:03:14.370',NULL),('³˜Lİ—I=¤¶Ô¯pµw','/»_ââšMpªXTÎ|ãâ','Blaenau Gwent',NULL,'2020-04-04 21:03:14.355',NULL),('³µ£Øì0B[»ŒÙ±<s','/»_ââšMpªXTÎ|ãâ','Sunderland',NULL,'2020-04-04 21:03:14.333',NULL),('´|2ÑMº[¯õâ$µ','/»_ââšMpªXTÎ|ãâ','Derby',NULL,'2020-04-04 21:03:14.338',NULL),('µÅr‰³üA×·T›’ö´Êë','/»_ââšMpªXTÎ|ãâ','Armagh, Banbridge and Craigavon',NULL,'2020-04-04 21:03:14.347',NULL),('¶Á^¬ªA\"°øºCHùñ','/»_ââšMpªXTÎ|ãâ','Derry and Strabane',NULL,'2020-04-04 21:03:14.347',NULL),('·S7İHRŠ’èß¹9­','/»_ââšMpªXTÎ|ãâ','Wales',NULL,'2020-04-04 21:03:14.296',NULL),('¸@Áı“A¼WøEò<®','/»_ââšMpªXTÎ|ãâ','Leeds',NULL,'2020-04-04 21:03:14.330',NULL),('¸´äoHù¨Dç†uf:•','/»_ââšMpªXTÎ|ãâ','Oldham',NULL,'2020-04-04 21:03:14.331',NULL),('¸în­—+C1Š)A‰C¦!«','/»_ââšMpªXTÎ|ãâ','Angus',NULL,'2020-04-04 21:03:14.349',NULL),('ºK}¸ËJA±5)á¶0N','/»_ââšMpªXTÎ|ãâ','Monmouthshire',NULL,'2020-04-04 21:03:14.358',NULL),('º\ZÍ\n7|F ½—QU?\05','/»_ââšMpªXTÎ|ãâ','Causeway Coast and Glens',NULL,'2020-04-04 21:03:14.347',NULL),('º,ÔÂZâKğ¦ ŞAñ¯*,','/»_ââšMpªXTÎ|ãâ','Medway',NULL,'2020-04-04 21:03:14.340',NULL),('º¬®—ˆ@¥¶é;XôeP','/»_ââšMpªXTÎ|ãâ','Gwynedd',NULL,'2020-04-04 21:03:14.357',NULL),('ºìáèEÄI‡…º+¬~€d','/»_ââšMpªXTÎ|ãâ','North Somerset',NULL,'2020-04-04 21:03:14.341',NULL),('»ı0]@ÛC@´$ºés','/»_ââšMpªXTÎ|ãâ','Brandenburg',NULL,'2020-04-04 21:03:14.271',NULL),('»ı0]@ÛC@´$ºés','‹/pó¡L†…Mã4Ó8','Brandenburg',NULL,'2020-04-04 21:03:14.271',NULL),('¼}Â‘]bM„Š¤½æA0Æ','/»_ââšMpªXTÎ|ãâ','Kentucky',NULL,'2020-04-04 21:03:14.368',NULL),('¼ûät?Ã@l– ¶$ÿõ','/»_ââšMpªXTÎ|ãâ','North Rhine-Westphalia',NULL,'2020-04-04 21:03:14.280',NULL),('¼ûät?Ã@l– ¶$ÿõ','‹/pó¡L†…Mã4Ó8','North Rhine-Westphalia',NULL,'2020-04-04 21:03:14.280',NULL),('¾\0Ì­şB-…+Oãr\"İ','/»_ââšMpªXTÎ|ãâ','Wolverhampton',NULL,'2020-04-04 21:03:14.335',NULL),('¾»;tÜK/­‹¨>b4\Z','/»_ââšMpªXTÎ|ãâ','Hesse',NULL,'2020-04-04 21:03:14.275',NULL),('¾»;tÜK/­‹¨>b4\Z','‹/pó¡L†…Mã4Ó8','Hesse',NULL,'2020-04-04 21:03:14.275',NULL),('¿#7HÉGô‰Ksš','/»_ââšMpªXTÎ|ãâ','Maryland',NULL,'2020-04-04 21:03:14.369',NULL),('ÀUÕ\r6>GJàÅM¢C½¶','/»_ââšMpªXTÎ|ãâ','Florida',NULL,'2020-04-04 21:03:14.366',NULL),('Âq­pÏAõ¹H÷}À×','/»_ââšMpªXTÎ|ãâ','Wandsworth',NULL,'2020-04-04 21:03:14.327',NULL),('Ã+20–¬E\'=‘äC8','/»_ââšMpªXTÎ|ãâ','Bolton',NULL,'2020-04-04 21:03:14.328',NULL),('ÄQÊ:*G’º@f†ã(','/»_ââšMpªXTÎ|ãâ','West Lothian',NULL,'2020-04-04 21:03:14.355',NULL),('Ä‘Æº3Lç¡Ë|ÿ$÷6','/»_ââšMpªXTÎ|ãâ','North East Lincolnshire',NULL,'2020-04-04 21:03:14.341',NULL),('Ä¿(%ÎäG÷‡A°ª!p£Ş','/»_ââšMpªXTÎ|ãâ','Dundee City',NULL,'2020-04-04 21:03:14.350',NULL),('Å &¯,I°¢›îïL“¸','/»_ââšMpªXTÎ|ãâ','Hounslow',NULL,'2020-04-04 21:03:14.324',NULL),('ÆJÒ?N·¶Z˜üBT','/»_ââšMpªXTÎ|ãâ','Gloucestershire',NULL,'2020-04-04 21:03:14.308',NULL),('Æ’z>=G«<.µ*X¸','/»_ââšMpªXTÎ|ãâ','Tameside',NULL,'2020-04-04 21:03:14.334',NULL),('ÆºıùÛC|›;\Z}ãÙ:','/»_ââšMpªXTÎ|ãâ','Newry, Mourne and Down',NULL,'2020-04-04 21:03:14.348',NULL),('È¥k°–AÎŸ+şÊG¥','/»_ââšMpªXTÎ|ãâ','New Mexico',NULL,'2020-04-04 21:03:14.371',NULL),('ÉÅÄ®î“Nİ­`©:Æ{','/»_ââšMpªXTÎ|ãâ','North Dakota',NULL,'2020-04-04 21:03:14.371',NULL),('Ë¯P²Å°G8„ÿşú‘®','/»_ââšMpªXTÎ|ãâ','Kingston upon Hull',NULL,'2020-04-04 21:03:14.339',NULL),('ÌF+„BZ¡rÛ/Tö¶©','/»_ââšMpªXTÎ|ãâ','Flintshire',NULL,'2020-04-04 21:03:14.357',NULL),('Í}§oOO–®IÀqœÖ','/»_ââšMpªXTÎ|ãâ','Antrim and Newtownabbey',NULL,'2020-04-04 21:03:14.346',NULL),('ÍÃ&Œ`–LN­ÓŞÚ«”¦','/»_ââšMpªXTÎ|ãâ','Nottinghamshire',NULL,'2020-04-04 21:03:14.314',NULL),('ÎgT¿%fJËY9)÷~æ','/»_ââšMpªXTÎ|ãâ','Cardiff',NULL,'2020-04-04 21:03:14.356',NULL),('Ï¾ø\'ØÒH	’A*G´°','/»_ââšMpªXTÎ|ãâ','East Dunbartonshire',NULL,'2020-04-04 21:03:14.350',NULL),('ÏÃô“‰O›°Ü£v›\Z\n','/»_ââšMpªXTÎ|ãâ','Calderdale',NULL,'2020-04-04 21:03:14.329',NULL),('Ñ‚×³q†@\n€ĞĞ@i©P ','/»_ââšMpªXTÎ|ãâ','Leicestershire',NULL,'2020-04-04 21:03:14.311',NULL),('ÒÕ+S@¥›]‹EâlÆY','/»_ââšMpªXTÎ|ãâ','Connecticut',NULL,'2020-04-04 21:03:14.366',NULL),('Õ+ ê£ìC–…vÑ$}v','/»_ââšMpªXTÎ|ãâ','West Virginia',NULL,'2020-04-04 21:03:14.374',NULL),('ÕG“Å?@6ŒZØ˜¿â','/»_ââšMpªXTÎ|ãâ','Hackney',NULL,'2020-04-04 21:03:14.322',NULL),('Õ½ùühEé·‰î)İü!','/»_ââšMpªXTÎ|ãâ','South Dakota',NULL,'2020-04-04 21:03:14.373',NULL),('Ö50É×§Ll¬{v£îá“­','/»_ââšMpªXTÎ|ãâ','Southampton',NULL,'2020-04-04 21:03:14.344',NULL),('Öü8ˆó˜O­…«ù÷Œšğs','/»_ââšMpªXTÎ|ãâ','Bexley',NULL,'2020-04-04 21:03:14.320',NULL),('Úmv2²\ZIØ´ŸÌöŒ^','/»_ââšMpªXTÎ|ãâ','Hampshire',NULL,'2020-04-04 21:03:14.308',NULL),('ÚÁ\ráæA:ŠOç*=ÅLJ','/»_ââšMpªXTÎ|ãâ','Havering',NULL,'2020-04-04 21:03:14.323',NULL),('ÛÍºÑ@rœVzµM]´','/»_ââšMpªXTÎ|ãâ','Kingston upon Thames',NULL,'2020-04-04 21:03:14.324',NULL),('Û­h<~UM„¿_êİ’ª‡','/»_ââšMpªXTÎ|ãâ','Louisiana',NULL,'2020-04-04 21:03:14.368',NULL),('Ü5;KÓáF_«Áu%µ¹','/»_ââšMpªXTÎ|ãâ','California',NULL,'2020-04-04 21:03:14.365',NULL),('İ¶˜¡åIÏÈä»Z3','/»_ââšMpªXTÎ|ãâ','East Renfrewshire',NULL,'2020-04-04 21:03:14.351',NULL),('ŞÊ(RCŠ¸¸\"a¿ëI','/»_ââšMpªXTÎ|ãâ','Highland',NULL,'2020-04-04 21:03:14.352',NULL),('ß.e5œJ ¢u¨@ÛÃÀ’','/»_ââšMpªXTÎ|ãâ','Southend-on-Sea',NULL,'2020-04-04 21:03:14.344',NULL),('ß¼M\\jkO¬@…º/öGØ','/»_ââšMpªXTÎ|ãâ','Warrington',NULL,'2020-04-04 21:03:14.345',NULL),('åL\'“ÌîG…¬€zçÕ÷0','/»_ââšMpªXTÎ|ãâ','Trafford',NULL,'2020-04-04 21:03:14.334',NULL),('å™\"Ä\"DêŸ#\r¬\"T\\s','/»_ââšMpªXTÎ|ãâ','Rhineland-Palatinate',NULL,'2020-04-04 21:03:14.281',NULL),('å™\"Ä\"DêŸ#\r¬\"T\\s','‹/pó¡L†…Mã4Ó8','Rhineland-Palatinate',NULL,'2020-04-04 21:03:14.281',NULL),('è3˜´V‡N‚Óp<÷','/»_ââšMpªXTÎ|ãâ','New Jersey',NULL,'2020-04-04 21:03:14.371',NULL),('ès¤&·KªœÇ¯X®n','/»_ââšMpªXTÎ|ãâ','Torfaen',NULL,'2020-04-04 21:03:14.359',NULL),('èúFu§F”‘Úru`½\"','/»_ââšMpªXTÎ|ãâ','Kensington and Chelsea',NULL,'2020-04-04 21:03:14.324',NULL),('ëœÎ@åÂN·¸mUXçW','/»_ââšMpªXTÎ|ãâ','North Ayrshire',NULL,'2020-04-04 21:03:14.353',NULL),('ë½{ÅBĞOÇ„Mm\"Tª4ô','/»_ââšMpªXTÎ|ãâ','Peterborough',NULL,'2020-04-04 21:03:14.342',NULL),('ìúr›CÙ‘üÕ‰Åª','/»_ââšMpªXTÎ|ãâ','Ealing',NULL,'2020-04-04 21:03:14.321',NULL),('ì<xåÆ;A>¬!eKr\"','/»_ââšMpªXTÎ|ãâ','Washington',NULL,'2020-04-04 21:03:14.374',NULL),('í\0^÷O]1bû‚EV','/»_ââšMpªXTÎ|ãâ','Redcar and Cleveland',NULL,'2020-04-04 21:03:14.343',NULL),('íÁì¨äEKF–ô¬M¾É3','/»_ââšMpªXTÎ|ãâ','Lincolnshire',NULL,'2020-04-04 21:03:14.312',NULL),('î¼‹×u}I·4àYW5:','/»_ââšMpªXTÎ|ãâ','Harrow',NULL,'2020-04-04 21:03:14.323',NULL),('ï´6ƒ=J¶ƒ¨Ğk ~ã','/»_ââšMpªXTÎ|ãâ','Hartlepool',NULL,'2020-04-04 21:03:14.339',NULL),('ïøÌ’N‘Iğª~\0ì¥¾','/»_ââšMpªXTÎ|ãâ','Arizona',NULL,'2020-04-04 21:03:14.365',NULL),('ğq-¾\nkA.±ä«lF±ù','/»_ââšMpªXTÎ|ãâ','Lower Saxony',NULL,'2020-04-04 21:03:14.277',NULL),('ğq-¾\nkA.±ä«lF±ù','‹/pó¡L†…Mã4Ó8','Lower Saxony',NULL,'2020-04-04 21:03:14.277',NULL),('ğ{+É3´Aü¤JKc5¶Ú','/»_ââšMpªXTÎ|ãâ','Oxfordshire',NULL,'2020-04-04 21:03:14.314',NULL),('ñEê¶qCB´y~]úÈ','/»_ââšMpªXTÎ|ãâ','Barnsley',NULL,'2020-04-04 21:03:14.327',NULL),('ñûƒ§nRM$˜:Ø\Z^Ğ','/»_ââšMpªXTÎ|ãâ','Arkansas',NULL,'2020-04-04 21:03:14.365',NULL),('òÑm[´K²‚ÄêÎI5Ùì','/»_ââšMpªXTÎ|ãâ','Rutland',NULL,'2020-04-04 21:03:14.343',NULL),('ò4D™h%A/¾ƒg÷E·Ê','/»_ââšMpªXTÎ|ãâ','Halton',NULL,'2020-04-04 21:03:14.338',NULL),('ò´ÃhàE0¼ÁßÒ\'9Š','/»_ââšMpªXTÎ|ãâ','Bristol, City of',NULL,'2020-04-04 21:03:14.337',NULL),('óZ\\\r°J—Š\'ë­SØ','/»_ââšMpªXTÎ|ãâ','Belfast',NULL,'2020-04-04 21:03:14.347',NULL),('óÕ#ršÈK¿‰ß-Ÿ«EØ','/»_ââšMpªXTÎ|ãâ','Newham',NULL,'2020-04-04 21:03:14.325',NULL),('õ;T¦‘G‚|êJí¿Òœ','/»_ââšMpªXTÎ|ãâ','Lambeth',NULL,'2020-04-04 21:03:14.325',NULL),('÷@@/`·Læû¡v\"Æ','/»_ââšMpªXTÎ|ãâ','North Tyneside',NULL,'2020-04-04 21:03:14.331',NULL),('÷wG¢ iG\rœ±%vÅ EÌ','/»_ââšMpªXTÎ|ãâ','Lewisham',NULL,'2020-04-04 21:03:14.325',NULL),('÷ƒLA{@7½z`y>Ö','/»_ââšMpªXTÎ|ãâ','Lisburn and Castlereagh',NULL,'2020-04-04 21:03:14.348',NULL),('ø‰0[jÉA°œqû‰¢','/»_ââšMpªXTÎ|ãâ','Coventry',NULL,'2020-04-04 21:03:14.329',NULL),('ø³]nzAFoƒîR?d†ã','/»_ââšMpªXTÎ|ãâ','Bracknell Forest',NULL,'2020-04-04 21:03:14.336',NULL),('ùA˜\ZJ‹MÚ¿K‚ÏZ»Æl','/»_ââšMpªXTÎ|ãâ','Schleswig-Holstein',NULL,'2020-04-04 21:03:14.287',NULL),('ùA˜\ZJ‹MÚ¿K‚ÏZ»Æl','‹/pó¡L†…Mã4Ó8','Schleswig-Holstein',NULL,'2020-04-04 21:03:14.287',NULL),('ùD²ˆfBv¿úÆµÍğƒ','/»_ââšMpªXTÎ|ãâ','East Ayrshire',NULL,'2020-04-04 21:03:14.350',NULL),('ùb=ãÑçC_»á¥WÍ]A','/»_ââšMpªXTÎ|ãâ','Northumberland',NULL,'2020-04-04 21:03:14.341',NULL),('úñ%ªûF$”‚2ÔñÄ&','/»_ââšMpªXTÎ|ãâ','Portsmouth',NULL,'2020-04-04 21:03:14.342',NULL),('ûo}‘WXG£¹ß»=´u','/»_ââšMpªXTÎ|ãâ','North Lanarkshire',NULL,'2020-04-04 21:03:14.353',NULL),('ıÄYgûDF€Áú‚³-','/»_ââšMpªXTÎ|ãâ','England and Wales',NULL,'2020-04-04 21:03:14.297',NULL),('ÿ[Õ§¿À@‚OoñQ-Ñ','/»_ââšMpªXTÎ|ãâ','District of Columbia',NULL,'2020-04-04 21:03:14.375',NULL),('ÿáÅJIş«a)áE','/»_ââšMpªXTÎ|ãâ','Shetland Islands',NULL,'2020-04-04 21:03:14.354',NULL);
-/*!40000 ALTER TABLE `country_state_translation` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `country_translation`
---
-
-DROP TABLE IF EXISTS `country_translation`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `country_translation` (
-  `country_id` binary(16) NOT NULL,
-  `language_id` binary(16) NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`country_id`,`language_id`),
-  KEY `fk.country_translation.language_id` (`language_id`),
-  CONSTRAINT `fk.country_translation.country_id` FOREIGN KEY (`country_id`) REFERENCES `country` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.country_translation.language_id` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `json.country_translation.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `country_translation`
---
-
-LOCK TABLES `country_translation` WRITE;
-/*!40000 ALTER TABLE `country_translation` DISABLE KEYS */;
-INSERT INTO `country_translation` VALUES ('\0j†>¿NY†cI·H%Ù¢','/»_ââšMpªXTÎ|ãâ','Hungary',NULL,'2020-04-04 21:03:14.376',NULL),('\0j†>¿NY†cI·H%Ù¢','‹/pó¡L†…Mã4Ó8','Ungarn',NULL,'2020-04-04 21:03:14.376',NULL),('\r™¬Zµ#N†5Bäì¤ùw','/»_ââšMpªXTÎ|ãâ','Ireland',NULL,'2020-04-04 21:03:14.360',NULL),('\r™¬Zµ#N†5Bäì¤ùw','‹/pó¡L†…Mã4Ó8','Irland',NULL,'2020-04-04 21:03:14.360',NULL),('VäŠ\Zd@È¢MÇ´qÆŞ','/»_ââšMpªXTÎ|ãâ','Austria',NULL,'2020-04-04 21:03:14.363',NULL),('VäŠ\Zd@È¢MÇ´qÆŞ','‹/pó¡L†…Mã4Ó8','Ã–sterreich',NULL,'2020-04-04 21:03:14.363',NULL),('\Z!~äK’ˆ³?ä÷}“','/»_ââšMpªXTÎ|ãâ','United Kingdom',NULL,'2020-04-04 21:03:14.292',NULL),('\Z!~äK’ˆ³?ä÷}“','‹/pó¡L†…Mã4Ó8','Vereinigtes KÃ¶nigreich',NULL,'2020-04-04 21:03:14.292',NULL),('\Zrpá”ÈH5ª3\\=¹\"«˜','/»_ââšMpªXTÎ|ãâ','Sweden',NULL,'2020-04-04 21:03:14.364',NULL),('\Zrpá”ÈH5ª3\\=¹\"«˜','‹/pó¡L†…Mã4Ó8','Schweden',NULL,'2020-04-04 21:03:14.364',NULL),('\"fœJöèBF´DÙ3a®cH','/»_ââšMpªXTÎ|ãâ','Romania',NULL,'2020-04-04 21:03:14.377',NULL),('\"fœJöèBF´DÙ3a®cH','‹/pó¡L†…Mã4Ó8','RumÃ¤nien',NULL,'2020-04-04 21:03:14.378',NULL),('&>3	BAõ¶Ûƒé+¶','/»_ââšMpªXTÎ|ãâ','Spain',NULL,'2020-04-04 21:03:14.364',NULL),('&>3	BAõ¶Ûƒé+¶','‹/pó¡L†…Mã4Ó8','Spanien',NULL,'2020-04-04 21:03:14.364',NULL),('.R)fMT„ïş.…(½','/»_ââšMpªXTÎ|ãâ','Luxembourg',NULL,'2020-04-04 21:03:14.362',NULL),('.R)fMT„ïş.…(½','‹/pó¡L†…Mã4Ó8','Luxemburg',NULL,'2020-04-04 21:03:14.362',NULL),('3PpâiGæ«4Á‘=G:ø','/»_ââšMpªXTÎ|ãâ','France',NULL,'2020-04-04 21:03:14.380',NULL),('3PpâiGæ«4Á‘=G:ø','‹/pó¡L†…Mã4Ó8','Frankreich',NULL,'2020-04-04 21:03:14.380',NULL),(';[çÄ$Jüº\Z\n,–ƒ«9','/»_ââšMpªXTÎ|ãâ','Canada',NULL,'2020-04-04 21:03:14.361',NULL),(';[çÄ$Jüº\Z\n,–ƒ«9','‹/pó¡L†…Mã4Ó8','Kanada',NULL,'2020-04-04 21:03:14.361',NULL),('Hv¡ş¯Gœ”²;Ì¸tú¸','/»_ââšMpªXTÎ|ãâ','Liechtenstein',NULL,'2020-04-04 21:03:14.375',NULL),('Hv¡ş¯Gœ”²;Ì¸tú¸','‹/pó¡L†…Mã4Ó8','Liechtenstein',NULL,'2020-04-04 21:03:14.375',NULL),('LM\Z×Hr–é$lsZ‘¬','/»_ââšMpªXTÎ|ãâ','Australia',NULL,'2020-04-04 21:03:14.378',NULL),('LM\Z×Hr–é$lsZ‘¬','‹/pó¡L†…Mã4Ó8','Australien',NULL,'2020-04-04 21:03:14.379',NULL),('PÌ¯Ó[í@Õ¡A!\rÔ¬','/»_ââšMpªXTÎ|ãâ','Finland',NULL,'2020-04-04 21:03:14.379',NULL),('PÌ¯Ó[í@Õ¡A!\rÔ¬','‹/pó¡L†…Mã4Ó8','Finnland',NULL,'2020-04-04 21:03:14.379',NULL),('bEîÛ¢ BfÈ\\ûßÛ','/»_ââšMpªXTÎ|ãâ','Japan',NULL,'2020-04-04 21:03:14.361',NULL),('bEîÛ¢ BfÈ\\ûßÛ','‹/pó¡L†…Mã4Ó8','Japan',NULL,'2020-04-04 21:03:14.361',NULL),('oÍ9?s™F‹­­÷´™]','/»_ââšMpªXTÎ|ãâ','Portugal',NULL,'2020-04-04 21:03:14.363',NULL),('oÍ9?s™F‹­­÷´™]','‹/pó¡L†…Mã4Ó8','Portugal',NULL,'2020-04-04 21:03:14.363',NULL),('…ó>,J²˜¾#Øÿa','/»_ââšMpªXTÎ|ãâ','Germany',NULL,'2020-04-04 21:03:14.265',NULL),('…ó>,J²˜¾#Øÿa','‹/pó¡L†…Mã4Ó8','Deutschland',NULL,'2020-04-04 21:03:14.265',NULL),('‰‹G“‰A*’¢èMX;','/»_ââšMpªXTÎ|ãâ','Arab Emirates',NULL,'2020-04-04 21:03:14.376',NULL),('‰‹G“‰A*’¢èMX;','‹/pó¡L†…Mã4Ó8','Arabische Emirate',NULL,'2020-04-04 21:03:14.376',NULL),('¸\n˜ÌN°Pd(é','/»_ââšMpªXTÎ|ãâ','Israel',NULL,'2020-04-04 21:03:14.378',NULL),('¸\n˜ÌN°Pd(é','‹/pó¡L†…Mã4Ó8','Israel',NULL,'2020-04-04 21:03:14.378',NULL),('¸±oÇÙOæ–9|-¥¥f','/»_ââšMpªXTÎ|ãâ','Iceland',NULL,'2020-04-04 21:03:14.360',NULL),('¸±oÇÙOæ–9|-¥¥f','‹/pó¡L†…Mã4Ó8','Island',NULL,'2020-04-04 21:03:14.360',NULL),('¸aÓÑpºG3ˆ,˜ÜZ·ã','/»_ââšMpªXTÎ|ãâ','Netherlands',NULL,'2020-04-04 21:03:14.362',NULL),('¸aÓÑpºG3ˆ,˜ÜZ·ã','‹/pó¡L†…Mã4Ó8','Niederlande',NULL,'2020-04-04 21:03:14.362',NULL),('ºvŠQWF¯3í\rK¨6Í','/»_ââšMpªXTÎ|ãâ','USA',NULL,'2020-04-04 21:03:14.364',NULL),('ºvŠQWF¯3í\rK¨6Í','‹/pó¡L†…Mã4Ó8','USA',NULL,'2020-04-04 21:03:14.365',NULL),('Ãp®ğæB£·Y’`Â6','/»_ââšMpªXTÎ|ãâ','Italy',NULL,'2020-04-04 21:03:14.361',NULL),('Ãp®ğæB£·Y’`Â6','‹/pó¡L†…Mã4Ó8','Italien',NULL,'2020-04-04 21:03:14.361',NULL),('Æ·­äœìH?D‚\n@¿o','/»_ââšMpªXTÎ|ãâ','Greece',NULL,'2020-04-04 21:03:14.290',NULL),('Æ·­äœìH?D‚\n@¿o','‹/pó¡L†…Mã4Ó8','Griechenland',NULL,'2020-04-04 21:03:14.291',NULL),('ÆÅÆr\'Fn¹eÁ|Ps¿µ','/»_ââšMpªXTÎ|ãâ','Poland',NULL,'2020-04-04 21:03:14.376',NULL),('ÆÅÆr\'Fn¹eÁ|Ps¿µ','‹/pó¡L†…Mã4Ó8','Polen',NULL,'2020-04-04 21:03:14.376',NULL),('ÇæòÇ@ë‡ôbt§L$ó','/»_ââšMpªXTÎ|ãâ','Brazil',NULL,'2020-04-04 21:03:14.378',NULL),('ÇæòÇ@ë‡ôbt§L$ó','‹/pó¡L†…Mã4Ó8','Brasilien',NULL,'2020-04-04 21:03:14.378',NULL),('Ñk‘§ßC„¤:ˆÿ¶L¢','/»_ââšMpªXTÎ|ãâ','Norway',NULL,'2020-04-04 21:03:14.363',NULL),('Ñk‘§ßC„¤:ˆÿ¶L¢','‹/pó¡L†…Mã4Ó8','Norwegen',NULL,'2020-04-04 21:03:14.363',NULL),('Ø9RÙdmGº¼á¦è‹,­','/»_ââšMpªXTÎ|ãâ','Denmark',NULL,'2020-04-04 21:03:14.379',NULL),('Ø9RÙdmGº¼á¦è‹,­','‹/pó¡L†…Mã4Ó8','DÃ¤nemark',NULL,'2020-04-04 21:03:14.379',NULL),('ámNÒ†ü@e¬ÎR*¦bP\r','/»_ââšMpªXTÎ|ãâ','Belgium',NULL,'2020-04-04 21:03:14.379',NULL),('ámNÒ†ü@e¬ÎR*¦bP\r','‹/pó¡L†…Mã4Ó8','Belgien',NULL,'2020-04-04 21:03:14.379',NULL),('éÅFmCe¡ÜåÃRÆ','/»_ââšMpªXTÎ|ãâ','Switzerland',NULL,'2020-04-04 21:03:14.364',NULL),('éÅFmCe¡ÜåÃRÆ','‹/pó¡L†…Mã4Ó8','Schweiz',NULL,'2020-04-04 21:03:14.364',NULL),('ôÂ¼¥òßLG›ñfˆX','/»_ââšMpªXTÎ|ãâ','Turkey',NULL,'2020-04-04 21:03:14.376',NULL),('ôÂ¼¥òßLG›ñfˆX','‹/pó¡L†…Mã4Ó8','TÃ¼rkei',NULL,'2020-04-04 21:03:14.377',NULL),('ö)È8€Di‡”:¹tìäù','/»_ââšMpªXTÎ|ãâ','Namibia',NULL,'2020-04-04 21:03:14.362',NULL),('ö)È8€Di‡”:¹tìäù','‹/pó¡L†…Mã4Ó8','Namibia',NULL,'2020-04-04 21:03:14.362',NULL),('úU‹O!¶t\ZK˜¿','/»_ââšMpªXTÎ|ãâ','Slovenia',NULL,'2020-04-04 21:03:14.377',NULL),('úU‹O!¶t\ZK˜¿','‹/pó¡L†…Mã4Ó8','Slowenien',NULL,'2020-04-04 21:03:14.377',NULL),('ıÕ^klCœQµ–7È','/»_ââšMpªXTÎ|ãâ','Czech Republic',NULL,'2020-04-04 21:03:14.377',NULL),('ıÕ^klCœQµ–7È','‹/pó¡L†…Mã4Ó8','Tschechische Republik',NULL,'2020-04-04 21:03:14.377',NULL);
-/*!40000 ALTER TABLE `country_translation` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `currency`
---
-
-DROP TABLE IF EXISTS `currency`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `currency` (
-  `id` binary(16) NOT NULL,
-  `iso_code` char(3) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `factor` double NOT NULL,
-  `symbol` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `position` int(11) NOT NULL DEFAULT 1,
-  `decimal_precision` int(11) NOT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uniq.currency.iso_code` (`iso_code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `currency`
---
-
-LOCK TABLES `currency` WRITE;
-/*!40000 ALTER TABLE `currency` DISABLE KEYS */;
-INSERT INTO `currency` VALUES ('&íÉĞiOS·Ë(]Wäñ','PLN',4.33,'zÅ‚',1,2,'2020-04-04 21:03:21.802',NULL),('‚š&È,O³ LÇñ-\0°','DKK',7.47,'kr',1,2,'2020-04-04 21:03:21.812',NULL),('‡w¢×K”OğÛR×Ö/İ','NOK',0.099,'nkr',1,2,'2020-04-04 21:03:21.815',NULL),('ÀKg7>Dg‹»À^g˜F','USD',1.17085,'$',1,2,'2020-04-04 21:03:14.381',NULL),('¨Ÿ,nADä²\nìiÕ^È','SEK',10.51,'kr',1,2,'2020-04-04 21:03:21.809',NULL),('·ÒUKèGÍ‚ó¬›ÑÀßÊ','EUR',1,'â‚¬',1,2,'2020-04-04 21:03:14.380',NULL),('ºD“Nš±Hàˆ…û~óâ¡','CHF',1.1,'Fr',1,2,'2020-04-04 21:03:21.806',NULL),('Ü’ñ£IÂ·!¿ıBÏ','GBP',0.89157,'Â£',1,2,'2020-04-04 21:03:14.382',NULL);
-/*!40000 ALTER TABLE `currency` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `currency_translation`
---
-
-DROP TABLE IF EXISTS `currency_translation`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `currency_translation` (
-  `currency_id` binary(16) NOT NULL,
-  `language_id` binary(16) NOT NULL,
-  `short_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`currency_id`,`language_id`),
-  KEY `fk.currency_translation.language_id` (`language_id`),
-  CONSTRAINT `fk.currency_translation.currency_id` FOREIGN KEY (`currency_id`) REFERENCES `currency` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.currency_translation.language_id` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `json.currency_translation.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `currency_translation`
---
-
-LOCK TABLES `currency_translation` WRITE;
-/*!40000 ALTER TABLE `currency_translation` DISABLE KEYS */;
-INSERT INTO `currency_translation` VALUES ('&íÉĞiOS·Ë(]Wäñ','/»_ââšMpªXTÎ|ãâ','PLN','ZÅ‚oty',NULL,'2020-04-04 21:03:21.804',NULL),('&íÉĞiOS·Ë(]Wäñ','‹/pó¡L†…Mã4Ó8','PLN','ZÅ‚oty',NULL,'2020-04-04 21:03:21.805',NULL),('‚š&È,O³ LÇñ-\0°','/»_ââšMpªXTÎ|ãâ','DKK','Danish krone',NULL,'2020-04-04 21:03:21.813',NULL),('‚š&È,O³ LÇñ-\0°','‹/pó¡L†…Mã4Ó8','DKK','DÃ¤nische Kronen',NULL,'2020-04-04 21:03:21.814',NULL),('‡w¢×K”OğÛR×Ö/İ','/»_ââšMpªXTÎ|ãâ','NOK','Norwegian krone',NULL,'2020-04-04 21:03:21.816',NULL),('‡w¢×K”OğÛR×Ö/İ','‹/pó¡L†…Mã4Ó8','NOK','Norwegische Kronen',NULL,'2020-04-04 21:03:21.817',NULL),('ÀKg7>Dg‹»À^g˜F','/»_ââšMpªXTÎ|ãâ','USD','US-Dollar',NULL,'2020-04-04 21:03:14.381',NULL),('ÀKg7>Dg‹»À^g˜F','‹/pó¡L†…Mã4Ó8','USD','US-Dollar',NULL,'2020-04-04 21:03:14.382',NULL),('¨Ÿ,nADä²\nìiÕ^È','/»_ââšMpªXTÎ|ãâ','SEK','Swedish krone',NULL,'2020-04-04 21:03:21.810',NULL),('¨Ÿ,nADä²\nìiÕ^È','‹/pó¡L†…Mã4Ó8','SEK','Schwedische Kronen',NULL,'2020-04-04 21:03:21.811',NULL),('·ÒUKèGÍ‚ó¬›ÑÀßÊ','/»_ââšMpªXTÎ|ãâ','EUR','Euro',NULL,'2020-04-04 21:03:14.381',NULL),('·ÒUKèGÍ‚ó¬›ÑÀßÊ','‹/pó¡L†…Mã4Ó8','EUR','Euro',NULL,'2020-04-04 21:03:14.381',NULL),('ºD“Nš±Hàˆ…û~óâ¡','/»_ââšMpªXTÎ|ãâ','CHF','Swiss francs',NULL,'2020-04-04 21:03:21.807',NULL),('ºD“Nš±Hàˆ…û~óâ¡','‹/pó¡L†…Mã4Ó8','CHF','Schweizer Franken',NULL,'2020-04-04 21:03:21.808',NULL),('Ü’ñ£IÂ·!¿ıBÏ','/»_ââšMpªXTÎ|ãâ','GBP','Pound',NULL,'2020-04-04 21:03:14.382',NULL),('Ü’ñ£IÂ·!¿ıBÏ','‹/pó¡L†…Mã4Ó8','GBP','Pfund',NULL,'2020-04-04 21:03:14.382',NULL);
-/*!40000 ALTER TABLE `currency_translation` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `custom_field`
---
-
-DROP TABLE IF EXISTS `custom_field`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `custom_field` (
-  `id` binary(16) NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `config` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `active` tinyint(1) NOT NULL DEFAULT 1,
-  `set_id` binary(16) DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uniq.custom_field.name` (`name`),
-  KEY `fk.custom_field.set_id` (`set_id`),
-  CONSTRAINT `fk.custom_field.set_id` FOREIGN KEY (`set_id`) REFERENCES `custom_field_set` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `json.custom_field.config` CHECK (json_valid(`config`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `custom_field`
---
-
-LOCK TABLES `custom_field` WRITE;
-/*!40000 ALTER TABLE `custom_field` DISABLE KEYS */;
-/*!40000 ALTER TABLE `custom_field` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `custom_field_set`
---
-
-DROP TABLE IF EXISTS `custom_field_set`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `custom_field_set` (
-  `id` binary(16) NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `config` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `active` tinyint(1) NOT NULL DEFAULT 1,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  CONSTRAINT `json.custom_field_set.config` CHECK (json_valid(`config`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `custom_field_set`
---
-
-LOCK TABLES `custom_field_set` WRITE;
-/*!40000 ALTER TABLE `custom_field_set` DISABLE KEYS */;
-/*!40000 ALTER TABLE `custom_field_set` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `custom_field_set_relation`
---
-
-DROP TABLE IF EXISTS `custom_field_set_relation`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `custom_field_set_relation` (
-  `id` binary(16) NOT NULL,
-  `set_id` binary(16) NOT NULL,
-  `entity_name` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uniq.custom_field_set_relation.entity_name` (`set_id`,`entity_name`),
-  CONSTRAINT `fk.custom_field_set_relation.set_id` FOREIGN KEY (`set_id`) REFERENCES `custom_field_set` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `custom_field_set_relation`
---
-
-LOCK TABLES `custom_field_set_relation` WRITE;
-/*!40000 ALTER TABLE `custom_field_set_relation` DISABLE KEYS */;
-/*!40000 ALTER TABLE `custom_field_set_relation` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `customer`
---
-
-DROP TABLE IF EXISTS `customer`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `customer` (
-  `id` binary(16) NOT NULL,
-  `auto_increment` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `customer_group_id` binary(16) NOT NULL,
-  `default_payment_method_id` binary(16) NOT NULL,
-  `sales_channel_id` binary(16) NOT NULL,
-  `language_id` binary(16) NOT NULL,
-  `last_payment_method_id` binary(16) DEFAULT NULL,
-  `default_billing_address_id` binary(16) NOT NULL,
-  `default_shipping_address_id` binary(16) NOT NULL,
-  `customer_number` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `salutation_id` binary(16) NOT NULL,
-  `first_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `last_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `company` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `password` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `legacy_password` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `legacy_encoder` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `email` varchar(254) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `title` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `active` tinyint(1) NOT NULL DEFAULT 1,
-  `doubleOptInRegistration` tinyint(1) NOT NULL DEFAULT 0,
-  `doubleOptInEmailSentDate` datetime(3) DEFAULT NULL,
-  `doubleOptInConfirmDate` datetime(3) DEFAULT NULL,
-  `hash` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `guest` tinyint(1) NOT NULL DEFAULT 0,
-  `first_login` datetime(3) DEFAULT NULL,
-  `last_login` datetime(3) DEFAULT NULL,
-  `newsletter` tinyint(1) NOT NULL DEFAULT 0,
-  `birthday` date DEFAULT NULL,
-  `last_order_date` datetime(3) DEFAULT NULL,
-  `order_count` int(5) NOT NULL DEFAULT 0,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `affiliate_code` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `campaign_code` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  `remote_address` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uniq.auto_increment` (`auto_increment`),
-  UNIQUE KEY `hash` (`hash`),
-  KEY `idx.firstlogin` (`first_login`),
-  KEY `idx.lastlogin` (`last_login`),
-  KEY `idx.customer.default_billing_address_id` (`default_billing_address_id`),
-  KEY `idx.customer.default_shipping_address_id` (`default_shipping_address_id`),
-  KEY `fk.customer.customer_group_id` (`customer_group_id`),
-  KEY `fk.customer.default_payment_method_id` (`default_payment_method_id`),
-  KEY `fk.customer.last_payment_method_id` (`last_payment_method_id`),
-  KEY `fk.customer.sales_channel_id` (`sales_channel_id`),
-  KEY `fk.customer.salutation_id` (`salutation_id`),
-  CONSTRAINT `fk.customer.customer_group_id` FOREIGN KEY (`customer_group_id`) REFERENCES `customer_group` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `fk.customer.default_payment_method_id` FOREIGN KEY (`default_payment_method_id`) REFERENCES `payment_method` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `fk.customer.last_payment_method_id` FOREIGN KEY (`last_payment_method_id`) REFERENCES `payment_method` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `fk.customer.sales_channel_id` FOREIGN KEY (`sales_channel_id`) REFERENCES `sales_channel` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `fk.customer.salutation_id` FOREIGN KEY (`salutation_id`) REFERENCES `salutation` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `json.customer.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `customer`
---
-
-LOCK TABLES `customer` WRITE;
-/*!40000 ALTER TABLE `customer` DISABLE KEYS */;
-INSERT INTO `customer` VALUES ('l—SL,Gó‡Qä<²°',1,'Ï½PÓAØ­ÊÙOÈ½Ö','½‘ı¡IS¦íC‚‹Eöµ','˜C-ï9üF$³2¥kŒ”M','/»_ââšMpªXTÎ|ãâ',NULL,'Øğß÷ï9G—šƒÄ/e	ò,','Øğß÷ï9G—šƒÄ/e	ò,','SWDEMO10000','Æ‘nËçAÛc½¼¼Ø3‘','Max','Mustermann',NULL,'$2y$10$qYoCQe2r3h/tiGIqwsq7YuuKBGCEmgtM/U4v182xtKDrFv5vSNFJO',NULL,NULL,'test@example.com',NULL,1,0,NULL,NULL,NULL,0,NULL,'2019-06-12 07:13:39.641',0,'1996-06-06',NULL,0,NULL,NULL,NULL,'2020-04-04 21:05:18.400',NULL,NULL);
-/*!40000 ALTER TABLE `customer` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `customer_address`
---
-
-DROP TABLE IF EXISTS `customer_address`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `customer_address` (
-  `id` binary(16) NOT NULL,
-  `customer_id` binary(16) NOT NULL,
-  `country_id` binary(16) NOT NULL,
-  `country_state_id` binary(16) DEFAULT NULL,
-  `company` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `department` varchar(35) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `salutation_id` binary(16) NOT NULL,
-  `title` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `first_name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `last_name` varchar(60) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `street` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `zipcode` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `city` varchar(70) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `vat_id` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `phone_number` varchar(40) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `additional_address_line1` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `additional_address_line2` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk.customer_address.country_id` (`country_id`),
-  KEY `fk.customer_address.country_state_id` (`country_state_id`),
-  KEY `fk.customer_address.customer_id` (`customer_id`),
-  KEY `fk.customer_address.salutation_id` (`salutation_id`),
-  CONSTRAINT `fk.customer_address.country_id` FOREIGN KEY (`country_id`) REFERENCES `country` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `fk.customer_address.country_state_id` FOREIGN KEY (`country_state_id`) REFERENCES `country_state` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `fk.customer_address.customer_id` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.customer_address.salutation_id` FOREIGN KEY (`salutation_id`) REFERENCES `salutation` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `json.customer_address.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `customer_address`
---
-
-LOCK TABLES `customer_address` WRITE;
-/*!40000 ALTER TABLE `customer_address` DISABLE KEYS */;
-INSERT INTO `customer_address` VALUES ('Øğß÷ï9G—šƒÄ/e	ò,','l—SL,Gó‡Qä<²°','\0j†>¿NY†cI·H%Ù¢',NULL,NULL,NULL,'Æ‘nËçAÛc½¼¼Ø3‘',NULL,'Max','Mustermann','MusterstraÃŸe 1','12345','Musterstadt',NULL,NULL,NULL,NULL,NULL,'2020-04-04 21:05:18.399',NULL);
-/*!40000 ALTER TABLE `customer_address` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `customer_group`
---
-
-DROP TABLE IF EXISTS `customer_group`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `customer_group` (
-  `id` binary(16) NOT NULL,
-  `display_gross` tinyint(1) NOT NULL DEFAULT 1,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `customer_group`
---
-
-LOCK TABLES `customer_group` WRITE;
-/*!40000 ALTER TABLE `customer_group` DISABLE KEYS */;
-INSERT INTO `customer_group` VALUES ('Ï½PÓAØ­ÊÙOÈ½Ö',1,'2020-04-04 21:03:14.382',NULL);
-/*!40000 ALTER TABLE `customer_group` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `customer_group_translation`
---
-
-DROP TABLE IF EXISTS `customer_group_translation`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `customer_group_translation` (
-  `customer_group_id` binary(16) NOT NULL,
-  `language_id` binary(16) NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`customer_group_id`,`language_id`),
-  KEY `fk.customer_group_translation.language_id` (`language_id`),
-  CONSTRAINT `fk.customer_group_translation.customer_group_id` FOREIGN KEY (`customer_group_id`) REFERENCES `customer_group` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.customer_group_translation.language_id` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `json.customer_group_translation.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `customer_group_translation`
---
-
-LOCK TABLES `customer_group_translation` WRITE;
-/*!40000 ALTER TABLE `customer_group_translation` DISABLE KEYS */;
-INSERT INTO `customer_group_translation` VALUES ('Ï½PÓAØ­ÊÙOÈ½Ö','/»_ââšMpªXTÎ|ãâ','Standard customer group',NULL,'2020-04-04 21:03:14.383',NULL),('Ï½PÓAØ­ÊÙOÈ½Ö','‹/pó¡L†…Mã4Ó8','Standard-Kundengruppe',NULL,'2020-04-04 21:03:14.383',NULL);
-/*!40000 ALTER TABLE `customer_group_translation` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `customer_recovery`
---
-
-DROP TABLE IF EXISTS `customer_recovery`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `customer_recovery` (
-  `id` binary(16) NOT NULL,
-  `customer_id` binary(16) NOT NULL,
-  `hash` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  UNIQUE KEY `uniq.customer_recovery.customer_id` (`customer_id`),
-  CONSTRAINT `fk.customer_recovery.customer_id` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `customer_recovery`
---
-
-LOCK TABLES `customer_recovery` WRITE;
-/*!40000 ALTER TABLE `customer_recovery` DISABLE KEYS */;
-/*!40000 ALTER TABLE `customer_recovery` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `customer_tag`
---
-
-DROP TABLE IF EXISTS `customer_tag`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `customer_tag` (
-  `customer_id` binary(16) NOT NULL,
-  `tag_id` binary(16) NOT NULL,
-  PRIMARY KEY (`customer_id`,`tag_id`),
-  KEY `fk.customer_tag.tag_id` (`tag_id`),
-  CONSTRAINT `fk.customer_tag.customer_id` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`id`),
-  CONSTRAINT `fk.customer_tag.tag_id` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `customer_tag`
---
-
-LOCK TABLES `customer_tag` WRITE;
-/*!40000 ALTER TABLE `customer_tag` DISABLE KEYS */;
-/*!40000 ALTER TABLE `customer_tag` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `dead_message`
---
-
-DROP TABLE IF EXISTS `dead_message`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `dead_message` (
-  `id` binary(16) NOT NULL,
-  `original_message_class` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `serialized_original_message` longblob NOT NULL,
-  `handler_class` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `encrypted` tinyint(1) NOT NULL DEFAULT 0,
-  `error_count` int(11) NOT NULL,
-  `next_execution_time` datetime(3) NOT NULL,
-  `exception` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `exception_message` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `exception_file` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `exception_line` int(11) NOT NULL,
-  `scheduled_task_id` binary(16) DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk.dead_message.scheduled_task_id` (`scheduled_task_id`),
-  CONSTRAINT `fk.dead_message.scheduled_task_id` FOREIGN KEY (`scheduled_task_id`) REFERENCES `scheduled_task` (`id`) ON DELETE SET NULL,
-  CONSTRAINT `check.dead_message.error_count` CHECK (`error_count` >= 1)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `dead_message`
---
-
-LOCK TABLES `dead_message` WRITE;
-/*!40000 ALTER TABLE `dead_message` DISABLE KEYS */;
-/*!40000 ALTER TABLE `dead_message` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `delivery_time`
---
-
-DROP TABLE IF EXISTS `delivery_time`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `delivery_time` (
-  `id` binary(16) NOT NULL,
-  `min` int(3) NOT NULL,
-  `max` int(3) NOT NULL,
-  `unit` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `delivery_time`
---
-
-LOCK TABLES `delivery_time` WRITE;
-/*!40000 ALTER TABLE `delivery_time` DISABLE KEYS */;
-INSERT INTO `delivery_time` VALUES ('ñ\\N&ƒi\"âw>/',2,5,'day','2020-04-04 21:03:14.000',NULL),('qza£»UIW“ÿ|1·.',1,2,'week','2020-04-04 21:03:14.000',NULL),('æ-°™j|B:¤6bl(Ã',1,3,'day','2020-04-04 21:03:14.000',NULL),('ùpóÔ-,Kİ§M“fÃ„ø',3,4,'week','2020-04-04 21:03:14.000',NULL);
-/*!40000 ALTER TABLE `delivery_time` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `delivery_time_translation`
---
-
-DROP TABLE IF EXISTS `delivery_time_translation`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `delivery_time_translation` (
-  `delivery_time_id` binary(16) NOT NULL,
-  `language_id` binary(16) NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`delivery_time_id`,`language_id`),
-  KEY `fk.delivery_time_translation.language_id` (`language_id`),
-  CONSTRAINT `fk.delivery_time_translation.delivery_time_id` FOREIGN KEY (`delivery_time_id`) REFERENCES `delivery_time` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.delivery_time_translation.language_id` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `delivery_time_translation`
---
-
-LOCK TABLES `delivery_time_translation` WRITE;
-/*!40000 ALTER TABLE `delivery_time_translation` DISABLE KEYS */;
-INSERT INTO `delivery_time_translation` VALUES ('ñ\\N&ƒi\"âw>/','/»_ââšMpªXTÎ|ãâ','2-5 days',NULL,'2020-04-04 21:03:14.000',NULL),('ñ\\N&ƒi\"âw>/','‹/pó¡L†…Mã4Ó8','2-5 Tage',NULL,'2020-04-04 21:03:14.000',NULL),('qza£»UIW“ÿ|1·.','/»_ââšMpªXTÎ|ãâ','1-2 weeks',NULL,'2020-04-04 21:03:14.000',NULL),('qza£»UIW“ÿ|1·.','‹/pó¡L†…Mã4Ó8','1-2 Wochen',NULL,'2020-04-04 21:03:14.000',NULL),('æ-°™j|B:¤6bl(Ã','/»_ââšMpªXTÎ|ãâ','1-3 days',NULL,'2020-04-04 21:03:14.000',NULL),('æ-°™j|B:¤6bl(Ã','‹/pó¡L†…Mã4Ó8','1-3 Tage',NULL,'2020-04-04 21:03:14.000',NULL),('ùpóÔ-,Kİ§M“fÃ„ø','/»_ââšMpªXTÎ|ãâ','3-4 weeks',NULL,'2020-04-04 21:03:14.000',NULL),('ùpóÔ-,Kİ§M“fÃ„ø','‹/pó¡L†…Mã4Ó8','3-4 Wochen',NULL,'2020-04-04 21:03:14.000',NULL);
-/*!40000 ALTER TABLE `delivery_time_translation` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `document`
---
-
-DROP TABLE IF EXISTS `document`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `document` (
-  `id` binary(16) NOT NULL,
-  `document_type_id` binary(16) NOT NULL,
-  `referenced_document_id` binary(16) DEFAULT NULL,
-  `file_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `order_id` binary(16) NOT NULL,
-  `order_version_id` binary(16) NOT NULL,
-  `config` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `sent` tinyint(1) NOT NULL DEFAULT 0,
-  `static` tinyint(1) NOT NULL DEFAULT 0,
-  `deep_link_code` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `document_media_file_id` binary(16) DEFAULT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uniq.deep_link_code` (`deep_link_code`),
-  KEY `fk.document.document_type_id` (`document_type_id`),
-  KEY `fk.document.referenced_document_id` (`referenced_document_id`),
-  KEY `fk.document.order_id` (`order_id`,`order_version_id`),
-  KEY `fk.document.document_media_file_id` (`document_media_file_id`),
-  CONSTRAINT `fk.document.document_media_file_id` FOREIGN KEY (`document_media_file_id`) REFERENCES `media` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `fk.document.document_type_id` FOREIGN KEY (`document_type_id`) REFERENCES `document_type` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `fk.document.order_id` FOREIGN KEY (`order_id`, `order_version_id`) REFERENCES `order` (`id`, `version_id`) ON UPDATE CASCADE,
-  CONSTRAINT `fk.document.referenced_document_id` FOREIGN KEY (`referenced_document_id`) REFERENCES `document` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `json.document.custom_fields` CHECK (json_valid(`custom_fields`)),
-  CONSTRAINT `json.document.config` CHECK (json_valid(`config`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `document`
---
-
-LOCK TABLES `document` WRITE;
-/*!40000 ALTER TABLE `document` DISABLE KEYS */;
-/*!40000 ALTER TABLE `document` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `document_base_config`
---
-
-DROP TABLE IF EXISTS `document_base_config`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `document_base_config` (
-  `id` binary(16) NOT NULL,
-  `name` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `filename_prefix` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT '',
-  `filename_suffix` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT '',
-  `document_number` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT '',
-  `global` tinyint(1) DEFAULT 0,
-  `document_type_id` binary(16) NOT NULL,
-  `logo_id` binary(16) DEFAULT NULL,
-  `config` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `idx.document_base_config.type_id` (`document_type_id`),
-  KEY `fk.document_base_config.logo_id` (`logo_id`),
-  CONSTRAINT `fk.document_base_config.logo_id` FOREIGN KEY (`logo_id`) REFERENCES `media` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.document_base_config.type_id` FOREIGN KEY (`document_type_id`) REFERENCES `document_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `json.config` CHECK (json_valid(`config`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `document_base_config`
---
-
-LOCK TABLES `document_base_config` WRITE;
-/*!40000 ALTER TABLE `document_base_config` DISABLE KEYS */;
-INSERT INTO `document_base_config` VALUES ('$ã¢ß*şD»¤3†§|·','storno','storno_','','',1,'û¦Æ@»Fš†şƒÔqîE',NULL,'{\"displayPrices\":true,\"displayFooter\":true,\"displayHeader\":true,\"displayLineItems\":true,\"diplayLineItemPosition\":true,\"displayPageCount\":true,\"displayCompanyAddress\":true,\"pageOrientation\":\"portrait\",\"pageSize\":\"a4\",\"itemsPerPage\":10,\"companyName\":\"Muster AG\",\"taxNumber\":\"000111000\",\"vatId\":\"XX 111 222 333\",\"taxOffice\":\"Coesfeld\",\"bankName\":\"Kreissparkasse M\\u00fcnster\",\"bankIban\":\"DE11111222223333344444\",\"bankBic\":\"SWSKKEFF\",\"placeOfJurisdiction\":\"Coesfeld\",\"placeOfFulfillment\":\"Coesfeld\",\"executiveDirector\":\"Max Mustermann\",\"companyAddress\":\"Muster AG - Ebbinghoff 10 - 48624 Sch\\u00f6ppingen\",\"referencedDocumentType\":\"invoice\"}','2020-04-04 21:03:14.416',NULL),('9”ài\'D|‡wÑ€E=','credit_note','credit_note_','','',1,'Ì1§µ¹¼Bg–Á¤\\?Øy',NULL,'{\"displayPrices\":true,\"displayFooter\":true,\"displayHeader\":true,\"displayLineItems\":true,\"diplayLineItemPosition\":true,\"displayPageCount\":true,\"displayCompanyAddress\":true,\"pageOrientation\":\"portrait\",\"pageSize\":\"a4\",\"itemsPerPage\":10,\"companyName\":\"Muster AG\",\"taxNumber\":\"000111000\",\"vatId\":\"XX 111 222 333\",\"taxOffice\":\"Coesfeld\",\"bankName\":\"Kreissparkasse M\\u00fcnster\",\"bankIban\":\"DE11111222223333344444\",\"bankBic\":\"SWSKKEFF\",\"placeOfJurisdiction\":\"Coesfeld\",\"placeOfFulfillment\":\"Coesfeld\",\"executiveDirector\":\"Max Mustermann\",\"companyAddress\":\"Muster AG - Ebbinghoff 10 - 48624 Sch\\u00f6ppingen\"}','2020-04-04 21:03:14.417',NULL),('f\'š».ÇO­¬#\"¬À’','delivery_note','delivery_note_','','',1,'ô_èfrI¢ bâ«G¹`',NULL,'{\"displayPrices\":false,\"displayFooter\":true,\"displayHeader\":true,\"displayLineItems\":true,\"diplayLineItemPosition\":true,\"displayPageCount\":true,\"displayCompanyAddress\":true,\"pageOrientation\":\"portrait\",\"pageSize\":\"a4\",\"itemsPerPage\":10,\"companyName\":\"Muster AG\",\"taxNumber\":\"000111000\",\"vatId\":\"XX 111 222 333\",\"taxOffice\":\"Coesfeld\",\"bankName\":\"Kreissparkasse M\\u00fcnster\",\"bankIban\":\"DE11111222223333344444\",\"bankBic\":\"SWSKKEFF\",\"placeOfJurisdiction\":\"Coesfeld\",\"placeOfFulfillment\":\"Coesfeld\",\"executiveDirector\":\"Max Mustermann\",\"companyAddress\":\"Muster AG - Ebbinghoff 10 - 48624 Sch\\u00f6ppingen\"}','2020-04-04 21:03:14.417',NULL),('•Ÿj™ĞöJ‚“ÑQßKËé&','invoice','invoice_','','',1,'}¿ÓqÕEcºÀí	W “',NULL,'{\"displayPrices\":true,\"displayFooter\":true,\"displayHeader\":true,\"displayLineItems\":true,\"diplayLineItemPosition\":true,\"displayPageCount\":true,\"displayCompanyAddress\":true,\"pageOrientation\":\"portrait\",\"pageSize\":\"a4\",\"itemsPerPage\":10,\"companyName\":\"Muster AG\",\"taxNumber\":\"000111000\",\"vatId\":\"XX 111 222 333\",\"taxOffice\":\"Coesfeld\",\"bankName\":\"Kreissparkasse M\\u00fcnster\",\"bankIban\":\"DE11111222223333344444\",\"bankBic\":\"SWSKKEFF\",\"placeOfJurisdiction\":\"Coesfeld\",\"placeOfFulfillment\":\"Coesfeld\",\"executiveDirector\":\"Max Mustermann\",\"companyAddress\":\"Muster AG - Ebbinghoff 10 - 48624 Sch\\u00f6ppingen\"}','2020-04-04 21:03:14.417',NULL);
-/*!40000 ALTER TABLE `document_base_config` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `document_base_config_sales_channel`
---
-
-DROP TABLE IF EXISTS `document_base_config_sales_channel`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `document_base_config_sales_channel` (
-  `id` binary(16) NOT NULL,
-  `document_base_config_id` binary(16) NOT NULL,
-  `document_type_id` binary(16) NOT NULL,
-  `sales_channel_id` binary(16) DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  UNIQUE KEY `uniq.document_base_configuration_id__sales_channel_id` (`document_type_id`,`sales_channel_id`),
-  KEY `fk.document_base_config_sales_channel.document_base_config_id` (`document_base_config_id`),
-  KEY `fk.document_base_config_sales_channel.sales_channel_id` (`sales_channel_id`),
-  CONSTRAINT `fk.document_base_config_sales_channel.document_base_config_id` FOREIGN KEY (`document_base_config_id`) REFERENCES `document_base_config` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.document_base_config_sales_channel.document_type_id` FOREIGN KEY (`document_type_id`) REFERENCES `document_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.document_base_config_sales_channel.sales_channel_id` FOREIGN KEY (`sales_channel_id`) REFERENCES `sales_channel` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `document_base_config_sales_channel`
---
-
-LOCK TABLES `document_base_config_sales_channel` WRITE;
-/*!40000 ALTER TABLE `document_base_config_sales_channel` DISABLE KEYS */;
-INSERT INTO `document_base_config_sales_channel` VALUES ('÷zqˆ¢k@	œâ(É]ÿÒh','$ã¢ß*şD»¤3†§|·','û¦Æ@»Fš†şƒÔqîE',NULL,'2020-04-04 21:03:14.417',NULL),('ª/nŒô­KÜ­€şìÑHL','•Ÿj™ĞöJ‚“ÑQßKËé&','}¿ÓqÕEcºÀí	W “',NULL,'2020-04-04 21:03:14.417',NULL),('Ğüï˜‹B=œdlîxùÌ','f\'š».ÇO­¬#\"¬À’','ô_èfrI¢ bâ«G¹`',NULL,'2020-04-04 21:03:14.417',NULL),('ËÍ]äpJ=»íÜQù’†Ì','9”ài\'D|‡wÑ€E=','Ì1§µ¹¼Bg–Á¤\\?Øy',NULL,'2020-04-04 21:03:14.418',NULL);
-/*!40000 ALTER TABLE `document_base_config_sales_channel` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `document_type`
---
-
-DROP TABLE IF EXISTS `document_type`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `document_type` (
-  `id` binary(16) NOT NULL,
-  `technical_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uniq.document_type.technical_name` (`technical_name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `document_type`
---
-
-LOCK TABLES `document_type` WRITE;
-/*!40000 ALTER TABLE `document_type` DISABLE KEYS */;
-INSERT INTO `document_type` VALUES ('}¿ÓqÕEcºÀí	W “','invoice','2020-04-04 21:03:14.250',NULL),('Ì1§µ¹¼Bg–Á¤\\?Øy','credit_note','2020-04-04 21:03:14.252',NULL),('ô_èfrI¢ bâ«G¹`','delivery_note','2020-04-04 21:03:14.252',NULL),('û¦Æ@»Fš†şƒÔqîE','storno','2020-04-04 21:03:14.416',NULL);
-/*!40000 ALTER TABLE `document_type` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `document_type_translation`
---
-
-DROP TABLE IF EXISTS `document_type_translation`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `document_type_translation` (
-  `document_type_id` binary(16) NOT NULL,
-  `language_id` binary(16) NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`document_type_id`,`language_id`),
-  KEY `fk.document_type_translation.language_id` (`language_id`),
-  CONSTRAINT `fk.document_type_translation.document_type_id` FOREIGN KEY (`document_type_id`) REFERENCES `document_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.document_type_translation.language_id` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `json.document_type_translation.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `document_type_translation`
---
-
-LOCK TABLES `document_type_translation` WRITE;
-/*!40000 ALTER TABLE `document_type_translation` DISABLE KEYS */;
-INSERT INTO `document_type_translation` VALUES ('}¿ÓqÕEcºÀí	W “','/»_ââšMpªXTÎ|ãâ','Invoice',NULL,'2020-04-04 21:03:14.254',NULL),('}¿ÓqÕEcºÀí	W “','‹/pó¡L†…Mã4Ó8','Rechnung',NULL,'2020-04-04 21:03:14.254',NULL),('Ì1§µ¹¼Bg–Á¤\\?Øy','/»_ââšMpªXTÎ|ãâ','Credit note',NULL,'2020-04-04 21:03:14.256',NULL),('Ì1§µ¹¼Bg–Á¤\\?Øy','‹/pó¡L†…Mã4Ó8','Gutschrift',NULL,'2020-04-04 21:03:14.256',NULL),('ô_èfrI¢ bâ«G¹`','/»_ââšMpªXTÎ|ãâ','Delivery note',NULL,'2020-04-04 21:03:14.255',NULL),('ô_èfrI¢ bâ«G¹`','‹/pó¡L†…Mã4Ó8','Lieferschein',NULL,'2020-04-04 21:03:14.255',NULL),('û¦Æ@»Fš†şƒÔqîE','/»_ââšMpªXTÎ|ãâ','Storno bill',NULL,'2020-04-04 21:03:14.416',NULL),('û¦Æ@»Fš†şƒÔqîE','‹/pó¡L†…Mã4Ó8','Stornorechnung',NULL,'2020-04-04 21:03:14.416',NULL);
-/*!40000 ALTER TABLE `document_type_translation` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `elasticsearch_index_task`
---
-
-DROP TABLE IF EXISTS `elasticsearch_index_task`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `elasticsearch_index_task` (
-  `id` binary(16) NOT NULL,
-  `index` varchar(500) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `alias` varchar(500) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `entity` varchar(500) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `doc_count` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `elasticsearch_index_task`
---
-
-LOCK TABLES `elasticsearch_index_task` WRITE;
-/*!40000 ALTER TABLE `elasticsearch_index_task` DISABLE KEYS */;
-/*!40000 ALTER TABLE `elasticsearch_index_task` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `enqueue`
---
-
-DROP TABLE IF EXISTS `enqueue`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `enqueue` (
-  `id` char(36) COLLATE utf8_unicode_ci NOT NULL COMMENT '(DC2Type:guid)',
-  `published_at` bigint(20) NOT NULL,
-  `body` longtext COLLATE utf8_unicode_ci DEFAULT NULL,
-  `headers` longtext COLLATE utf8_unicode_ci DEFAULT NULL,
-  `properties` longtext COLLATE utf8_unicode_ci DEFAULT NULL,
-  `redelivered` tinyint(1) DEFAULT NULL,
-  `queue` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `priority` smallint(6) DEFAULT NULL,
-  `delayed_until` bigint(20) DEFAULT NULL,
-  `time_to_live` bigint(20) DEFAULT NULL,
-  `delivery_id` char(36) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '(DC2Type:guid)',
-  `redeliver_after` bigint(20) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `IDX_CFC35A6862A6DC27E0D4FDE17FFD7F63121369211A065DF8BF396750` (`priority`,`published_at`,`queue`,`delivery_id`,`delayed_until`,`id`),
-  KEY `IDX_CFC35A68AA0BDFF712136921` (`redeliver_after`,`delivery_id`),
-  KEY `IDX_CFC35A68E0669C0612136921` (`time_to_live`,`delivery_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `enqueue`
---
-
-LOCK TABLES `enqueue` WRITE;
-/*!40000 ALTER TABLE `enqueue` DISABLE KEYS */;
-INSERT INTO `enqueue` VALUES ('515c2ac9-eaa2-4817-806f-324f8d550c75',15861083098337,'O:36:\\\"Symfony\\\\Component\\\\Messenger\\\\Envelope\\\":2:{s:44:\\\"\\0Symfony\\\\Component\\\\Messenger\\\\Envelope\\0stamps\\\";a:1:{s:46:\\\"Symfony\\\\Component\\\\Messenger\\\\Stamp\\\\BusNameStamp\\\";a:1:{i:0;O:46:\\\"Symfony\\\\Component\\\\Messenger\\\\Stamp\\\\BusNameStamp\\\":1:{s:55:\\\"\\0Symfony\\\\Component\\\\Messenger\\\\Stamp\\\\BusNameStamp\\0busName\\\";s:22:\\\"messenger.bus.shopware\\\";}}}s:45:\\\"\\0Symfony\\\\Component\\\\Messenger\\\\Envelope\\0message\\\";O:61:\\\"Shopware\\\\Core\\\\Content\\\\Media\\\\Message\\\\GenerateThumbnailsMessage\\\":2:{s:71:\\\"\\0Shopware\\\\Core\\\\Content\\\\Media\\\\Message\\\\GenerateThumbnailsMessage\\0mediaIds\\\";a:1:{i:0;s:32:\\\"1412f754d8194cd0a59a5d349b4c9b5a\\\";}s:74:\\\"\\0Shopware\\\\Core\\\\Content\\\\Media\\\\Message\\\\GenerateThumbnailsMessage\\0contextData\\\";s:575:\\\"O:31:\\\"Shopware\\\\Core\\\\Framework\\\\Context\\\":12:{s:18:\\\"\\0*\\0languageIdChain\\\";a:1:{i:0;s:32:\\\"2fbb5fe2e29a4d70aa5854ce7ce3e20b\\\";}s:12:\\\"\\0*\\0versionId\\\";s:32:\\\"0fa91ce3e96a4bc2be4bd9ce752c3425\\\";s:13:\\\"\\0*\\0currencyId\\\";s:32:\\\"b7d2554b0ce847cd82f3ac9bd1c0dfca\\\";s:17:\\\"\\0*\\0currencyFactor\\\";d:1;s:20:\\\"\\0*\\0currencyPrecision\\\";i:2;s:8:\\\"\\0*\\0scope\\\";s:6:\\\"system\\\";s:10:\\\"\\0*\\0ruleIds\\\";a:0:{}s:9:\\\"\\0*\\0source\\\";O:48:\\\"Shopware\\\\Core\\\\Framework\\\\Api\\\\Context\\\\SystemSource\\\":0:{}s:22:\\\"\\0*\\0considerInheritance\\\";b:0;s:11:\\\"\\0*\\0taxState\\\";s:5:\\\"gross\\\";s:41:\\\"\\0Shopware\\\\Core\\\\Framework\\\\Context\\0useCache\\\";b:1;s:13:\\\"\\0*\\0extensions\\\";a:0:{}}\\\";}}','[]','[]',0,'messages',0,NULL,NULL,NULL,NULL),('8c5b6937-0352-4cc7-99c0-cdade9bac914',15861083097436,'O:36:\\\"Symfony\\\\Component\\\\Messenger\\\\Envelope\\\":2:{s:44:\\\"\\0Symfony\\\\Component\\\\Messenger\\\\Envelope\\0stamps\\\";a:1:{s:46:\\\"Symfony\\\\Component\\\\Messenger\\\\Stamp\\\\BusNameStamp\\\";a:1:{i:0;O:46:\\\"Symfony\\\\Component\\\\Messenger\\\\Stamp\\\\BusNameStamp\\\":1:{s:55:\\\"\\0Symfony\\\\Component\\\\Messenger\\\\Stamp\\\\BusNameStamp\\0busName\\\";s:22:\\\"messenger.bus.shopware\\\";}}}s:45:\\\"\\0Symfony\\\\Component\\\\Messenger\\\\Envelope\\0message\\\";O:53:\\\"Shopware\\\\Core\\\\Content\\\\Media\\\\Message\\\\DeleteFileMessage\\\":1:{s:60:\\\"\\0Shopware\\\\Core\\\\Content\\\\Media\\\\Message\\\\DeleteFileMessage\\0files\\\";a:3:{i:0;s:49:\\\"media/18/e4/70/1586034354/defaultThemePreview.jpg\\\";i:1;s:44:\\\"media/6d/1a/ac/1586034354/demostore-logo.png\\\";i:2;s:37:\\\"media/9a/0a/92/1586034354/favicon.png\\\";}}}','[]','[]',0,'messages',0,NULL,NULL,NULL,NULL),('8cb695f7-58d6-4ec7-ab35-67c901ba72b8',15861083098533,'O:36:\\\"Symfony\\\\Component\\\\Messenger\\\\Envelope\\\":2:{s:44:\\\"\\0Symfony\\\\Component\\\\Messenger\\\\Envelope\\0stamps\\\";a:1:{s:46:\\\"Symfony\\\\Component\\\\Messenger\\\\Stamp\\\\BusNameStamp\\\";a:1:{i:0;O:46:\\\"Symfony\\\\Component\\\\Messenger\\\\Stamp\\\\BusNameStamp\\\":1:{s:55:\\\"\\0Symfony\\\\Component\\\\Messenger\\\\Stamp\\\\BusNameStamp\\0busName\\\";s:22:\\\"messenger.bus.shopware\\\";}}}s:45:\\\"\\0Symfony\\\\Component\\\\Messenger\\\\Envelope\\0message\\\";O:61:\\\"Shopware\\\\Core\\\\Content\\\\Media\\\\Message\\\\GenerateThumbnailsMessage\\\":2:{s:71:\\\"\\0Shopware\\\\Core\\\\Content\\\\Media\\\\Message\\\\GenerateThumbnailsMessage\\0mediaIds\\\";a:1:{i:0;s:32:\\\"dae61626e5a247b0bdbb681b2256c7ae\\\";}s:74:\\\"\\0Shopware\\\\Core\\\\Content\\\\Media\\\\Message\\\\GenerateThumbnailsMessage\\0contextData\\\";s:575:\\\"O:31:\\\"Shopware\\\\Core\\\\Framework\\\\Context\\\":12:{s:18:\\\"\\0*\\0languageIdChain\\\";a:1:{i:0;s:32:\\\"2fbb5fe2e29a4d70aa5854ce7ce3e20b\\\";}s:12:\\\"\\0*\\0versionId\\\";s:32:\\\"0fa91ce3e96a4bc2be4bd9ce752c3425\\\";s:13:\\\"\\0*\\0currencyId\\\";s:32:\\\"b7d2554b0ce847cd82f3ac9bd1c0dfca\\\";s:17:\\\"\\0*\\0currencyFactor\\\";d:1;s:20:\\\"\\0*\\0currencyPrecision\\\";i:2;s:8:\\\"\\0*\\0scope\\\";s:6:\\\"system\\\";s:10:\\\"\\0*\\0ruleIds\\\";a:0:{}s:9:\\\"\\0*\\0source\\\";O:48:\\\"Shopware\\\\Core\\\\Framework\\\\Api\\\\Context\\\\SystemSource\\\":0:{}s:22:\\\"\\0*\\0considerInheritance\\\";b:0;s:11:\\\"\\0*\\0taxState\\\";s:5:\\\"gross\\\";s:41:\\\"\\0Shopware\\\\Core\\\\Framework\\\\Context\\0useCache\\\";b:1;s:13:\\\"\\0*\\0extensions\\\";a:0:{}}\\\";}}','[]','[]',0,'messages',0,NULL,NULL,NULL,NULL),('e0116b70-7bd7-4a83-b398-3ad52a3d7a8f',15861083098709,'O:36:\\\"Symfony\\\\Component\\\\Messenger\\\\Envelope\\\":2:{s:44:\\\"\\0Symfony\\\\Component\\\\Messenger\\\\Envelope\\0stamps\\\";a:1:{s:46:\\\"Symfony\\\\Component\\\\Messenger\\\\Stamp\\\\BusNameStamp\\\";a:1:{i:0;O:46:\\\"Symfony\\\\Component\\\\Messenger\\\\Stamp\\\\BusNameStamp\\\":1:{s:55:\\\"\\0Symfony\\\\Component\\\\Messenger\\\\Stamp\\\\BusNameStamp\\0busName\\\";s:22:\\\"messenger.bus.shopware\\\";}}}s:45:\\\"\\0Symfony\\\\Component\\\\Messenger\\\\Envelope\\0message\\\";O:61:\\\"Shopware\\\\Core\\\\Content\\\\Media\\\\Message\\\\GenerateThumbnailsMessage\\\":2:{s:71:\\\"\\0Shopware\\\\Core\\\\Content\\\\Media\\\\Message\\\\GenerateThumbnailsMessage\\0mediaIds\\\";a:1:{i:0;s:32:\\\"1b503cc18dc3457bb1af95f74a0a8749\\\";}s:74:\\\"\\0Shopware\\\\Core\\\\Content\\\\Media\\\\Message\\\\GenerateThumbnailsMessage\\0contextData\\\";s:575:\\\"O:31:\\\"Shopware\\\\Core\\\\Framework\\\\Context\\\":12:{s:18:\\\"\\0*\\0languageIdChain\\\";a:1:{i:0;s:32:\\\"2fbb5fe2e29a4d70aa5854ce7ce3e20b\\\";}s:12:\\\"\\0*\\0versionId\\\";s:32:\\\"0fa91ce3e96a4bc2be4bd9ce752c3425\\\";s:13:\\\"\\0*\\0currencyId\\\";s:32:\\\"b7d2554b0ce847cd82f3ac9bd1c0dfca\\\";s:17:\\\"\\0*\\0currencyFactor\\\";d:1;s:20:\\\"\\0*\\0currencyPrecision\\\";i:2;s:8:\\\"\\0*\\0scope\\\";s:6:\\\"system\\\";s:10:\\\"\\0*\\0ruleIds\\\";a:0:{}s:9:\\\"\\0*\\0source\\\";O:48:\\\"Shopware\\\\Core\\\\Framework\\\\Api\\\\Context\\\\SystemSource\\\":0:{}s:22:\\\"\\0*\\0considerInheritance\\\";b:0;s:11:\\\"\\0*\\0taxState\\\";s:5:\\\"gross\\\";s:41:\\\"\\0Shopware\\\\Core\\\\Framework\\\\Context\\0useCache\\\";b:1;s:13:\\\"\\0*\\0extensions\\\";a:0:{}}\\\";}}','[]','[]',0,'messages',0,NULL,NULL,NULL,NULL);
-/*!40000 ALTER TABLE `enqueue` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `event_action`
---
-
-DROP TABLE IF EXISTS `event_action`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `event_action` (
-  `id` binary(16) NOT NULL,
-  `event_name` varchar(500) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `action_name` varchar(500) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `config` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `idx.event_action.event_name` (`event_name`),
-  KEY `idx.event_action.action_name` (`action_name`),
-  CONSTRAINT `json.event_action.config` CHECK (json_valid(`config`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `event_action`
---
-
-LOCK TABLES `event_action` WRITE;
-/*!40000 ALTER TABLE `event_action` DISABLE KEYS */;
-INSERT INTO `event_action` VALUES ('3ÿcãJ1®¯å¹z™Ò','checkout.order.placed','action.mail.send','{\"mail_template_type_id\":\"8e9f421e796648b7b2680439da89fcf9\"}','2020-04-04 21:03:14.422',NULL),('-6.s@ä6ƒM2y~9','user.recovery.request','action.mail.send','{\"mail_template_type_id\":\"a989b781fa894d5e9a8d3dd842af414c\"}','2020-04-04 21:03:16.031',NULL),('4àÚ`ËİN…‘\0‹\ZĞSÁÛ','customer.recovery.request','action.mail.send','{\"mail_template_type_id\":\"b496e12809684081b83712c5d256fe82\"}','2020-04-04 21:03:18.797',NULL),('IÜuÁòtC­û¶w²;Ü','contact_form.send','action.mail.send','{\"mail_template_type_id\":\"d53f7708c34b4e37aa6bd6b85602729d\"}','2020-04-04 21:03:16.763',NULL),('gvÈÁ‡@¥¥N=„õ„Há','checkout.customer.double_opt_in_guest_order','action.mail.send','{\"mail_template_type_id\":\"cb7b9ed0965340babfc566912416af83\"}','2020-04-04 21:03:20.186',NULL),('ŸÜÌ0·JÕ»¢Rã¡°‡','checkout.customer.double_opt_in_registration','action.mail.send','{\"mail_template_type_id\":\"2f9e748ff5b949f9aa37913dc26a855c\"}','2020-04-04 21:03:19.964',NULL),('©-h¥/äNà‘†ƒ\0hFGí','checkout.customer.register','action.mail.send','{\"mail_template_type_id\":\"572455124da5438d86090664217db598\"}','2020-04-04 21:03:14.440',NULL),('Ø±¯ò±·D4‰jOZ×\\¥\"','newsletter.confirm','action.mail.send','{\"mail_template_type_id\":\"e1e80400fc074eb2b3d222177ef366f9\"}','2020-04-04 21:03:14.442',NULL),('ù»ì3@Ê@%[4£©¢&h','newsletter.register','action.mail.send','{\"mail_template_type_id\":\"eb75b9c468794311a903aec00cb11ce8\"}','2020-04-04 21:03:14.441',NULL);
-/*!40000 ALTER TABLE `event_action` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `import_export_file`
---
-
-DROP TABLE IF EXISTS `import_export_file`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `import_export_file` (
-  `id` binary(16) NOT NULL,
-  `original_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `path` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `expire_date` datetime(3) NOT NULL,
-  `size` int(11) DEFAULT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `access_token` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `import_export_file`
---
-
-LOCK TABLES `import_export_file` WRITE;
-/*!40000 ALTER TABLE `import_export_file` DISABLE KEYS */;
-/*!40000 ALTER TABLE `import_export_file` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `import_export_log`
---
-
-DROP TABLE IF EXISTS `import_export_log`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `import_export_log` (
-  `id` binary(16) NOT NULL,
-  `activity` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `state` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `records` int(11) NOT NULL,
-  `username` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `profile_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `user_id` binary(16) DEFAULT NULL,
-  `profile_id` binary(16) DEFAULT NULL,
-  `file_id` binary(16) DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk.import_export_log.user_id` (`user_id`),
-  KEY `fk.import_export_log.profile_id` (`profile_id`),
-  KEY `fk.import_export_log.file_id` (`file_id`),
-  CONSTRAINT `fk.import_export_log.file_id` FOREIGN KEY (`file_id`) REFERENCES `import_export_file` (`id`) ON DELETE SET NULL,
-  CONSTRAINT `fk.import_export_log.profile_id` FOREIGN KEY (`profile_id`) REFERENCES `import_export_profile` (`id`) ON DELETE SET NULL,
-  CONSTRAINT `fk.import_export_log.user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE SET NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `import_export_log`
---
-
-LOCK TABLES `import_export_log` WRITE;
-/*!40000 ALTER TABLE `import_export_log` DISABLE KEYS */;
-/*!40000 ALTER TABLE `import_export_log` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `import_export_profile`
---
-
-DROP TABLE IF EXISTS `import_export_profile`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `import_export_profile` (
-  `id` binary(16) NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `system_default` tinyint(1) unsigned NOT NULL DEFAULT 0,
-  `source_entity` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `file_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `delimiter` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `enclosure` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `mapping` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `import_export_profile`
---
-
-LOCK TABLES `import_export_profile` WRITE;
-/*!40000 ALTER TABLE `import_export_profile` DISABLE KEYS */;
-INSERT INTO `import_export_profile` VALUES ('jâ¹ÌkIUª]Î‘ç¹î','Default customer',1,'customer','text/csv',';','\"','[{\"fileField\":\"firstName\",\"entityField\":\"firstName\",\"valueSubstitutions\":[],\"isIdentifier\":false},{\"fileField\":\"lastName\",\"entityField\":\"lastName\",\"valueSubstitutions\":[],\"isIdentifier\":false},{\"fileField\":\"email\",\"entityField\":\"email\",\"valueSubstitutions\":[],\"isIdentifier\":false},{\"fileField\":\"customerNumber\",\"entityField\":\"customerNumber\",\"valueSubstitutions\":[],\"isIdentifier\":true},{\"fileField\":\"salesChannelId\",\"entityField\":\"salesChannelId\",\"valueSubstitutions\":{\"default\":\"98432def39fc4624b33213a56b8c944d\"},\"isIdentifier\":false},{\"fileField\":\"birthday\",\"entityField\":\"birthday\",\"valueSubstitutions\":[],\"isIdentifier\":false},{\"fileField\":\"salutationId\",\"entityField\":\"salutationId\",\"valueSubstitutions\":{\"mrs\":\"80d8030ba9c14c7bbda77ee359e3b106\",\"not_specified\":\"8dbd118f43134334add815dd1c586bcd\",\"mr\":\"c6916ecb05e741db9d63bdbcbcd83391\"},\"isIdentifier\":false},{\"fileField\":\"salesChannelId\",\"entityField\":\"salesChannelId\",\"valueSubstitutions\":{\"default\":\"98432def39fc4624b33213a56b8c944d\"},\"isIdentifier\":false},{\"fileField\":\"defaultPaymentMethodId\",\"entityField\":\"defaultPaymentMethodId\",\"valueSubstitutions\":{\"pre\":\"10bd91fd16a14953a6ed43828b45f6b5\",\"invoice\":\"869fa8dfaab744518a0ac23f86c0f152\",\"debit\":\"da954b4434b74c13b5beb1e4b644518f\",\"cash\":\"e0978c8fff38421b840c95e8fa96fdf6\"},\"isIdentifier\":false},{\"fileField\":\"groupId\",\"entityField\":\"groupId\",\"valueSubstitutions\":{\"default\":\"cfbd5018d38d41d8adca10d94fc8bdd6\"},\"isIdentifier\":false},{\"fileField\":\"guest\",\"entityField\":\"guest\",\"valueSubstitutions\":[false,true],\"isIdentifier\":false},{\"fileField\":\"defaultBillingAddress.firstName\",\"entityField\":\"defaultBillingAddress.firstName\",\"valueSubstitutions\":[],\"isIdentifier\":false},{\"fileField\":\"defaultBillingAddress.lastName\",\"entityField\":\"defaultBillingAddress.lastName\",\"valueSubstitutions\":[],\"isIdentifier\":false},{\"fileField\":\"defaultBillingAddress.salutationId\",\"entityField\":\"defaultBillingAddress.salutationId\",\"valueSubstitutions\":{\"mrs\":\"80d8030ba9c14c7bbda77ee359e3b106\",\"not_specified\":\"8dbd118f43134334add815dd1c586bcd\",\"mr\":\"c6916ecb05e741db9d63bdbcbcd83391\"},\"isIdentifier\":false},{\"fileField\":\"defaultBillingAddress.street\",\"entityField\":\"defaultBillingAddress.street\",\"valueSubstitutions\":[],\"isIdentifier\":false},{\"fileField\":\"defaultBillingAddress.zipcode\",\"entityField\":\"defaultBillingAddress.zipcode\",\"valueSubstitutions\":[],\"isIdentifier\":false},{\"fileField\":\"defaultBillingAddress.city\",\"entityField\":\"defaultBillingAddress.city\",\"valueSubstitutions\":[],\"isIdentifier\":false},{\"fileField\":\"defaultBillingAddress.countryId\",\"entityField\":\"defaultBillingAddress.countryId\",\"valueSubstitutions\":{\"HU\":\"006a86083ebf4e59866349b74825d9a2\",\"IE\":\"0d99ac5ab5234e06863542e4eca4f977\",\"AT\":\"1256e48a1a6440c8a2084dc7b471c6de\",\"GB\":\"1a219e7e17e44b9288b33fe4f77d8f93\",\"SE\":\"1a7270e194c84835aa335c3db922ab98\",\"RO\":\"22669c4af6e84246b444d93361ae6348\",\"ES\":\"263e3309024241f5b61002db83e92bb6\",\"LU\":\"2e528e9029664d54849deffe2e8528bd\",\"FR\":\"335070e2698147e6ab34c1913d473af8\",\"CA\":\"3b5b0be7c4244afcba1a0a2c9683ab39\",\"LI\":\"4876a1fe15af479c94b23bccb874fab8\",\"AU\":\"4c4d0c1ad711487296e9246c735a91ac\",\"FI\":\"50ccafd35bed40d5a141210d08d4ac15\",\"JP\":\"6245eedba2a042669d0c8fc85cfbdfdb\",\"PT\":\"6fcd393f7399468badad1b0ef7b4995d\",\"DE\":\"851f0cf33e2c4ab2987fbe23d8ff6112\",\"AE\":\"898b47931c89412a928da2e84d58083b\",\"IL\":\"b80a189807cc4e0cb050649d281790e9\",\"IS\":\"b814b16fc7d94fe68d96397c2da5a566\",\"NL\":\"b861d3d170ba4733882c98dc5a9eb7e3\",\"US\":\"ba07768a515746af9d33ed0d4ba836cd\",\"IT\":\"c370ae03f0e642a3b75992129d60c236\",\"GR\":\"c6b7ade49cec483f8f4490820a40bf6f\",\"PL\":\"c6c5c69d7227466eb965c17c5073bfb5\",\"BR\":\"c711e6f20fc740eb87f46274a74c24f3\",\"NO\":\"d16b91a7df154384a43a88ffb69e4ca2\",\"DK\":\"d83952d9646d4714babce1a6e88b2cad\",\"BE\":\"e16d4ed286fc4065acce522aa662500d\",\"CH\":\"e9c5466d1e8f4365a1dc05e5c3529dc6\",\"TR\":\"f4c2bca5f2df4c479bf1026688580b15\",\"NA\":\"f629c8381f80446987943ab974ece4f9\",\"SK\":\"fa558f7f188b4f21b6747f1a4b8f98bf\",\"CZ\":\"fdd5195e6b6c430f9c51b5968f7f37c8\"},\"isIdentifier\":false},{\"fileField\":\"defaultShippingAddress.firstName\",\"entityField\":\"defaultShippingAddress.firstName\",\"valueSubstitutions\":[],\"isIdentifier\":false},{\"fileField\":\"defaultShippingAddress.lastName\",\"entityField\":\"defaultShippingAddress.lastName\",\"valueSubstitutions\":[],\"isIdentifier\":false},{\"fileField\":\"defaultShippingAddress.salutationId\",\"entityField\":\"defaultShippingAddress.salutationId\",\"valueSubstitutions\":{\"mrs\":\"80d8030ba9c14c7bbda77ee359e3b106\",\"not_specified\":\"8dbd118f43134334add815dd1c586bcd\",\"mr\":\"c6916ecb05e741db9d63bdbcbcd83391\"},\"isIdentifier\":false},{\"fileField\":\"defaultShippingAddress.street\",\"entityField\":\"defaultShippingAddress.street\",\"valueSubstitutions\":[],\"isIdentifier\":false},{\"fileField\":\"defaultShippingAddress.zipcode\",\"entityField\":\"defaultShippingAddress.zipcode\",\"valueSubstitutions\":[],\"isIdentifier\":false},{\"fileField\":\"defaultShippingAddress.city\",\"entityField\":\"defaultShippingAddress.city\",\"valueSubstitutions\":[],\"isIdentifier\":false},{\"fileField\":\"defaultShippingAddress.countryId\",\"entityField\":\"defaultShippingAddress.countryId\",\"valueSubstitutions\":{\"HU\":\"006a86083ebf4e59866349b74825d9a2\",\"IE\":\"0d99ac5ab5234e06863542e4eca4f977\",\"AT\":\"1256e48a1a6440c8a2084dc7b471c6de\",\"GB\":\"1a219e7e17e44b9288b33fe4f77d8f93\",\"SE\":\"1a7270e194c84835aa335c3db922ab98\",\"RO\":\"22669c4af6e84246b444d93361ae6348\",\"ES\":\"263e3309024241f5b61002db83e92bb6\",\"LU\":\"2e528e9029664d54849deffe2e8528bd\",\"FR\":\"335070e2698147e6ab34c1913d473af8\",\"CA\":\"3b5b0be7c4244afcba1a0a2c9683ab39\",\"LI\":\"4876a1fe15af479c94b23bccb874fab8\",\"AU\":\"4c4d0c1ad711487296e9246c735a91ac\",\"FI\":\"50ccafd35bed40d5a141210d08d4ac15\",\"JP\":\"6245eedba2a042669d0c8fc85cfbdfdb\",\"PT\":\"6fcd393f7399468badad1b0ef7b4995d\",\"DE\":\"851f0cf33e2c4ab2987fbe23d8ff6112\",\"AE\":\"898b47931c89412a928da2e84d58083b\",\"IL\":\"b80a189807cc4e0cb050649d281790e9\",\"IS\":\"b814b16fc7d94fe68d96397c2da5a566\",\"NL\":\"b861d3d170ba4733882c98dc5a9eb7e3\",\"US\":\"ba07768a515746af9d33ed0d4ba836cd\",\"IT\":\"c370ae03f0e642a3b75992129d60c236\",\"GR\":\"c6b7ade49cec483f8f4490820a40bf6f\",\"PL\":\"c6c5c69d7227466eb965c17c5073bfb5\",\"BR\":\"c711e6f20fc740eb87f46274a74c24f3\",\"NO\":\"d16b91a7df154384a43a88ffb69e4ca2\",\"DK\":\"d83952d9646d4714babce1a6e88b2cad\",\"BE\":\"e16d4ed286fc4065acce522aa662500d\",\"CH\":\"e9c5466d1e8f4365a1dc05e5c3529dc6\",\"TR\":\"f4c2bca5f2df4c479bf1026688580b15\",\"NA\":\"f629c8381f80446987943ab974ece4f9\",\"SK\":\"fa558f7f188b4f21b6747f1a4b8f98bf\",\"CZ\":\"fdd5195e6b6c430f9c51b5968f7f37c8\"},\"isIdentifier\":false}]','2020-04-04 21:03:14.720','2020-04-04 21:03:16.560'),('ë\'\'`ÜŞEcŞ‹ô¤- ğ','Default product',1,'product','text/csv',';','\"','[{\"fileField\":\"name.de-DE\",\"entityField\":\"name.de-DE\",\"valueSubstitutions\":[],\"isIdentifier\":false},{\"fileField\":\"name.en-GB\",\"entityField\":\"name.en-GB\",\"valueSubstitutions\":[],\"isIdentifier\":false},{\"fileField\":\"stock\",\"entityField\":\"stock\",\"valueSubstitutions\":[],\"isIdentifier\":false},{\"fileField\":\"manufacturer.id\",\"entityField\":\"manufacturer.id\",\"valueSubstitutions\":[],\"isIdentifier\":false},{\"fileField\":\"tax.id\",\"entityField\":\"tax.id\",\"valueSubstitutions\":[],\"isIdentifier\":false},{\"fileField\":\"price.net\",\"entityField\":\"price.net\",\"valueSubstitutions\":[],\"isIdentifier\":false},{\"fileField\":\"price.gross\",\"entityField\":\"price.gross\",\"valueSubstitutions\":[],\"isIdentifier\":false},{\"fileField\":\"price.linked\",\"entityField\":\"price.linked\",\"valueSubstitutions\":[],\"isIdentifier\":false},{\"fileField\":\"productNumber\",\"entityField\":\"productNumber\",\"valueSubstitutions\":[],\"isIdentifier\":true},{\"fileField\":\"releaseDate\",\"entityField\":\"releaseDate\",\"valueSubstitutions\":[],\"isIdentifier\":false},{\"fileField\":\"categories.id\",\"entityField\":\"categories.id\",\"valueSubstitutions\":[],\"isIdentifier\":false}]','2020-04-04 21:03:15.917','2020-04-04 21:03:16.562');
-/*!40000 ALTER TABLE `import_export_profile` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `integration`
---
-
-DROP TABLE IF EXISTS `integration`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `integration` (
-  `id` binary(16) NOT NULL,
-  `write_access` tinyint(1) NOT NULL DEFAULT 0,
-  `access_key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `secret_access_key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `label` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  `last_usage_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `idx.access_key` (`access_key`),
-  CONSTRAINT `json.integration.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `integration`
---
-
-LOCK TABLES `integration` WRITE;
-/*!40000 ALTER TABLE `integration` DISABLE KEYS */;
-/*!40000 ALTER TABLE `integration` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `language`
---
-
-DROP TABLE IF EXISTS `language`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `language` (
-  `id` binary(16) NOT NULL,
-  `name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `parent_id` binary(16) DEFAULT NULL,
-  `locale_id` binary(16) NOT NULL,
-  `translation_code_id` binary(16) DEFAULT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uniq.translation_code_id` (`translation_code_id`),
-  KEY `idx.language.translation_code_id` (`translation_code_id`),
-  KEY `idx.language.language_id_parent_language_id` (`id`,`parent_id`),
-  KEY `fk.language.parent_id` (`parent_id`),
-  KEY `fk.language.locale_id` (`locale_id`),
-  CONSTRAINT `fk.language.locale_id` FOREIGN KEY (`locale_id`) REFERENCES `locale` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.language.parent_id` FOREIGN KEY (`parent_id`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.language.translation_code_id` FOREIGN KEY (`translation_code_id`) REFERENCES `locale` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `json.language.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `language`
---
-
-LOCK TABLES `language` WRITE;
-/*!40000 ALTER TABLE `language` DISABLE KEYS */;
-INSERT INTO `language` VALUES ('/»_ââšMpªXTÎ|ãâ','English',NULL,'1ÔÄUAMwJ•ÿ@š#','1ÔÄUAMwJ•ÿ@š#',NULL,'2020-04-04 21:03:14.159',NULL),('‹/pó¡L†…Mã4Ó8','Deutsch',NULL,'AsÓF–Œ×¸ˆ¯¹Ñò','AsÓF–Œ×¸ˆ¯¹Ñò',NULL,'2020-04-04 21:03:14.178',NULL);
-/*!40000 ALTER TABLE `language` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `locale`
---
-
-DROP TABLE IF EXISTS `locale`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `locale` (
-  `id` binary(16) NOT NULL,
-  `code` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uniq.code` (`code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `locale`
---
-
-LOCK TABLES `locale` WRITE;
-/*!40000 ALTER TABLE `locale` DISABLE KEYS */;
-INSERT INTO `locale` VALUES ('\0%?Â™µI\"´/U(Â„4­','sr-ME','2020-04-04 21:03:14.202',NULL),('\0Š1R{KD€Ö©ó)m','es-ES','2020-04-04 21:03:14.193',NULL),('\0‹íóÖvJZ¯n3i?fÕ','ur-IN','2020-04-04 21:03:14.204',NULL),('hIË%KQ½£+ –¦','ku-TR','2020-04-04 21:03:14.198',NULL),('7ß/¿J+ õDØ\n‰¥','bs-BA','2020-04-04 21:03:14.189',NULL),('j©•V~H˜´Dÿ zÁ¨','ar-JO','2020-04-04 21:03:14.188',NULL),('Š,Ôl¤A¬‚3ÅrfÇÙ','en-IN','2020-04-04 21:03:14.191',NULL),('\r(0·+L‚ÙÓyÚ','kfo-CI','2020-04-04 21:03:14.197',NULL),('rxn´<L§œ¤mÛRO\r2','aa-ET','2020-04-04 21:03:14.187',NULL),('oĞ&nGİ¡(¦SQâ×‘','it-CH','2020-04-04 21:03:14.196',NULL),('oIulL¨\r\\³·ï','ar-MA','2020-04-04 21:03:14.188',NULL),('ñEùH­¨*50nÅ','fil-PH','2020-04-04 21:03:14.194',NULL),('óõ¯DFª)÷ì×•','fur-IT','2020-04-04 21:03:14.195',NULL),('	£öM™şD×±!ú‚Ì#”B','so-DJ','2020-04-04 21:03:14.201',NULL),('	³_®ú7M¾–4!oz¯>{','ln-CD','2020-04-04 21:03:14.198',NULL),('\nl<Ú~TJX€rExg‹•]','es-MX','2020-04-04 21:03:14.193',NULL),('\r¹ä¢€O·¥ğ¾½Ï­İ','ln-CG','2020-04-04 21:03:14.198',NULL),('v(©°DÕ²|Ò’¤','ky-KG','2020-04-04 21:03:14.198',NULL),('#r×ÛJH¡KéšÃÿb','pa-IN','2020-04-04 21:03:14.200',NULL),('‡¢èBOs®©à0Sõö¯','fr-SN','2020-04-04 21:03:14.195',NULL),('¡_eÎIş½ëç=I<õì','hr-HR','2020-04-04 21:03:14.196',NULL),('\r+pÏâJğ„Í	“l©I','ar-LY','2020-04-04 21:03:14.188',NULL),('\r€c%\rN—ŠrÏóèMc','lo-LA','2020-04-04 21:03:14.198',NULL),('\r¨•÷MJB»Bá2pß­','byn-ER','2020-04-04 21:03:14.189',NULL),('¦àÀ>_C±¥ÄCû©j×','bo-CN','2020-04-04 21:03:14.189',NULL),('öå©ÊN”u¨Û½\'','is-IS','2020-04-04 21:03:14.196',NULL),('™°ò@£ı’I3I','kpe-GN','2020-04-04 21:03:14.197',NULL),('gˆ$RKªÛÇ‘m£‰','gsw-CH','2020-04-04 21:03:14.195',NULL),('¹ÔÏÅ,K	‘|ÍBÉ‚','fo-FO','2020-04-04 21:03:14.194',NULL),('–(ğ!Dq¾?Ù‡@µ’-','de-BE','2020-04-04 21:03:14.190',NULL),('[m»WFÍ’ ëî¨„¢Î','kl-GL','2020-04-04 21:03:14.197',NULL),('då$;ÿI¿­MÄ¾§…[','nds-DE','2020-04-04 21:03:14.199',NULL),('ùk¾}~G\n­1—]ìåQ','nn-NO','2020-04-04 21:03:14.199',NULL),('e÷9tHi¢yf´¸¤p/','zh-HK','2020-04-04 21:03:14.204',NULL),('˜ˆ²ïÆA¢­Ô›—uQ*…','en-JM','2020-04-04 21:03:14.191',NULL),('•	ñÉG¾ˆ·x¹ûûp','st-ZA','2020-04-04 21:03:14.202',NULL),('yì‘×SKÍ\\QÌ','sr-RS','2020-04-04 21:03:14.202',NULL),('¥ÇˆÊ)O‰¾ö’g3[','pt-PT','2020-04-04 21:03:14.200',NULL),('\ZÄ<í@<›ã;ºj~','ca-ES','2020-04-04 21:03:14.189',NULL),('\ZÓEqì|F…·ÉD3„)¿¼','pa-PK','2020-04-04 21:03:14.200',NULL),('G/Úh{F®P¾[„ßdB','ar-SA','2020-04-04 21:03:14.188',NULL),('AsÓF–Œ×¸ˆ¯¹Ñò','de-DE','2020-04-04 21:03:14.158',NULL),(' Ú»wI3œAØÕ	“…Ä','pl-PL','2020-04-04 21:03:14.200',NULL),('!³µıœ»Dk¿I—1•ÜÖÃ','to-TO','2020-04-04 21:03:14.203',NULL),('\"^±_GF>¿Ï‹Õ wq','ee-TG','2020-04-04 21:03:14.190',NULL),('\"¸ÆäŠLJë 0cí®','om-KE','2020-04-04 21:03:14.200',NULL),('\"Ï=E}™A€6Àú¦~„Ş','cch-NG','2020-04-04 21:03:14.189',NULL),('#C‡\nCÎM8·a»è]şjå','de-LU','2020-04-04 21:03:14.190',NULL),('#g[£Oö¤¯5#a#õ','ak-GH','2020-04-04 21:03:14.187',NULL),('#ÃbÆ&jKí¿”´Ô\r¨:','en-AS','2020-04-04 21:03:14.190',NULL),('$+ˆmDL‹ìıÃ\0z[F','ss-ZA','2020-04-04 21:03:14.202',NULL),('\'\0	VA_‡£AÏ_','as-IN','2020-04-04 21:03:14.189',NULL),(')–b&ˆNÒ¬(Ndopø2','ar-KW','2020-04-04 21:03:14.188',NULL),(')¢?F<SGí»×6³Ä]…','ne-IN','2020-04-04 21:03:14.199',NULL),('*½£±oTOšM}8\nOÔr','en-ZW','2020-04-04 21:03:14.192',NULL),(',XØ?#Bè¥§ñæJ¬','sr-CS','2020-04-04 21:03:14.202',NULL),(',îå/x2Gò¼y{‘ôéè','ve-ZA','2020-04-04 21:03:14.204',NULL),('-\"òo­@Ğ‘†L’S÷¯§','sk-SK','2020-04-04 21:03:14.201',NULL),('-ü°A[WO¢„€vøø—ñ','tig-ER','2020-04-04 21:03:14.203',NULL),('.<QK÷hDo°<ş¸RRèı','es-BO','2020-04-04 21:03:14.192',NULL),('.œÕÌÉDÕ† S^=ş8','en-BW','2020-04-04 21:03:14.191',NULL),('/ÿŞİ}(B«êÂşŒÓê–','ar-BH','2020-04-04 21:03:14.188',NULL),('1¤-8¦rEºªÍ*ìX\rò','uk-UA','2020-04-04 21:03:14.203',NULL),('1ÔÄUAMwJ•ÿ@š#','en-GB','2020-04-04 21:03:14.156',NULL),('2Ù`b¼BE¶KİjTâJ','fr-BE','2020-04-04 21:03:14.194',NULL),('4¾…qiA‰òZùsÇ','tt-RU','2020-04-04 21:03:14.203',NULL),('6°\'HK÷BV»ú›\0ë=ƒ\Z','ar-YE','2020-04-04 21:03:14.189',NULL),('6äº$ÀN_aU\ZsÀ\\','en-SG','2020-04-04 21:03:14.192',NULL),('7ªìØœ\'Bñ¯ëJJ$ ','zu-ZA','2020-04-04 21:03:14.205',NULL),('8*)UxŒM™»âIõ.¡%','aa-DJ','2020-04-04 21:03:14.187',NULL),('9,ª`Ô@…¦|ÔèÛLÈó','pt-BR','2020-04-04 21:03:14.200',NULL),(';5,¦¢œDÉ€®n¢Â «\0','ne-NP','2020-04-04 21:03:14.199',NULL),('>i…/¦0HG¸qY^‘P','fa-AF','2020-04-04 21:03:14.194',NULL),('>¢ıÑIS°½>µuŞ*','ar-SY','2020-04-04 21:03:14.188',NULL),('>ïY~\ZD%€’$€«×','ko-KR','2020-04-04 21:03:14.197',NULL),('@‚jÌøIÙ—H9Á{¸¶N','es-CL','2020-04-04 21:03:14.192',NULL),('BO{şüN½™íCXç*V','sr-BA','2020-04-04 21:03:14.202',NULL),('DşZ³F¯MK›¿p\0\'¾8º','gl-ES','2020-04-04 21:03:14.195',NULL),('EP÷ EF±P›-¦ µ#','sh-BA','2020-04-04 21:03:14.201',NULL),('FY{=K2¢ØÀ?ÛÙú','zh-MO','2020-04-04 21:03:14.204',NULL),('GzbK_x@\r€˜ıÈ','bg-BG','2020-04-04 21:03:14.189',NULL),('G‰ê³\rJãÒxéa1','sl-SI','2020-04-04 21:03:14.201',NULL),('Iß”C‘ÊN„¥6U¸Q¹«','es-NI','2020-04-04 21:03:14.193',NULL),('Iî(ˆM1½¢÷Ü ‹J','ku-IR','2020-04-04 21:03:14.198',NULL),('K*ŒØùDğ¾ûëÏÕ»','or-IN','2020-04-04 21:03:14.200',NULL),('LÄ2¡åşB;ÃaÚwoõ#','nso-ZA','2020-04-04 21:03:14.199',NULL),('LÿBª¢®I®ªd#ÿ¹¹','fr-CA','2020-04-04 21:03:14.194',NULL),('Ré¯äğIk„ˆmfº†÷','el-GR','2020-04-04 21:03:14.190',NULL),('Ró_CéFFÑªÀO@ü­,0','en-VI','2020-04-04 21:03:14.192',NULL),('UmK\0˜IT¯~óR¶…r','ar-SD','2020-04-04 21:03:14.188',NULL),('U«(ÀĞ\\@ï¶us.ï¤','nl-BE','2020-04-04 21:03:14.199',NULL),('V¶É^W#Ki—vƒW—”ç+','af-ZA','2020-04-04 21:03:14.187',NULL),('VÀ\r—ŞBlµ\"÷9¦óit','th-TH','2020-04-04 21:03:14.203',NULL),('Xh,»Ô`@¯¹Oé³K8‘','ee-GH','2020-04-04 21:03:14.190',NULL),('YO³uãF’²µÂ×9€•','om-ET','2020-04-04 21:03:14.200',NULL),('Z‰íV¹GH¤*N8Ø…½ë','he-IL','2020-04-04 21:03:14.196',NULL),('[”OÈ|@¾¤_i©¿\n‚Y','ro-RO','2020-04-04 21:03:14.200',NULL),('[ª#yH×‰?2$Ó.ƒe','sh-CS','2020-04-04 21:03:14.201',NULL),('\\,wzF±ŞşÂèV','mt-MT','2020-04-04 21:03:14.199',NULL),('\\7€ôOa™şágŸ','es-PY','2020-04-04 21:03:14.193',NULL),('].cÁ¢O·Qf•ÅQ','es-PR','2020-04-04 21:03:14.193',NULL),('^óÎ9İŠF\"”Ã×ş/k„o','ar-LB','2020-04-04 21:03:14.188',NULL),('_n|åFn£î4ePğ7w','ar-AE','2020-04-04 21:03:14.187',NULL),('cåùƒ;H6˜Ú\'©yÔË€','so-SO','2020-04-04 21:03:14.202',NULL),('cøÌ^RNŒ+ZF!á³','ha-NG','2020-04-04 21:03:14.195',NULL),('cû‰eMN¬Z½¨ÕI3','gv-GB','2020-04-04 21:03:14.195',NULL),('dv!ÕGÂ›0¸á6¤Ån','en-BE','2020-04-04 21:03:14.191',NULL),('e|[â,QAm…2P+Ùk£','es-AR','2020-04-04 21:03:14.192',NULL),('f‰Ÿ”ñ–OgŠân[ä¶','gaa-GH','2020-04-04 21:03:14.195',NULL),('hü¡önNC»ãôBwÛw','en-UM','2020-04-04 21:03:14.192',NULL),('jz%ˆÊEå“€3rè¢§','ku-IQ','2020-04-04 21:03:14.197',NULL),('j²JWÅ7G“ “9§S','en-AU','2020-04-04 21:03:14.191',NULL),('kõiÖXIÄ|¹‰È†˜','haw-US','2020-04-04 21:03:14.196',NULL),('mòeåN•IÜµ¿Üí¯','tg-TJ','2020-04-04 21:03:14.203',NULL),('nÎ<ŞsBµûØßå›iá','de-AT','2020-04-04 21:03:14.190',NULL),('oóÖLÖ‡/j-”\0Pa','ru-UA','2020-04-04 21:03:14.201',NULL),('pÀ%Y¤J£°r±}N[|õ','de-LI','2020-04-04 21:03:14.190',NULL),('qBÊbJu§ËN,kš½q','es-VE','2020-04-04 21:03:14.194',NULL),('q+0ù\\qE÷¹Â:Ócñ„I','uz-AF','2020-04-04 21:03:14.204',NULL),('rÓŸ›fA\"‘‘‡@Éœàš','ml-IN','2020-04-04 21:03:14.198',NULL),('sh§ÅöBzœúk ÊcP7','sa-IN','2020-04-04 21:03:14.201',NULL),('tc{+àƒHÚ—‹Ú@ª·','ha-SD','2020-04-04 21:03:14.196',NULL),('to·(l>F»[ùzî','oc-FR','2020-04-04 21:03:14.200',NULL),('v:†^‚Jà‹]KñPAE|','ti-ER','2020-04-04 21:03:14.203',NULL),('wÒşÁnO/¹™ÿ-ƒ;Š','es-CO','2020-04-04 21:03:14.192',NULL),('yN	›AÚ‰ ŸE¯vÑ','en-MH','2020-04-04 21:03:14.191',NULL),('ySZÌ8æIå‚SÖ¼&Õ!','my-MM','2020-04-04 21:03:14.199',NULL),('yÖ¹¤º­H\\”¼«Rä»‰²','cy-GB','2020-04-04 21:03:14.190',NULL),('zß—Ù°AÚŒ(Şªù©','kk-KZ','2020-04-04 21:03:14.197',NULL),('|G¯Ğ“ÕLÓ‘C?åÆæŞ','es-PA','2020-04-04 21:03:14.193',NULL),('}Éi4nJè•\'BŸú','es-PE','2020-04-04 21:03:14.193',NULL),('~¯’Sr×Kß­ÁäÒ‚é\'','so-ET','2020-04-04 21:03:14.201',NULL),('€¹şÆÉ@Q“Gu\Zäxx ','gez-ET','2020-04-04 21:03:14.195',NULL),('€Åj71ú@Ğ éˆ/u+','kam-KE','2020-04-04 21:03:14.197',NULL),('‚\0Œ°à1G*»ağ n2I','st-LS','2020-04-04 21:03:14.202',NULL),('‚ïPóÔıI®²‹;ñƒ@','am-ET','2020-04-04 21:03:14.187',NULL),('ƒœ„MÏFF=µŞö»Ëˆ','wo-SN','2020-04-04 21:03:14.204',NULL),('…C+©Kæ‰ŸézN[äN','de-CH','2020-04-04 21:03:14.190',NULL),('†c¸ú?òN·ºö‡ˆÇõ&','ga-IE','2020-04-04 21:03:14.195',NULL),('‡ CB‡O‡€K÷ïX‹˜','sv-SE','2020-04-04 21:03:14.202',NULL),('‡1BCH«óû­¯b','ms-MY','2020-04-04 21:03:14.199',NULL),('‡Yâ£JŞ}ly^ÏŠÔ','en-HK','2020-04-04 21:03:14.191',NULL),('‰ù\"*ËGAÿÃÁ¥4¾','kw-GB','2020-04-04 21:03:14.198',NULL),('ŠÎdm!$Jœ¤Ât†à-','en-NZ','2020-04-04 21:03:14.192',NULL),('‹Oƒ4JDÍ„–yyïê','en-US','2020-04-04 21:03:14.192',NULL),('Œ\'ìî·ÔI’@&e=£','ha-GH','2020-04-04 21:03:14.195',NULL),('Œ¦+©é\ZE!£ö`œMy* ','mn-CN','2020-04-04 21:03:14.198',NULL),('ŒÆ6æ}DvºUùë\r1C	','lt-LT','2020-04-04 21:03:14.198',NULL),('bŸµ¡J:„<µÆ‡y','si-LK','2020-04-04 21:03:14.201',NULL),('‹Ë]3Eæ³ù½+JàÁ','ti-ET','2020-04-04 21:03:14.203',NULL),('afÒALÑ¹X¼¥Dˆ','fa-IR','2020-04-04 21:03:14.194',NULL),('’|¸GCB­¶(éA¬3','ar-IQ','2020-04-04 21:03:14.188',NULL),('“ğ\Zù7ÙEoq.1òœœ;','en-MT','2020-04-04 21:03:14.191',NULL),('”2ÄÓ\\Aƒ”´˜RGÓ6','ur-PK','2020-04-04 21:03:14.204',NULL),('”ÄÁ=åJ‰¦„TşÊS‰','ar-QA','2020-04-04 21:03:14.188',NULL),('•[<‹ÀMH‚µ©ê;bşGµ','lv-LV','2020-04-04 21:03:14.198',NULL),('–xFê¹ãH’Ÿ‘H¯aĞ','wal-ET','2020-04-04 21:03:14.204',NULL),('—‚‘BîIJ\"¡:mò\'ı0#','es-GT','2020-04-04 21:03:14.193',NULL),('˜#Àß?Iî¹Ù0%±»\\','nr-ZA','2020-04-04 21:03:14.199',NULL),('™eÏ¯¢¹K9œ!|Æ¢','ar-DZ','2020-04-04 21:03:14.188',NULL),('Ÿ	×j†³OĞdRch¨E?','en-NA','2020-04-04 21:03:14.191',NULL),('¢³¢ºBˆH:‰ÿ22¿`ú','fi-FI','2020-04-04 21:03:14.194',NULL),('¢ºÀJæODe–€½–º¸’Ú','id-ID','2020-04-04 21:03:14.196',NULL),('¢şa S@£ F¿Ğ¤‡®','en-MP','2020-04-04 21:03:14.191',NULL),('£ôR£„ÆI+ŠLvï<¡‹','es-CR','2020-04-04 21:03:14.193',NULL),('¤ksZ×ÉNªÁÅQ@o±','ms-BN','2020-04-04 21:03:14.199',NULL),('©G?´‚D¯E\0weãÒ=','syr-SY','2020-04-04 21:03:14.203',NULL),('ªÃŒ\'ôFà³K¬³Çó2)','sq-AL','2020-04-04 21:03:14.202',NULL),('«¥LCƒŸ+ƒ£›üf','en-BZ','2020-04-04 21:03:14.191',NULL),('¬I@èh›C}„¼‰3MjS','en-TT','2020-04-04 21:03:14.192',NULL),('­Š›EL¶‚ª&­H)','sw-TZ','2020-04-04 21:03:14.202',NULL),('±*eyıG §šxøS@','en-IE','2020-04-04 21:03:14.191',NULL),('±Û˜Pè3JşœÄk€¶ç','aa-ER','2020-04-04 21:03:14.187',NULL),('²y²KŠ®œ}û½','es-UY','2020-04-04 21:03:14.194',NULL),('³k}ë¢DF‚sÂˆ·ıJ','kpe-LR','2020-04-04 21:03:14.197',NULL),('³ÀYÓÕ\"M£¾#²vşe{Š','es-HN','2020-04-04 21:03:14.193',NULL),('·3¨wOùŠ~×®¿ÏŞ','en-ZA','2020-04-04 21:03:14.192',NULL),('ºµIªõLt‡[xÔBO \'','ar-TN','2020-04-04 21:03:14.189',NULL),('¼”Ëˆ©O‡÷øÿ˜†?K','af-NA','2020-04-04 21:03:14.187',NULL),('½ıû¸vFn½ê³g›^Õ¹','ny-MW','2020-04-04 21:03:14.200',NULL),('¾XàÇh ItµÇÏ»9Ìÿ›','kn-IN','2020-04-04 21:03:14.197',NULL),('¾aI<-!NB,(ì\n€','nl-NL','2020-04-04 21:03:14.199',NULL),('¿ö#ÎC¿¥ú±2¹&','hu-HU','2020-04-04 21:03:14.196',NULL),('Áj$ÚŸÚFØ’ü\0¢Iò','be-BY','2020-04-04 21:03:14.189',NULL),('Âó&[™ÌG®I³ëÔ.','kcg-NG','2020-04-04 21:03:14.197',NULL),('ÆŒu²®K¨ºæ¤²±y','tn-ZA','2020-04-04 21:03:14.203',NULL),('É\n¹SKCšOÑ«ëÔ>','dz-BT','2020-04-04 21:03:14.190',NULL),('Ë‰îÑDù£!šd¾œC','ro-MD','2020-04-04 21:03:14.200',NULL),('Î\0YNƒK¬¸T{‘çÿHİ','ru-RU','2020-04-04 21:03:14.200',NULL),('Ïƒ*ì(A‚‘sğ¶9Ö‰^','zh-SG','2020-04-04 21:03:14.204',NULL),('ĞÃR¨qEŞfÒ,lª³','se-FI','2020-04-04 21:03:14.201',NULL),('ĞËâÚ|oDuˆeYNüPñ2','en-PK','2020-04-04 21:03:14.192',NULL),('Ñ#G]&Ml·eƒ3ïâW','ar-EG','2020-04-04 21:03:14.188',NULL),('Ñ¢>z$JCŒÚÉpé?wê','fr-LU','2020-04-04 21:03:14.194',NULL),('ÒŒºdP5B¢¦gñç1è','gez-ER','2020-04-04 21:03:14.195',NULL),('ÓBlË\Z C*‚&4ÎÈ©¿$','kok-IN','2020-04-04 21:03:14.197',NULL),('Ô¯‚ogJ¦‚vıia¨Dæ','es-EC','2020-04-04 21:03:14.193',NULL),('Õÿx>È@‹”ä!!.]','es-US','2020-04-04 21:03:14.193',NULL),('Ö Ú\0:EO³T‹ıÿ„’','ig-NG','2020-04-04 21:03:14.196',NULL),('Ö°`¨\rH½·øuf•','yo-NG','2020-04-04 21:03:14.204',NULL),('×.c<AyAÊš@ñZ\n„Èu','so-KE','2020-04-04 21:03:14.201',NULL),('×E Ö4@\Z´Éév+7U›','el-CY','2020-04-04 21:03:14.190',NULL),('ØÉĞÜO\0›ÔdØ‹â¸','dv-MV','2020-04-04 21:03:14.190',NULL),('Ø[È}L\rAd…N1LŸë½','gu-IN','2020-04-04 21:03:14.195',NULL),('Øe¡~M“±8\rñıØeç','es-SV','2020-04-04 21:03:14.193',NULL),('ØÓk<¶]EEGÑÏÏÈ+¹','en-CA','2020-04-04 21:03:14.191',NULL),('Ù&Åî€JJ¯›EE.S‡\nt','en-PH','2020-04-04 21:03:14.192',NULL),('ÙfŠ-‰JT²ÀÇ¿‚æ­‰','eu-ES','2020-04-04 21:03:14.194',NULL),('Ùmë½“ZBkŠ_fŸ7û|','bn-IN','2020-04-04 21:03:14.189',NULL),('Û÷Õ)zFA±Zt3eˆ','ku-SY','2020-04-04 21:03:14.198',NULL),('ÜW›ªãpD½­+më£í¡','bo-IN','2020-04-04 21:03:14.189',NULL),('Ü]v³\0@¬³¿äÍ\0Üš=','ss-SZ','2020-04-04 21:03:14.202',NULL),('İõ“íÂ¸B4¤ı©Öe}÷\'','ha-NE','2020-04-04 21:03:14.195',NULL),('Ş)úiŠÏM²¾–ôûÇcÂ6','da-DK','2020-04-04 21:03:14.190',NULL),('â›_ºBVŸ^ÛrßUUø','ii-CN','2020-04-04 21:03:14.196',NULL),('ä(¹|pÌM9°Uw‘KõĞ','es-DO','2020-04-04 21:03:14.193',NULL),('äœÛOy}B9’‰)^ÒÍIü','tr-TR','2020-04-04 21:03:14.203',NULL),('ä®äbMKà›¢|$…}Æ\0','km-KH','2020-04-04 21:03:14.197',NULL),('äÓò›øOF®ÛtÌuYH','xh-ZA','2020-04-04 21:03:14.204',NULL),('ænL]dD†K’úŒ.r•','te-IN','2020-04-04 21:03:14.203',NULL),('æ½rƒr|E¶‘-9øtg:','mk-MK','2020-04-04 21:03:14.198',NULL),('æÎB0ìAGéª“\'6Ö¯','fr-FR','2020-04-04 21:03:14.194',NULL),('ç(êúWjDÊ“;[­(et','mr-IN','2020-04-04 21:03:14.199',NULL),('çCôXcHB	ƒ(Úk5r','sw-KE','2020-04-04 21:03:14.202',NULL),('èKNä²Eª±jŞß\\ÇÁ','et-EE','2020-04-04 21:03:14.194',NULL),('èç\\´AÚ‡9B5:L','ta-IN','2020-04-04 21:03:14.203',NULL),('ëUeïVÓJˆ²=M&vA‡“','kaj-NG','2020-04-04 21:03:14.197',NULL),('ëy†µ‚©O•±×’©Ë™(Ø','fr-MC','2020-04-04 21:03:14.195',NULL),('ë¹8Vl;Aë€h:™°U®','ka-GE','2020-04-04 21:03:14.197',NULL),('ìÒÆV®B£¯â­\03pÑŞ','ts-ZA','2020-04-04 21:03:14.203',NULL),('ğ#%,©HŸt¶’HÎ_','fr-CH','2020-04-04 21:03:14.194',NULL),('ğŞ½ãx;NõŠØ³-n\rk²','ps-AF','2020-04-04 21:03:14.200',NULL),('ñG+iHr‚‹ )l	','sv-FI','2020-04-04 21:03:14.202',NULL),('ñqÄå„Bœ˜FeŠáùŞ','cs-CZ','2020-04-04 21:03:14.190',NULL),('ñ”oîø`Ft•™K{üg÷','bn-BD','2020-04-04 21:03:14.189',NULL),('ò‹èÊÚH\n‚³‡\"—W','en-GU','2020-04-04 21:03:14.191',NULL),('òâ#¥÷pJNû	;§„»','rw-RW','2020-04-04 21:03:14.201',NULL),('óÖJÜèËFş¬ò?¶áWg','hy-AM','2020-04-04 21:03:14.196',NULL),('ôl0•oõF/´Bñvİ±','sid-ET','2020-04-04 21:03:14.201',NULL),('ôÍ©^œüH¶—`ßÆVöŞ°','zh-CN','2020-04-04 21:03:14.204',NULL),('ö“b¢/CÁ„)íœ%Ã','mn-MN','2020-04-04 21:03:14.198',NULL),('ö€\\<Æ@Iñ ¨;§–Wó','az-AZ','2020-04-04 21:03:14.189',NULL),('÷¼—ÍSN)§±ÔøÊ¯Òr','ar-OM','2020-04-04 21:03:14.188',NULL),('÷Áàå‘šGµ¬U·AlŠ˜ ','nb-NO','2020-04-04 21:03:14.199',NULL),('øß¥éC\"ŠR¥üÄá','se-NO','2020-04-04 21:03:14.201',NULL),('ø‡«ÃW»MÛœŸjk','ug-CN','2020-04-04 21:03:14.203',NULL),('ùS­—rL‹}Äb+½^“','it-IT','2020-04-04 21:03:14.196',NULL),('ù£\rÍë‚C{™$ˆ~3)Ñ','hi-IN','2020-04-04 21:03:14.196',NULL),('úĞANSšØLq‰B','ja-JP','2020-04-04 21:03:14.196',NULL),('úÕqÇêPM°šèRu–øµ','vi-VN','2020-04-04 21:03:14.204',NULL),('û>!ÆBj«gO§}','uz-UZ','2020-04-04 21:03:14.204',NULL),('şx…Å©sN!²\"±ökk','zh-TW','2020-04-04 21:03:14.205',NULL);
-/*!40000 ALTER TABLE `locale` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `locale_translation`
---
-
-DROP TABLE IF EXISTS `locale_translation`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `locale_translation` (
-  `locale_id` binary(16) NOT NULL,
-  `language_id` binary(16) NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `territory` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`locale_id`,`language_id`),
-  KEY `fk.locale_translation.language_id` (`language_id`),
-  CONSTRAINT `fk.locale_translation.language_id` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.locale_translation.locale_id` FOREIGN KEY (`locale_id`) REFERENCES `locale` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `json.locale_translation.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `locale_translation`
---
-
-LOCK TABLES `locale_translation` WRITE;
-/*!40000 ALTER TABLE `locale_translation` DISABLE KEYS */;
-INSERT INTO `locale_translation` VALUES ('\0%?Â™µI\"´/U(Â„4­','/»_ââšMpªXTÎ|ãâ','Serbian','Montenegro',NULL,'2020-04-04 21:03:14.202',NULL),('\0%?Â™µI\"´/U(Â„4­','‹/pó¡L†…Mã4Ó8','Serbisch','Montenegro',NULL,'2020-04-04 21:03:14.202',NULL),('\0Š1R{KD€Ö©ó)m','/»_ââšMpªXTÎ|ãâ','Spanish','Spain',NULL,'2020-04-04 21:03:14.193',NULL),('\0Š1R{KD€Ö©ó)m','‹/pó¡L†…Mã4Ó8','Spanisch','Spanien',NULL,'2020-04-04 21:03:14.193',NULL),('\0‹íóÖvJZ¯n3i?fÕ','/»_ââšMpªXTÎ|ãâ','Urdu','India',NULL,'2020-04-04 21:03:14.204',NULL),('\0‹íóÖvJZ¯n3i?fÕ','‹/pó¡L†…Mã4Ó8','Urdu','Indien',NULL,'2020-04-04 21:03:14.204',NULL),('hIË%KQ½£+ –¦','/»_ââšMpªXTÎ|ãâ','Kurdish','Turkey',NULL,'2020-04-04 21:03:14.198',NULL),('hIË%KQ½£+ –¦','‹/pó¡L†…Mã4Ó8','Kurdisch','TÃ¼rkei',NULL,'2020-04-04 21:03:14.198',NULL),('7ß/¿J+ õDØ\n‰¥','/»_ââšMpªXTÎ|ãâ','Bosnian','Bosnia and Herzegovina',NULL,'2020-04-04 21:03:14.189',NULL),('7ß/¿J+ õDØ\n‰¥','‹/pó¡L†…Mã4Ó8','Bosnisch','Bosnien und Herzegowina',NULL,'2020-04-04 21:03:14.189',NULL),('j©•V~H˜´Dÿ zÁ¨','/»_ââšMpªXTÎ|ãâ','Arabic','Jordan',NULL,'2020-04-04 21:03:14.188',NULL),('j©•V~H˜´Dÿ zÁ¨','‹/pó¡L†…Mã4Ó8','Arabisch','Jordanien',NULL,'2020-04-04 21:03:14.188',NULL),('Š,Ôl¤A¬‚3ÅrfÇÙ','/»_ââšMpªXTÎ|ãâ','English','India',NULL,'2020-04-04 21:03:14.191',NULL),('Š,Ôl¤A¬‚3ÅrfÇÙ','‹/pó¡L†…Mã4Ó8','Englisch','Indien',NULL,'2020-04-04 21:03:14.191',NULL),('\r(0·+L‚ÙÓyÚ','/»_ââšMpªXTÎ|ãâ','Koro','Ivory Coast',NULL,'2020-04-04 21:03:14.197',NULL),('\r(0·+L‚ÙÓyÚ','‹/pó¡L†…Mã4Ó8','Koro','CÃ´te d?Ivoire',NULL,'2020-04-04 21:03:14.197',NULL),('rxn´<L§œ¤mÛRO\r2','/»_ââšMpªXTÎ|ãâ','Afar','Ethiopia',NULL,'2020-04-04 21:03:14.187',NULL),('rxn´<L§œ¤mÛRO\r2','‹/pó¡L†…Mã4Ó8','Afar','Ã„thiopien',NULL,'2020-04-04 21:03:14.187',NULL),('oĞ&nGİ¡(¦SQâ×‘','/»_ââšMpªXTÎ|ãâ','Italian','Switzerland',NULL,'2020-04-04 21:03:14.196',NULL),('oĞ&nGİ¡(¦SQâ×‘','‹/pó¡L†…Mã4Ó8','Italienisch','Schweiz',NULL,'2020-04-04 21:03:14.196',NULL),('oIulL¨\r\\³·ï','/»_ââšMpªXTÎ|ãâ','Arabic','Morocco',NULL,'2020-04-04 21:03:14.188',NULL),('oIulL¨\r\\³·ï','‹/pó¡L†…Mã4Ó8','Arabisch','Marokko',NULL,'2020-04-04 21:03:14.188',NULL),('ñEùH­¨*50nÅ','/»_ââšMpªXTÎ|ãâ','Filipino','Philippines',NULL,'2020-04-04 21:03:14.194',NULL),('ñEùH­¨*50nÅ','‹/pó¡L†…Mã4Ó8','Filipino','Philippinen',NULL,'2020-04-04 21:03:14.194',NULL),('óõ¯DFª)÷ì×•','/»_ââšMpªXTÎ|ãâ','Friulian','Italy',NULL,'2020-04-04 21:03:14.195',NULL),('óõ¯DFª)÷ì×•','‹/pó¡L†…Mã4Ó8','Friulisch','Italien',NULL,'2020-04-04 21:03:14.195',NULL),('	£öM™şD×±!ú‚Ì#”B','/»_ââšMpªXTÎ|ãâ','Somali','Djibouti',NULL,'2020-04-04 21:03:14.201',NULL),('	£öM™şD×±!ú‚Ì#”B','‹/pó¡L†…Mã4Ó8','Somali','Dschibuti',NULL,'2020-04-04 21:03:14.201',NULL),('	³_®ú7M¾–4!oz¯>{','/»_ââšMpªXTÎ|ãâ','Lingala','Democratic Republic of the Congo',NULL,'2020-04-04 21:03:14.198',NULL),('	³_®ú7M¾–4!oz¯>{','‹/pó¡L†…Mã4Ó8','Lingala','Demokratische Republik Kongo',NULL,'2020-04-04 21:03:14.198',NULL),('\nl<Ú~TJX€rExg‹•]','/»_ââšMpªXTÎ|ãâ','Spanish','Mexico',NULL,'2020-04-04 21:03:14.193',NULL),('\nl<Ú~TJX€rExg‹•]','‹/pó¡L†…Mã4Ó8','Spanisch','Mexiko',NULL,'2020-04-04 21:03:14.193',NULL),('\r¹ä¢€O·¥ğ¾½Ï­İ','/»_ââšMpªXTÎ|ãâ','Lingala','Congo',NULL,'2020-04-04 21:03:14.198',NULL),('\r¹ä¢€O·¥ğ¾½Ï­İ','‹/pó¡L†…Mã4Ó8','Lingala','Kongo',NULL,'2020-04-04 21:03:14.198',NULL),('v(©°DÕ²|Ò’¤','/»_ââšMpªXTÎ|ãâ','Kirghiz','Kyrgyzstan',NULL,'2020-04-04 21:03:14.198',NULL),('v(©°DÕ²|Ò’¤','‹/pó¡L†…Mã4Ó8','Kirgisisch','Kirgisistan',NULL,'2020-04-04 21:03:14.198',NULL),('#r×ÛJH¡KéšÃÿb','/»_ââšMpªXTÎ|ãâ','Punjabi','India',NULL,'2020-04-04 21:03:14.200',NULL),('#r×ÛJH¡KéšÃÿb','‹/pó¡L†…Mã4Ó8','Pandschabisch','Indien',NULL,'2020-04-04 21:03:14.200',NULL),('‡¢èBOs®©à0Sõö¯','/»_ââšMpªXTÎ|ãâ','French','Senegal',NULL,'2020-04-04 21:03:14.195',NULL),('‡¢èBOs®©à0Sõö¯','‹/pó¡L†…Mã4Ó8','FranzÃ¶sisch','Senegal',NULL,'2020-04-04 21:03:14.195',NULL),('¡_eÎIş½ëç=I<õì','/»_ââšMpªXTÎ|ãâ','Croatian','Croatia',NULL,'2020-04-04 21:03:14.196',NULL),('¡_eÎIş½ëç=I<õì','‹/pó¡L†…Mã4Ó8','Kroatisch','Kroatien',NULL,'2020-04-04 21:03:14.196',NULL),('\r+pÏâJğ„Í	“l©I','/»_ââšMpªXTÎ|ãâ','Arabic','Libya',NULL,'2020-04-04 21:03:14.188',NULL),('\r+pÏâJğ„Í	“l©I','‹/pó¡L†…Mã4Ó8','Arabisch','Libyen',NULL,'2020-04-04 21:03:14.188',NULL),('\r€c%\rN—ŠrÏóèMc','/»_ââšMpªXTÎ|ãâ','Lao','Laos',NULL,'2020-04-04 21:03:14.198',NULL),('\r€c%\rN—ŠrÏóèMc','‹/pó¡L†…Mã4Ó8','Laotisch','Laos',NULL,'2020-04-04 21:03:14.198',NULL),('\r¨•÷MJB»Bá2pß­','/»_ââšMpªXTÎ|ãâ','Blin','Eritrea',NULL,'2020-04-04 21:03:14.189',NULL),('\r¨•÷MJB»Bá2pß­','‹/pó¡L†…Mã4Ó8','Blin','Eritrea',NULL,'2020-04-04 21:03:14.189',NULL),('¦àÀ>_C±¥ÄCû©j×','/»_ââšMpªXTÎ|ãâ','Tibetan','China',NULL,'2020-04-04 21:03:14.189',NULL),('¦àÀ>_C±¥ÄCû©j×','‹/pó¡L†…Mã4Ó8','Tibetisch','China',NULL,'2020-04-04 21:03:14.189',NULL),('öå©ÊN”u¨Û½\'','/»_ââšMpªXTÎ|ãâ','Icelandic','Iceland',NULL,'2020-04-04 21:03:14.196',NULL),('öå©ÊN”u¨Û½\'','‹/pó¡L†…Mã4Ó8','IslÃ¤ndisch','Island',NULL,'2020-04-04 21:03:14.196',NULL),('™°ò@£ı’I3I','/»_ââšMpªXTÎ|ãâ','Kpelle','Guinea',NULL,'2020-04-04 21:03:14.197',NULL),('™°ò@£ı’I3I','‹/pó¡L†…Mã4Ó8','Kpelle-Sprache','Guinea',NULL,'2020-04-04 21:03:14.197',NULL),('gˆ$RKªÛÇ‘m£‰','/»_ââšMpªXTÎ|ãâ','Swiss German','Switzerland',NULL,'2020-04-04 21:03:14.195',NULL),('gˆ$RKªÛÇ‘m£‰','‹/pó¡L†…Mã4Ó8','Schweizerdeutsch','Schweiz',NULL,'2020-04-04 21:03:14.195',NULL),('¹ÔÏÅ,K	‘|ÍBÉ‚','/»_ââšMpªXTÎ|ãâ','Faeroese','Faeroe Islands',NULL,'2020-04-04 21:03:14.194',NULL),('¹ÔÏÅ,K	‘|ÍBÉ‚','‹/pó¡L†…Mã4Ó8','FÃ¤rÃ¶isch','FÃ¤rÃ¶er',NULL,'2020-04-04 21:03:14.194',NULL),('–(ğ!Dq¾?Ù‡@µ’-','/»_ââšMpªXTÎ|ãâ','German','Belgium',NULL,'2020-04-04 21:03:14.190',NULL),('–(ğ!Dq¾?Ù‡@µ’-','‹/pó¡L†…Mã4Ó8','Deutsch','Belgien',NULL,'2020-04-04 21:03:14.190',NULL),('[m»WFÍ’ ëî¨„¢Î','/»_ââšMpªXTÎ|ãâ','Greenlandic','Greenland',NULL,'2020-04-04 21:03:14.197',NULL),('[m»WFÍ’ ëî¨„¢Î','‹/pó¡L†…Mã4Ó8','GrÃ¶nlÃ¤ndisch','GrÃ¶nland',NULL,'2020-04-04 21:03:14.197',NULL),('då$;ÿI¿­MÄ¾§…[','/»_ââšMpªXTÎ|ãâ','Low German','Germany',NULL,'2020-04-04 21:03:14.199',NULL),('då$;ÿI¿­MÄ¾§…[','‹/pó¡L†…Mã4Ó8','Niederdeutsch','Deutschland',NULL,'2020-04-04 21:03:14.199',NULL),('ùk¾}~G\n­1—]ìåQ','/»_ââšMpªXTÎ|ãâ','Norwegian Nynorsk','Norway',NULL,'2020-04-04 21:03:14.199',NULL),('ùk¾}~G\n­1—]ìåQ','‹/pó¡L†…Mã4Ó8','Norwegisch Nynorsk','Norwegen',NULL,'2020-04-04 21:03:14.199',NULL),('e÷9tHi¢yf´¸¤p/','/»_ââšMpªXTÎ|ãâ','Chinese','Hong Kong',NULL,'2020-04-04 21:03:14.204',NULL),('e÷9tHi¢yf´¸¤p/','‹/pó¡L†…Mã4Ó8','Chinesisch','Sonderverwaltungszone Hongkong',NULL,'2020-04-04 21:03:14.204',NULL),('˜ˆ²ïÆA¢­Ô›—uQ*…','/»_ââšMpªXTÎ|ãâ','English','Jamaica',NULL,'2020-04-04 21:03:14.191',NULL),('˜ˆ²ïÆA¢­Ô›—uQ*…','‹/pó¡L†…Mã4Ó8','Englisch','Jamaika',NULL,'2020-04-04 21:03:14.191',NULL),('•	ñÉG¾ˆ·x¹ûûp','/»_ââšMpªXTÎ|ãâ','Southern Sotho Language','South Africa',NULL,'2020-04-04 21:03:14.202',NULL),('•	ñÉG¾ˆ·x¹ûûp','‹/pó¡L†…Mã4Ó8','SÃ¼d-Sotho-Sprache','SÃ¼dafrika',NULL,'2020-04-04 21:03:14.202',NULL),('yì‘×SKÍ\\QÌ','/»_ââšMpªXTÎ|ãâ','Serbian','Serbia',NULL,'2020-04-04 21:03:14.202',NULL),('yì‘×SKÍ\\QÌ','‹/pó¡L†…Mã4Ó8','Serbisch','Serbien',NULL,'2020-04-04 21:03:14.202',NULL),('¥ÇˆÊ)O‰¾ö’g3[','/»_ââšMpªXTÎ|ãâ','Portuguese','Portugal',NULL,'2020-04-04 21:03:14.200',NULL),('¥ÇˆÊ)O‰¾ö’g3[','‹/pó¡L†…Mã4Ó8','Portugiesisch','Portugal',NULL,'2020-04-04 21:03:14.200',NULL),('\ZÄ<í@<›ã;ºj~','/»_ââšMpªXTÎ|ãâ','Catalan','Spain',NULL,'2020-04-04 21:03:14.189',NULL),('\ZÄ<í@<›ã;ºj~','‹/pó¡L†…Mã4Ó8','Katalanisch','Spanien',NULL,'2020-04-04 21:03:14.189',NULL),('\ZÓEqì|F…·ÉD3„)¿¼','/»_ââšMpªXTÎ|ãâ','Punjabi','Pakistan',NULL,'2020-04-04 21:03:14.200',NULL),('\ZÓEqì|F…·ÉD3„)¿¼','‹/pó¡L†…Mã4Ó8','Pandschabisch','Pakistan',NULL,'2020-04-04 21:03:14.200',NULL),('G/Úh{F®P¾[„ßdB','/»_ââšMpªXTÎ|ãâ','Arabic','Saudi Arabia',NULL,'2020-04-04 21:03:14.188',NULL),('G/Úh{F®P¾[„ßdB','‹/pó¡L†…Mã4Ó8','Arabisch','Saudi-Arabien',NULL,'2020-04-04 21:03:14.188',NULL),('AsÓF–Œ×¸ˆ¯¹Ñò','/»_ââšMpªXTÎ|ãâ','German','Germany',NULL,'2020-04-04 21:03:14.181',NULL),('AsÓF–Œ×¸ˆ¯¹Ñò','‹/pó¡L†…Mã4Ó8','Deutsch','Deutschland',NULL,'2020-04-04 21:03:14.182',NULL),(' Ú»wI3œAØÕ	“…Ä','/»_ââšMpªXTÎ|ãâ','Polish','Poland',NULL,'2020-04-04 21:03:14.200',NULL),(' Ú»wI3œAØÕ	“…Ä','‹/pó¡L†…Mã4Ó8','Polnisch','Polen',NULL,'2020-04-04 21:03:14.200',NULL),('!³µıœ»Dk¿I—1•ÜÖÃ','/»_ââšMpªXTÎ|ãâ','Tongan','Tonga',NULL,'2020-04-04 21:03:14.203',NULL),('!³µıœ»Dk¿I—1•ÜÖÃ','‹/pó¡L†…Mã4Ó8','Tongaisch','Tonga',NULL,'2020-04-04 21:03:14.203',NULL),('\"^±_GF>¿Ï‹Õ wq','/»_ââšMpªXTÎ|ãâ','Ewe','Togo',NULL,'2020-04-04 21:03:14.190',NULL),('\"^±_GF>¿Ï‹Õ wq','‹/pó¡L†…Mã4Ó8','Ewe-Sprache','Togo',NULL,'2020-04-04 21:03:14.190',NULL),('\"¸ÆäŠLJë 0cí®','/»_ââšMpªXTÎ|ãâ','Oromo','Kenya',NULL,'2020-04-04 21:03:14.200',NULL),('\"¸ÆäŠLJë 0cí®','‹/pó¡L†…Mã4Ó8','Oromo','Kenia',NULL,'2020-04-04 21:03:14.200',NULL),('\"Ï=E}™A€6Àú¦~„Ş','/»_ââšMpªXTÎ|ãâ','Atsam','Nigeria',NULL,'2020-04-04 21:03:14.189',NULL),('\"Ï=E}™A€6Àú¦~„Ş','‹/pó¡L†…Mã4Ó8','Atsam','Nigeria',NULL,'2020-04-04 21:03:14.189',NULL),('#C‡\nCÎM8·a»è]şjå','/»_ââšMpªXTÎ|ãâ','German','Luxemburg',NULL,'2020-04-04 21:03:14.190',NULL),('#C‡\nCÎM8·a»è]şjå','‹/pó¡L†…Mã4Ó8','Deutsch','Luxemburg',NULL,'2020-04-04 21:03:14.190',NULL),('#g[£Oö¤¯5#a#õ','/»_ââšMpªXTÎ|ãâ','Akan','Ghana',NULL,'2020-04-04 21:03:14.187',NULL),('#g[£Oö¤¯5#a#õ','‹/pó¡L†…Mã4Ó8','Akan','Ghana',NULL,'2020-04-04 21:03:14.187',NULL),('#ÃbÆ&jKí¿”´Ô\r¨:','/»_ââšMpªXTÎ|ãâ','English','American Samoa',NULL,'2020-04-04 21:03:14.191',NULL),('#ÃbÆ&jKí¿”´Ô\r¨:','‹/pó¡L†…Mã4Ó8','Englisch','Amerikanisch-Samoa',NULL,'2020-04-04 21:03:14.191',NULL),('$+ˆmDL‹ìıÃ\0z[F','/»_ââšMpªXTÎ|ãâ','Swazi','South Africa',NULL,'2020-04-04 21:03:14.202',NULL),('$+ˆmDL‹ìıÃ\0z[F','‹/pó¡L†…Mã4Ó8','Swazi','SÃ¼dafrika',NULL,'2020-04-04 21:03:14.202',NULL),('\'\0	VA_‡£AÏ_','/»_ââšMpªXTÎ|ãâ','Assamese','India',NULL,'2020-04-04 21:03:14.189',NULL),('\'\0	VA_‡£AÏ_','‹/pó¡L†…Mã4Ó8','Assamesisch','Indien',NULL,'2020-04-04 21:03:14.189',NULL),(')–b&ˆNÒ¬(Ndopø2','/»_ââšMpªXTÎ|ãâ','Arabic','Kuwait',NULL,'2020-04-04 21:03:14.188',NULL),(')–b&ˆNÒ¬(Ndopø2','‹/pó¡L†…Mã4Ó8','Arabisch','Kuwait',NULL,'2020-04-04 21:03:14.188',NULL),(')¢?F<SGí»×6³Ä]…','/»_ââšMpªXTÎ|ãâ','Nepalese','India',NULL,'2020-04-04 21:03:14.199',NULL),(')¢?F<SGí»×6³Ä]…','‹/pó¡L†…Mã4Ó8','Nepalesisch','Indien',NULL,'2020-04-04 21:03:14.199',NULL),('*½£±oTOšM}8\nOÔr','/»_ââšMpªXTÎ|ãâ','English','Zimbabwe',NULL,'2020-04-04 21:03:14.192',NULL),('*½£±oTOšM}8\nOÔr','‹/pó¡L†…Mã4Ó8','Englisch','Simbabwe',NULL,'2020-04-04 21:03:14.192',NULL),(',XØ?#Bè¥§ñæJ¬','/»_ââšMpªXTÎ|ãâ','Serbian','Serbia and Montenegro',NULL,'2020-04-04 21:03:14.202',NULL),(',XØ?#Bè¥§ñæJ¬','‹/pó¡L†…Mã4Ó8','Serbisch','Serbien und Montenegro',NULL,'2020-04-04 21:03:14.202',NULL),(',îå/x2Gò¼y{‘ôéè','/»_ââšMpªXTÎ|ãâ','Venda Language','South Africa',NULL,'2020-04-04 21:03:14.204',NULL),(',îå/x2Gò¼y{‘ôéè','‹/pó¡L†…Mã4Ó8','Venda-Sprache','SÃ¼dafrika',NULL,'2020-04-04 21:03:14.204',NULL),('-\"òo­@Ğ‘†L’S÷¯§','/»_ââšMpªXTÎ|ãâ','Slovakian','Slovakia',NULL,'2020-04-04 21:03:14.201',NULL),('-\"òo­@Ğ‘†L’S÷¯§','‹/pó¡L†…Mã4Ó8','Slowakisch','Slowakei',NULL,'2020-04-04 21:03:14.201',NULL),('-ü°A[WO¢„€vøø—ñ','/»_ââšMpªXTÎ|ãâ','Tigre','Eritrea',NULL,'2020-04-04 21:03:14.203',NULL),('-ü°A[WO¢„€vøø—ñ','‹/pó¡L†…Mã4Ó8','Tigre','Eritrea',NULL,'2020-04-04 21:03:14.203',NULL),('.<QK÷hDo°<ş¸RRèı','/»_ââšMpªXTÎ|ãâ','Spanish','Bolivia',NULL,'2020-04-04 21:03:14.192',NULL),('.<QK÷hDo°<ş¸RRèı','‹/pó¡L†…Mã4Ó8','Spanisch','Bolivien',NULL,'2020-04-04 21:03:14.192',NULL),('.œÕÌÉDÕ† S^=ş8','/»_ââšMpªXTÎ|ãâ','English','Botswana',NULL,'2020-04-04 21:03:14.191',NULL),('.œÕÌÉDÕ† S^=ş8','‹/pó¡L†…Mã4Ó8','Englisch','Botsuana',NULL,'2020-04-04 21:03:14.191',NULL),('/ÿŞİ}(B«êÂşŒÓê–','/»_ââšMpªXTÎ|ãâ','Arabic','Bahrain',NULL,'2020-04-04 21:03:14.188',NULL),('/ÿŞİ}(B«êÂşŒÓê–','‹/pó¡L†…Mã4Ó8','Arabisch','Bahrain',NULL,'2020-04-04 21:03:14.188',NULL),('1¤-8¦rEºªÍ*ìX\rò','/»_ââšMpªXTÎ|ãâ','Ukrainian','Ukraine',NULL,'2020-04-04 21:03:14.204',NULL),('1¤-8¦rEºªÍ*ìX\rò','‹/pó¡L†…Mã4Ó8','Ukrainisch','Ukraine',NULL,'2020-04-04 21:03:14.204',NULL),('1ÔÄUAMwJ•ÿ@š#','/»_ââšMpªXTÎ|ãâ','English','United Kingdom',NULL,'2020-04-04 21:03:14.179',NULL),('1ÔÄUAMwJ•ÿ@š#','‹/pó¡L†…Mã4Ó8','Englisch','Vereinigtes KÃ¶nigreich',NULL,'2020-04-04 21:03:14.181',NULL),('2Ù`b¼BE¶KİjTâJ','/»_ââšMpªXTÎ|ãâ','French','Belgium',NULL,'2020-04-04 21:03:14.194',NULL),('2Ù`b¼BE¶KİjTâJ','‹/pó¡L†…Mã4Ó8','FranzÃ¶sisch','Belgien',NULL,'2020-04-04 21:03:14.194',NULL),('4¾…qiA‰òZùsÇ','/»_ââšMpªXTÎ|ãâ','Tartar','Russian Federation',NULL,'2020-04-04 21:03:14.203',NULL),('4¾…qiA‰òZùsÇ','‹/pó¡L†…Mã4Ó8','Tatarisch','Russische FÃ¶deration',NULL,'2020-04-04 21:03:14.203',NULL),('6°\'HK÷BV»ú›\0ë=ƒ\Z','/»_ââšMpªXTÎ|ãâ','Arabic','Yemen',NULL,'2020-04-04 21:03:14.189',NULL),('6°\'HK÷BV»ú›\0ë=ƒ\Z','‹/pó¡L†…Mã4Ó8','Arabisch','Jemen',NULL,'2020-04-04 21:03:14.189',NULL),('6äº$ÀN_aU\ZsÀ\\','/»_ââšMpªXTÎ|ãâ','English','Singapore',NULL,'2020-04-04 21:03:14.192',NULL),('6äº$ÀN_aU\ZsÀ\\','‹/pó¡L†…Mã4Ó8','Englisch','Singapur',NULL,'2020-04-04 21:03:14.192',NULL),('7ªìØœ\'Bñ¯ëJJ$ ','/»_ââšMpªXTÎ|ãâ','Zulu','South Africa',NULL,'2020-04-04 21:03:14.205',NULL),('7ªìØœ\'Bñ¯ëJJ$ ','‹/pó¡L†…Mã4Ó8','Zulu','SÃ¼dafrika',NULL,'2020-04-04 21:03:14.205',NULL),('8*)UxŒM™»âIõ.¡%','/»_ââšMpªXTÎ|ãâ','Afar','Djibouti',NULL,'2020-04-04 21:03:14.187',NULL),('8*)UxŒM™»âIõ.¡%','‹/pó¡L†…Mã4Ó8','Afar','Dschibuti',NULL,'2020-04-04 21:03:14.187',NULL),('9,ª`Ô@…¦|ÔèÛLÈó','/»_ââšMpªXTÎ|ãâ','Portuguese','Brazil',NULL,'2020-04-04 21:03:14.200',NULL),('9,ª`Ô@…¦|ÔèÛLÈó','‹/pó¡L†…Mã4Ó8','Portugiesisch','Brasilien',NULL,'2020-04-04 21:03:14.200',NULL),(';5,¦¢œDÉ€®n¢Â «\0','/»_ââšMpªXTÎ|ãâ','Nepalese','Nepal',NULL,'2020-04-04 21:03:14.199',NULL),(';5,¦¢œDÉ€®n¢Â «\0','‹/pó¡L†…Mã4Ó8','Nepalesisch','Nepal',NULL,'2020-04-04 21:03:14.199',NULL),('>i…/¦0HG¸qY^‘P','/»_ââšMpªXTÎ|ãâ','Persian','Afghanistan',NULL,'2020-04-04 21:03:14.194',NULL),('>i…/¦0HG¸qY^‘P','‹/pó¡L†…Mã4Ó8','Persisch','Afghanistan',NULL,'2020-04-04 21:03:14.194',NULL),('>¢ıÑIS°½>µuŞ*','/»_ââšMpªXTÎ|ãâ','Arabic','Syria',NULL,'2020-04-04 21:03:14.188',NULL),('>¢ıÑIS°½>µuŞ*','‹/pó¡L†…Mã4Ó8','Arabisch','Syrien',NULL,'2020-04-04 21:03:14.188',NULL),('>ïY~\ZD%€’$€«×','/»_ââšMpªXTÎ|ãâ','Korean','Republic of Korea',NULL,'2020-04-04 21:03:14.197',NULL),('>ïY~\ZD%€’$€«×','‹/pó¡L†…Mã4Ó8','Koreanisch','Republik Korea',NULL,'2020-04-04 21:03:14.197',NULL),('@‚jÌøIÙ—H9Á{¸¶N','/»_ââšMpªXTÎ|ãâ','Spanish','Chile',NULL,'2020-04-04 21:03:14.192',NULL),('@‚jÌøIÙ—H9Á{¸¶N','‹/pó¡L†…Mã4Ó8','Spanisch','Chile',NULL,'2020-04-04 21:03:14.192',NULL),('BO{şüN½™íCXç*V','/»_ââšMpªXTÎ|ãâ','Serbian','Bosnia and Herzegovina',NULL,'2020-04-04 21:03:14.202',NULL),('BO{şüN½™íCXç*V','‹/pó¡L†…Mã4Ó8','Serbisch','Bosnien und Herzegowina',NULL,'2020-04-04 21:03:14.202',NULL),('DşZ³F¯MK›¿p\0\'¾8º','/»_ââšMpªXTÎ|ãâ','Galician','Spain',NULL,'2020-04-04 21:03:14.195',NULL),('DşZ³F¯MK›¿p\0\'¾8º','‹/pó¡L†…Mã4Ó8','Galizisch','Spanien',NULL,'2020-04-04 21:03:14.195',NULL),('EP÷ EF±P›-¦ µ#','/»_ââšMpªXTÎ|ãâ','Serbo-Croat','Bosnia and Herzegovina',NULL,'2020-04-04 21:03:14.201',NULL),('EP÷ EF±P›-¦ µ#','‹/pó¡L†…Mã4Ó8','Serbo-Kroatisch','Bosnien und Herzegowina',NULL,'2020-04-04 21:03:14.201',NULL),('FY{=K2¢ØÀ?ÛÙú','/»_ââšMpªXTÎ|ãâ','Chinese','Macao',NULL,'2020-04-04 21:03:14.204',NULL),('FY{=K2¢ØÀ?ÛÙú','‹/pó¡L†…Mã4Ó8','Chinesisch','Sonderverwaltungszone Macao',NULL,'2020-04-04 21:03:14.204',NULL),('GzbK_x@\r€˜ıÈ','/»_ââšMpªXTÎ|ãâ','Bulgarian','Bulgaria',NULL,'2020-04-04 21:03:14.189',NULL),('GzbK_x@\r€˜ıÈ','‹/pó¡L†…Mã4Ó8','Bulgarisch','Bulgarien',NULL,'2020-04-04 21:03:14.189',NULL),('G‰ê³\rJãÒxéa1','/»_ââšMpªXTÎ|ãâ','Slovene','Slovenia',NULL,'2020-04-04 21:03:14.201',NULL),('G‰ê³\rJãÒxéa1','‹/pó¡L†…Mã4Ó8','Slowenisch','Slowenien',NULL,'2020-04-04 21:03:14.201',NULL),('Iß”C‘ÊN„¥6U¸Q¹«','/»_ââšMpªXTÎ|ãâ','Spanish','Nicaragua',NULL,'2020-04-04 21:03:14.193',NULL),('Iß”C‘ÊN„¥6U¸Q¹«','‹/pó¡L†…Mã4Ó8','Spanisch','Nicaragua',NULL,'2020-04-04 21:03:14.193',NULL),('Iî(ˆM1½¢÷Ü ‹J','/»_ââšMpªXTÎ|ãâ','Kurdish','Iran',NULL,'2020-04-04 21:03:14.198',NULL),('Iî(ˆM1½¢÷Ü ‹J','‹/pó¡L†…Mã4Ó8','Kurdisch','Iran',NULL,'2020-04-04 21:03:14.198',NULL),('K*ŒØùDğ¾ûëÏÕ»','/»_ââšMpªXTÎ|ãâ','Orija','India',NULL,'2020-04-04 21:03:14.200',NULL),('K*ŒØùDğ¾ûëÏÕ»','‹/pó¡L†…Mã4Ó8','Orija','Indien',NULL,'2020-04-04 21:03:14.200',NULL),('LÄ2¡åşB;ÃaÚwoõ#','/»_ââšMpªXTÎ|ãâ','Northern Sotho language','South Africa',NULL,'2020-04-04 21:03:14.199',NULL),('LÄ2¡åşB;ÃaÚwoõ#','‹/pó¡L†…Mã4Ó8','Nord-Sotho-Sprache','SÃ¼dafrika',NULL,'2020-04-04 21:03:14.199',NULL),('LÿBª¢®I®ªd#ÿ¹¹','/»_ââšMpªXTÎ|ãâ','French','Canada',NULL,'2020-04-04 21:03:14.194',NULL),('LÿBª¢®I®ªd#ÿ¹¹','‹/pó¡L†…Mã4Ó8','FranzÃ¶sisch','Kanada',NULL,'2020-04-04 21:03:14.194',NULL),('Ré¯äğIk„ˆmfº†÷','/»_ââšMpªXTÎ|ãâ','Greek','Greece',NULL,'2020-04-04 21:03:14.190',NULL),('Ré¯äğIk„ˆmfº†÷','‹/pó¡L†…Mã4Ó8','Griechisch','Griechenland',NULL,'2020-04-04 21:03:14.190',NULL),('Ró_CéFFÑªÀO@ü­,0','/»_ââšMpªXTÎ|ãâ','English','American Virgin Islands',NULL,'2020-04-04 21:03:14.192',NULL),('Ró_CéFFÑªÀO@ü­,0','‹/pó¡L†…Mã4Ó8','Englisch','Amerikanische Jungferninseln',NULL,'2020-04-04 21:03:14.192',NULL),('UmK\0˜IT¯~óR¶…r','/»_ââšMpªXTÎ|ãâ','Arabic','Sudan',NULL,'2020-04-04 21:03:14.188',NULL),('UmK\0˜IT¯~óR¶…r','‹/pó¡L†…Mã4Ó8','Arabisch','Sudan',NULL,'2020-04-04 21:03:14.188',NULL),('U«(ÀĞ\\@ï¶us.ï¤','/»_ââšMpªXTÎ|ãâ','Dutch','Belgium',NULL,'2020-04-04 21:03:14.199',NULL),('U«(ÀĞ\\@ï¶us.ï¤','‹/pó¡L†…Mã4Ó8','NiederlÃ¤ndisch','Belgien',NULL,'2020-04-04 21:03:14.199',NULL),('V¶É^W#Ki—vƒW—”ç+','/»_ââšMpªXTÎ|ãâ','Afrikaans','South Africa',NULL,'2020-04-04 21:03:14.187',NULL),('V¶É^W#Ki—vƒW—”ç+','‹/pó¡L†…Mã4Ó8','Afrikaans','SÃ¼dafrika',NULL,'2020-04-04 21:03:14.187',NULL),('VÀ\r—ŞBlµ\"÷9¦óit','/»_ââšMpªXTÎ|ãâ','Thai','Thailand',NULL,'2020-04-04 21:03:14.203',NULL),('VÀ\r—ŞBlµ\"÷9¦óit','‹/pó¡L†…Mã4Ó8','ThailÃ¤ndisch','Thailand',NULL,'2020-04-04 21:03:14.203',NULL),('Xh,»Ô`@¯¹Oé³K8‘','/»_ââšMpªXTÎ|ãâ','Ewe','Ghana',NULL,'2020-04-04 21:03:14.190',NULL),('Xh,»Ô`@¯¹Oé³K8‘','‹/pó¡L†…Mã4Ó8','Ewe-Sprache','Ghana',NULL,'2020-04-04 21:03:14.190',NULL),('YO³uãF’²µÂ×9€•','/»_ââšMpªXTÎ|ãâ','Oromo','Ethiopia',NULL,'2020-04-04 21:03:14.200',NULL),('YO³uãF’²µÂ×9€•','‹/pó¡L†…Mã4Ó8','Oromo','Ã„thiopien',NULL,'2020-04-04 21:03:14.200',NULL),('Z‰íV¹GH¤*N8Ø…½ë','/»_ââšMpªXTÎ|ãâ','Hebrew','Israel',NULL,'2020-04-04 21:03:14.196',NULL),('Z‰íV¹GH¤*N8Ø…½ë','‹/pó¡L†…Mã4Ó8','HebrÃ¤isch','Israel',NULL,'2020-04-04 21:03:14.196',NULL),('[”OÈ|@¾¤_i©¿\n‚Y','/»_ââšMpªXTÎ|ãâ','Romanian','Romania',NULL,'2020-04-04 21:03:14.200',NULL),('[”OÈ|@¾¤_i©¿\n‚Y','‹/pó¡L†…Mã4Ó8','RumÃ¤nisch','RumÃ¤nien',NULL,'2020-04-04 21:03:14.200',NULL),('[ª#yH×‰?2$Ó.ƒe','/»_ââšMpªXTÎ|ãâ','Serbo-Croat','Serbia and Montenegro',NULL,'2020-04-04 21:03:14.201',NULL),('[ª#yH×‰?2$Ó.ƒe','‹/pó¡L†…Mã4Ó8','Serbo-Kroatisch','Serbien und Montenegro',NULL,'2020-04-04 21:03:14.201',NULL),('\\,wzF±ŞşÂèV','/»_ââšMpªXTÎ|ãâ','Maltese','Malta',NULL,'2020-04-04 21:03:14.199',NULL),('\\,wzF±ŞşÂèV','‹/pó¡L†…Mã4Ó8','Maltesisch','Malta',NULL,'2020-04-04 21:03:14.199',NULL),('\\7€ôOa™şágŸ','/»_ââšMpªXTÎ|ãâ','Spanish','Paraguay',NULL,'2020-04-04 21:03:14.193',NULL),('\\7€ôOa™şágŸ','‹/pó¡L†…Mã4Ó8','Spanisch','Paraguay',NULL,'2020-04-04 21:03:14.193',NULL),('].cÁ¢O·Qf•ÅQ','/»_ââšMpªXTÎ|ãâ','Spanish','Puerto Rico',NULL,'2020-04-04 21:03:14.193',NULL),('].cÁ¢O·Qf•ÅQ','‹/pó¡L†…Mã4Ó8','Spanisch','Puerto Rico',NULL,'2020-04-04 21:03:14.193',NULL),('^óÎ9İŠF\"”Ã×ş/k„o','/»_ââšMpªXTÎ|ãâ','Arabic','Lebanon',NULL,'2020-04-04 21:03:14.188',NULL),('^óÎ9İŠF\"”Ã×ş/k„o','‹/pó¡L†…Mã4Ó8','Arabisch','Libanon',NULL,'2020-04-04 21:03:14.188',NULL),('_n|åFn£î4ePğ7w','/»_ââšMpªXTÎ|ãâ','Arabic','United Arab Emirates',NULL,'2020-04-04 21:03:14.187',NULL),('_n|åFn£î4ePğ7w','‹/pó¡L†…Mã4Ó8','Arabisch','Vereinigte Arabische Emirate',NULL,'2020-04-04 21:03:14.187',NULL),('cåùƒ;H6˜Ú\'©yÔË€','/»_ââšMpªXTÎ|ãâ','Somali','Somalia',NULL,'2020-04-04 21:03:14.202',NULL),('cåùƒ;H6˜Ú\'©yÔË€','‹/pó¡L†…Mã4Ó8','Somali','Somalia',NULL,'2020-04-04 21:03:14.202',NULL),('cøÌ^RNŒ+ZF!á³','/»_ââšMpªXTÎ|ãâ','Hausa','Nigeria',NULL,'2020-04-04 21:03:14.195',NULL),('cøÌ^RNŒ+ZF!á³','‹/pó¡L†…Mã4Ó8','Hausa','Nigeria',NULL,'2020-04-04 21:03:14.196',NULL),('cû‰eMN¬Z½¨ÕI3','/»_ââšMpªXTÎ|ãâ','Manx','United Kingdom',NULL,'2020-04-04 21:03:14.195',NULL),('cû‰eMN¬Z½¨ÕI3','‹/pó¡L†…Mã4Ó8','Manx','Vereinigtes KÃ¶nigreich',NULL,'2020-04-04 21:03:14.195',NULL),('dv!ÕGÂ›0¸á6¤Ån','/»_ââšMpªXTÎ|ãâ','English','Belgium',NULL,'2020-04-04 21:03:14.191',NULL),('dv!ÕGÂ›0¸á6¤Ån','‹/pó¡L†…Mã4Ó8','Englisch','Belgien',NULL,'2020-04-04 21:03:14.191',NULL),('e|[â,QAm…2P+Ùk£','/»_ââšMpªXTÎ|ãâ','Spanish','Argentina',NULL,'2020-04-04 21:03:14.192',NULL),('e|[â,QAm…2P+Ùk£','‹/pó¡L†…Mã4Ó8','Spanisch','Argentinien',NULL,'2020-04-04 21:03:14.192',NULL),('f‰Ÿ”ñ–OgŠân[ä¶','/»_ââšMpªXTÎ|ãâ','Ga','Ghana',NULL,'2020-04-04 21:03:14.195',NULL),('f‰Ÿ”ñ–OgŠân[ä¶','‹/pó¡L†…Mã4Ó8','Ga-Sprache','Ghana',NULL,'2020-04-04 21:03:14.195',NULL),('hü¡önNC»ãôBwÛw','/»_ââšMpªXTÎ|ãâ','English','U.S. Minor Outlying Islands',NULL,'2020-04-04 21:03:14.192',NULL),('hü¡önNC»ãôBwÛw','‹/pó¡L†…Mã4Ó8','Englisch','Amerikanisch-Ozeanien',NULL,'2020-04-04 21:03:14.192',NULL),('jz%ˆÊEå“€3rè¢§','/»_ââšMpªXTÎ|ãâ','Kurdish','Iraq',NULL,'2020-04-04 21:03:14.197',NULL),('jz%ˆÊEå“€3rè¢§','‹/pó¡L†…Mã4Ó8','Kurdisch','Irak',NULL,'2020-04-04 21:03:14.197',NULL),('j²JWÅ7G“ “9§S','/»_ââšMpªXTÎ|ãâ','English','Australia',NULL,'2020-04-04 21:03:14.191',NULL),('j²JWÅ7G“ “9§S','‹/pó¡L†…Mã4Ó8','Englisch','Australien',NULL,'2020-04-04 21:03:14.191',NULL),('kõiÖXIÄ|¹‰È†˜','/»_ââšMpªXTÎ|ãâ','Hawaiian','United States',NULL,'2020-04-04 21:03:14.196',NULL),('kõiÖXIÄ|¹‰È†˜','‹/pó¡L†…Mã4Ó8','Hawaiisch','Vereinigte Staaten',NULL,'2020-04-04 21:03:14.196',NULL),('mòeåN•IÜµ¿Üí¯','/»_ââšMpªXTÎ|ãâ','Tadjik','Tajikistan',NULL,'2020-04-04 21:03:14.203',NULL),('mòeåN•IÜµ¿Üí¯','‹/pó¡L†…Mã4Ó8','Tadschikisch','Tadschikistan',NULL,'2020-04-04 21:03:14.203',NULL),('nÎ<ŞsBµûØßå›iá','/»_ââšMpªXTÎ|ãâ','German','Austria',NULL,'2020-04-04 21:03:14.190',NULL),('nÎ<ŞsBµûØßå›iá','‹/pó¡L†…Mã4Ó8','Deutsch','Ã–sterreich',NULL,'2020-04-04 21:03:14.190',NULL),('oóÖLÖ‡/j-”\0Pa','/»_ââšMpªXTÎ|ãâ','Russian','Ukraine',NULL,'2020-04-04 21:03:14.201',NULL),('oóÖLÖ‡/j-”\0Pa','‹/pó¡L†…Mã4Ó8','Russisch','Ukraine',NULL,'2020-04-04 21:03:14.201',NULL),('pÀ%Y¤J£°r±}N[|õ','/»_ââšMpªXTÎ|ãâ','German','Liechtenstein',NULL,'2020-04-04 21:03:14.190',NULL),('pÀ%Y¤J£°r±}N[|õ','‹/pó¡L†…Mã4Ó8','Deutsch','Liechtenstein',NULL,'2020-04-04 21:03:14.190',NULL),('qBÊbJu§ËN,kš½q','/»_ââšMpªXTÎ|ãâ','Spanish','Venezuela',NULL,'2020-04-04 21:03:14.194',NULL),('qBÊbJu§ËN,kš½q','‹/pó¡L†…Mã4Ó8','Spanisch','Venezuela',NULL,'2020-04-04 21:03:14.194',NULL),('q+0ù\\qE÷¹Â:Ócñ„I','/»_ââšMpªXTÎ|ãâ','Uzbek','Afghanistan',NULL,'2020-04-04 21:03:14.204',NULL),('q+0ù\\qE÷¹Â:Ócñ„I','‹/pó¡L†…Mã4Ó8','Usbekisch','Afghanistan',NULL,'2020-04-04 21:03:14.204',NULL),('rÓŸ›fA\"‘‘‡@Éœàš','/»_ââšMpªXTÎ|ãâ','Malayalam','India',NULL,'2020-04-04 21:03:14.198',NULL),('rÓŸ›fA\"‘‘‡@Éœàš','‹/pó¡L†…Mã4Ó8','Malayalam','Indien',NULL,'2020-04-04 21:03:14.198',NULL),('sh§ÅöBzœúk ÊcP7','/»_ââšMpªXTÎ|ãâ','Sanskrit','India',NULL,'2020-04-04 21:03:14.201',NULL),('sh§ÅöBzœúk ÊcP7','‹/pó¡L†…Mã4Ó8','Sanskrit','Indien',NULL,'2020-04-04 21:03:14.201',NULL),('tc{+àƒHÚ—‹Ú@ª·','/»_ââšMpªXTÎ|ãâ','Hausa','Sudan',NULL,'2020-04-04 21:03:14.196',NULL),('tc{+àƒHÚ—‹Ú@ª·','‹/pó¡L†…Mã4Ó8','Hausa','Sudan',NULL,'2020-04-04 21:03:14.196',NULL),('to·(l>F»[ùzî','/»_ââšMpªXTÎ|ãâ','Occitan','France',NULL,'2020-04-04 21:03:14.200',NULL),('to·(l>F»[ùzî','‹/pó¡L†…Mã4Ó8','Okzitanisch','Frankreich',NULL,'2020-04-04 21:03:14.200',NULL),('v:†^‚Jà‹]KñPAE|','/»_ââšMpªXTÎ|ãâ','Tigrinya','Eritrea',NULL,'2020-04-04 21:03:14.203',NULL),('v:†^‚Jà‹]KñPAE|','‹/pó¡L†…Mã4Ó8','Tigrinja','Eritrea',NULL,'2020-04-04 21:03:14.203',NULL),('wÒşÁnO/¹™ÿ-ƒ;Š','/»_ââšMpªXTÎ|ãâ','Spanish','Colombia',NULL,'2020-04-04 21:03:14.192',NULL),('wÒşÁnO/¹™ÿ-ƒ;Š','‹/pó¡L†…Mã4Ó8','Spanisch','Kolumbien',NULL,'2020-04-04 21:03:14.193',NULL),('yN	›AÚ‰ ŸE¯vÑ','/»_ââšMpªXTÎ|ãâ','English','Marshall Islands',NULL,'2020-04-04 21:03:14.191',NULL),('yN	›AÚ‰ ŸE¯vÑ','‹/pó¡L†…Mã4Ó8','Englisch','Marshallinseln',NULL,'2020-04-04 21:03:14.191',NULL),('ySZÌ8æIå‚SÖ¼&Õ!','/»_ââšMpªXTÎ|ãâ','Burmese','Myanmar',NULL,'2020-04-04 21:03:14.199',NULL),('ySZÌ8æIå‚SÖ¼&Õ!','‹/pó¡L†…Mã4Ó8','Birmanisch','Myanmar',NULL,'2020-04-04 21:03:14.199',NULL),('yÖ¹¤º­H\\”¼«Rä»‰²','/»_ââšMpªXTÎ|ãâ','Welsh','United Kingdom',NULL,'2020-04-04 21:03:14.190',NULL),('yÖ¹¤º­H\\”¼«Rä»‰²','‹/pó¡L†…Mã4Ó8','Walisisch','Vereinigtes KÃ¶nigreich',NULL,'2020-04-04 21:03:14.190',NULL),('zß—Ù°AÚŒ(Şªù©','/»_ââšMpªXTÎ|ãâ','Kazakh','Kazakhstan',NULL,'2020-04-04 21:03:14.197',NULL),('zß—Ù°AÚŒ(Şªù©','‹/pó¡L†…Mã4Ó8','Kasachisch','Kasachstan',NULL,'2020-04-04 21:03:14.197',NULL),('|G¯Ğ“ÕLÓ‘C?åÆæŞ','/»_ââšMpªXTÎ|ãâ','Spanish','Panama',NULL,'2020-04-04 21:03:14.193',NULL),('|G¯Ğ“ÕLÓ‘C?åÆæŞ','‹/pó¡L†…Mã4Ó8','Spanisch','Panama',NULL,'2020-04-04 21:03:14.193',NULL),('}Éi4nJè•\'BŸú','/»_ââšMpªXTÎ|ãâ','Spanish','Peru',NULL,'2020-04-04 21:03:14.193',NULL),('}Éi4nJè•\'BŸú','‹/pó¡L†…Mã4Ó8','Spanisch','Peru',NULL,'2020-04-04 21:03:14.193',NULL),('~¯’Sr×Kß­ÁäÒ‚é\'','/»_ââšMpªXTÎ|ãâ','Somali','Ethiopia',NULL,'2020-04-04 21:03:14.201',NULL),('~¯’Sr×Kß­ÁäÒ‚é\'','‹/pó¡L†…Mã4Ó8','Somali','Ã„thiopien',NULL,'2020-04-04 21:03:14.201',NULL),('€¹şÆÉ@Q“Gu\Zäxx ','/»_ââšMpªXTÎ|ãâ','Geez','Ethiopia',NULL,'2020-04-04 21:03:14.195',NULL),('€¹şÆÉ@Q“Gu\Zäxx ','‹/pó¡L†…Mã4Ó8','Geez','Ã„thiopien',NULL,'2020-04-04 21:03:14.195',NULL),('€Åj71ú@Ğ éˆ/u+','/»_ââšMpªXTÎ|ãâ','Kamba','Kenya',NULL,'2020-04-04 21:03:14.197',NULL),('€Åj71ú@Ğ éˆ/u+','‹/pó¡L†…Mã4Ó8','Kamba','Kenia',NULL,'2020-04-04 21:03:14.197',NULL),('‚\0Œ°à1G*»ağ n2I','/»_ââšMpªXTÎ|ãâ','Southern Sotho Language','Lesotho',NULL,'2020-04-04 21:03:14.202',NULL),('‚\0Œ°à1G*»ağ n2I','‹/pó¡L†…Mã4Ó8','SÃ¼d-Sotho-Sprache','Lesotho',NULL,'2020-04-04 21:03:14.202',NULL),('‚ïPóÔıI®²‹;ñƒ@','/»_ââšMpªXTÎ|ãâ','Amharic','Ethiopia',NULL,'2020-04-04 21:03:14.187',NULL),('‚ïPóÔıI®²‹;ñƒ@','‹/pó¡L†…Mã4Ó8','Amharisch','Ã„thiopien',NULL,'2020-04-04 21:03:14.187',NULL),('ƒœ„MÏFF=µŞö»Ëˆ','/»_ââšMpªXTÎ|ãâ','Wolof','Senegal',NULL,'2020-04-04 21:03:14.204',NULL),('ƒœ„MÏFF=µŞö»Ëˆ','‹/pó¡L†…Mã4Ó8','Wolof','Senegal',NULL,'2020-04-04 21:03:14.204',NULL),('…C+©Kæ‰ŸézN[äN','/»_ââšMpªXTÎ|ãâ','German','Switzerland',NULL,'2020-04-04 21:03:14.190',NULL),('…C+©Kæ‰ŸézN[äN','‹/pó¡L†…Mã4Ó8','Deutsch','Schweiz',NULL,'2020-04-04 21:03:14.190',NULL),('†c¸ú?òN·ºö‡ˆÇõ&','/»_ââšMpªXTÎ|ãâ','Irish','Ireland',NULL,'2020-04-04 21:03:14.195',NULL),('†c¸ú?òN·ºö‡ˆÇõ&','‹/pó¡L†…Mã4Ó8','Irisch','Irland',NULL,'2020-04-04 21:03:14.195',NULL),('‡ CB‡O‡€K÷ïX‹˜','/»_ââšMpªXTÎ|ãâ','Swedish','Sweden',NULL,'2020-04-04 21:03:14.202',NULL),('‡ CB‡O‡€K÷ïX‹˜','‹/pó¡L†…Mã4Ó8','Schwedisch','Schweden',NULL,'2020-04-04 21:03:14.202',NULL),('‡1BCH«óû­¯b','/»_ââšMpªXTÎ|ãâ','Malay','Malaysia',NULL,'2020-04-04 21:03:14.199',NULL),('‡1BCH«óû­¯b','‹/pó¡L†…Mã4Ó8','Malaiisch','Malaysia',NULL,'2020-04-04 21:03:14.199',NULL),('‡Yâ£JŞ}ly^ÏŠÔ','/»_ââšMpªXTÎ|ãâ','English','Hong Kong',NULL,'2020-04-04 21:03:14.191',NULL),('‡Yâ£JŞ}ly^ÏŠÔ','‹/pó¡L†…Mã4Ó8','Englisch','Sonderverwaltungszone Hongkong',NULL,'2020-04-04 21:03:14.191',NULL),('‰ù\"*ËGAÿÃÁ¥4¾','/»_ââšMpªXTÎ|ãâ','Cornish','United Kingdom',NULL,'2020-04-04 21:03:14.198',NULL),('‰ù\"*ËGAÿÃÁ¥4¾','‹/pó¡L†…Mã4Ó8','Kornisch','Vereinigtes KÃ¶nigreich',NULL,'2020-04-04 21:03:14.198',NULL),('ŠÎdm!$Jœ¤Ât†à-','/»_ââšMpªXTÎ|ãâ','English','New Zealand',NULL,'2020-04-04 21:03:14.192',NULL),('ŠÎdm!$Jœ¤Ât†à-','‹/pó¡L†…Mã4Ó8','Englisch','Neuseeland',NULL,'2020-04-04 21:03:14.192',NULL),('‹Oƒ4JDÍ„–yyïê','/»_ââšMpªXTÎ|ãâ','English','United States',NULL,'2020-04-04 21:03:14.192',NULL),('‹Oƒ4JDÍ„–yyïê','‹/pó¡L†…Mã4Ó8','Englisch','Vereinigte Staaten',NULL,'2020-04-04 21:03:14.192',NULL),('Œ\'ìî·ÔI’@&e=£','/»_ââšMpªXTÎ|ãâ','Hausa','Ghana',NULL,'2020-04-04 21:03:14.195',NULL),('Œ\'ìî·ÔI’@&e=£','‹/pó¡L†…Mã4Ó8','Hausa','Ghana',NULL,'2020-04-04 21:03:14.195',NULL),('Œ¦+©é\ZE!£ö`œMy* ','/»_ââšMpªXTÎ|ãâ','Mongol','China',NULL,'2020-04-04 21:03:14.198',NULL),('Œ¦+©é\ZE!£ö`œMy* ','‹/pó¡L†…Mã4Ó8','Mongolisch','China',NULL,'2020-04-04 21:03:14.198',NULL),('ŒÆ6æ}DvºUùë\r1C	','/»_ââšMpªXTÎ|ãâ','Lithuanian','Lithuania',NULL,'2020-04-04 21:03:14.198',NULL),('ŒÆ6æ}DvºUùë\r1C	','‹/pó¡L†…Mã4Ó8','Litauisch','Litauen',NULL,'2020-04-04 21:03:14.198',NULL),('bŸµ¡J:„<µÆ‡y','/»_ââšMpªXTÎ|ãâ','Singhalese','Sri Lanka',NULL,'2020-04-04 21:03:14.201',NULL),('bŸµ¡J:„<µÆ‡y','‹/pó¡L†…Mã4Ó8','Singhalesisch','Sri Lanka',NULL,'2020-04-04 21:03:14.201',NULL),('‹Ë]3Eæ³ù½+JàÁ','/»_ââšMpªXTÎ|ãâ','Tigrinya','Ethiopia',NULL,'2020-04-04 21:03:14.203',NULL),('‹Ë]3Eæ³ù½+JàÁ','‹/pó¡L†…Mã4Ó8','Tigrinja','Ã„thiopien',NULL,'2020-04-04 21:03:14.203',NULL),('afÒALÑ¹X¼¥Dˆ','/»_ââšMpªXTÎ|ãâ','Persian','Iran',NULL,'2020-04-04 21:03:14.194',NULL),('afÒALÑ¹X¼¥Dˆ','‹/pó¡L†…Mã4Ó8','Persisch','Iran',NULL,'2020-04-04 21:03:14.194',NULL),('’|¸GCB­¶(éA¬3','/»_ââšMpªXTÎ|ãâ','Arabic','Iraq',NULL,'2020-04-04 21:03:14.188',NULL),('’|¸GCB­¶(éA¬3','‹/pó¡L†…Mã4Ó8','Arabisch','Irak',NULL,'2020-04-04 21:03:14.188',NULL),('“ğ\Zù7ÙEoq.1òœœ;','/»_ââšMpªXTÎ|ãâ','English','Malta',NULL,'2020-04-04 21:03:14.191',NULL),('“ğ\Zù7ÙEoq.1òœœ;','‹/pó¡L†…Mã4Ó8','Englisch','Malta',NULL,'2020-04-04 21:03:14.191',NULL),('”2ÄÓ\\Aƒ”´˜RGÓ6','/»_ââšMpªXTÎ|ãâ','Urdu','Pakistan',NULL,'2020-04-04 21:03:14.204',NULL),('”2ÄÓ\\Aƒ”´˜RGÓ6','‹/pó¡L†…Mã4Ó8','Urdu','Pakistan',NULL,'2020-04-04 21:03:14.204',NULL),('”ÄÁ=åJ‰¦„TşÊS‰','/»_ââšMpªXTÎ|ãâ','Arabic','Qatar',NULL,'2020-04-04 21:03:14.188',NULL),('”ÄÁ=åJ‰¦„TşÊS‰','‹/pó¡L†…Mã4Ó8','Arabisch','Katar',NULL,'2020-04-04 21:03:14.188',NULL),('•[<‹ÀMH‚µ©ê;bşGµ','/»_ââšMpªXTÎ|ãâ','Latvian','Lettland',NULL,'2020-04-04 21:03:14.198',NULL),('•[<‹ÀMH‚µ©ê;bşGµ','‹/pó¡L†…Mã4Ó8','Lettisch','Lettland',NULL,'2020-04-04 21:03:14.198',NULL),('–xFê¹ãH’Ÿ‘H¯aĞ','/»_ââšMpªXTÎ|ãâ','Walamo Language','Ethiopia',NULL,'2020-04-04 21:03:14.204',NULL),('–xFê¹ãH’Ÿ‘H¯aĞ','‹/pó¡L†…Mã4Ó8','Walamo-Sprache','Ã„thiopien',NULL,'2020-04-04 21:03:14.204',NULL),('—‚‘BîIJ\"¡:mò\'ı0#','/»_ââšMpªXTÎ|ãâ','Spanish','Guatemala',NULL,'2020-04-04 21:03:14.193',NULL),('—‚‘BîIJ\"¡:mò\'ı0#','‹/pó¡L†…Mã4Ó8','Spanisch','Guatemala',NULL,'2020-04-04 21:03:14.193',NULL),('˜#Àß?Iî¹Ù0%±»\\','/»_ââšMpªXTÎ|ãâ','Southern Ndebele','South Africa',NULL,'2020-04-04 21:03:14.199',NULL),('˜#Àß?Iî¹Ù0%±»\\','‹/pó¡L†…Mã4Ó8','SÃ¼d-Ndebele-Sprache','SÃ¼dafrika',NULL,'2020-04-04 21:03:14.199',NULL),('™eÏ¯¢¹K9œ!|Æ¢','/»_ââšMpªXTÎ|ãâ','Arabic','Algeria',NULL,'2020-04-04 21:03:14.188',NULL),('™eÏ¯¢¹K9œ!|Æ¢','‹/pó¡L†…Mã4Ó8','Arabisch','Algerien',NULL,'2020-04-04 21:03:14.188',NULL),('Ÿ	×j†³OĞdRch¨E?','/»_ââšMpªXTÎ|ãâ','English','Namibia',NULL,'2020-04-04 21:03:14.191',NULL),('Ÿ	×j†³OĞdRch¨E?','‹/pó¡L†…Mã4Ó8','Englisch','Namibia',NULL,'2020-04-04 21:03:14.192',NULL),('¢³¢ºBˆH:‰ÿ22¿`ú','/»_ââšMpªXTÎ|ãâ','Finnish','Finland',NULL,'2020-04-04 21:03:14.194',NULL),('¢³¢ºBˆH:‰ÿ22¿`ú','‹/pó¡L†…Mã4Ó8','Finnisch','Finnland',NULL,'2020-04-04 21:03:14.194',NULL),('¢ºÀJæODe–€½–º¸’Ú','/»_ââšMpªXTÎ|ãâ','Indonesian','Indonesia',NULL,'2020-04-04 21:03:14.196',NULL),('¢ºÀJæODe–€½–º¸’Ú','‹/pó¡L†…Mã4Ó8','Indonesisch','Indonesien',NULL,'2020-04-04 21:03:14.196',NULL),('¢şa S@£ F¿Ğ¤‡®','/»_ââšMpªXTÎ|ãâ','English','Northern Mariana Islands',NULL,'2020-04-04 21:03:14.191',NULL),('¢şa S@£ F¿Ğ¤‡®','‹/pó¡L†…Mã4Ó8','Englisch','NÃ¶rdliche Marianen',NULL,'2020-04-04 21:03:14.191',NULL),('£ôR£„ÆI+ŠLvï<¡‹','/»_ââšMpªXTÎ|ãâ','Spanish','Costa Rica',NULL,'2020-04-04 21:03:14.193',NULL),('£ôR£„ÆI+ŠLvï<¡‹','‹/pó¡L†…Mã4Ó8','Spanisch','Costa Rica',NULL,'2020-04-04 21:03:14.193',NULL),('¤ksZ×ÉNªÁÅQ@o±','/»_ââšMpªXTÎ|ãâ','Malay','Brunei Darussalam',NULL,'2020-04-04 21:03:14.199',NULL),('¤ksZ×ÉNªÁÅQ@o±','‹/pó¡L†…Mã4Ó8','Malaiisch','Brunei Darussalam',NULL,'2020-04-04 21:03:14.199',NULL),('©G?´‚D¯E\0weãÒ=','/»_ââšMpªXTÎ|ãâ','Syriac','Syria',NULL,'2020-04-04 21:03:14.203',NULL),('©G?´‚D¯E\0weãÒ=','‹/pó¡L†…Mã4Ó8','Syrisch','Syrien',NULL,'2020-04-04 21:03:14.203',NULL),('ªÃŒ\'ôFà³K¬³Çó2)','/»_ââšMpªXTÎ|ãâ','Albanian','Albania',NULL,'2020-04-04 21:03:14.202',NULL),('ªÃŒ\'ôFà³K¬³Çó2)','‹/pó¡L†…Mã4Ó8','Albanisch','Albanien',NULL,'2020-04-04 21:03:14.202',NULL),('«¥LCƒŸ+ƒ£›üf','/»_ââšMpªXTÎ|ãâ','English','Belize',NULL,'2020-04-04 21:03:14.191',NULL),('«¥LCƒŸ+ƒ£›üf','‹/pó¡L†…Mã4Ó8','Englisch','Belize',NULL,'2020-04-04 21:03:14.191',NULL),('¬I@èh›C}„¼‰3MjS','/»_ââšMpªXTÎ|ãâ','English','Trinidad and Tobago',NULL,'2020-04-04 21:03:14.192',NULL),('¬I@èh›C}„¼‰3MjS','‹/pó¡L†…Mã4Ó8','Englisch','Trinidad und Tobago',NULL,'2020-04-04 21:03:14.192',NULL),('­Š›EL¶‚ª&­H)','/»_ââšMpªXTÎ|ãâ','Swahili','Tanzania',NULL,'2020-04-04 21:03:14.202',NULL),('­Š›EL¶‚ª&­H)','‹/pó¡L†…Mã4Ó8','Suaheli','Tansania',NULL,'2020-04-04 21:03:14.202',NULL),('±*eyıG §šxøS@','/»_ââšMpªXTÎ|ãâ','English','Ireland',NULL,'2020-04-04 21:03:14.191',NULL),('±*eyıG §šxøS@','‹/pó¡L†…Mã4Ó8','Englisch','Irland',NULL,'2020-04-04 21:03:14.191',NULL),('±Û˜Pè3JşœÄk€¶ç','/»_ââšMpªXTÎ|ãâ','Afar','Eritrea',NULL,'2020-04-04 21:03:14.187',NULL),('±Û˜Pè3JşœÄk€¶ç','‹/pó¡L†…Mã4Ó8','Afar','Eritrea',NULL,'2020-04-04 21:03:14.187',NULL),('²y²KŠ®œ}û½','/»_ââšMpªXTÎ|ãâ','Spanish','Uruguay',NULL,'2020-04-04 21:03:14.194',NULL),('²y²KŠ®œ}û½','‹/pó¡L†…Mã4Ó8','Spanisch','Uruguay',NULL,'2020-04-04 21:03:14.194',NULL),('³k}ë¢DF‚sÂˆ·ıJ','/»_ââšMpªXTÎ|ãâ','Kpelle','Liberia',NULL,'2020-04-04 21:03:14.197',NULL),('³k}ë¢DF‚sÂˆ·ıJ','‹/pó¡L†…Mã4Ó8','Kpelle-Sprache','Liberia',NULL,'2020-04-04 21:03:14.197',NULL),('³ÀYÓÕ\"M£¾#²vşe{Š','/»_ââšMpªXTÎ|ãâ','Spanish','Honduras',NULL,'2020-04-04 21:03:14.193',NULL),('³ÀYÓÕ\"M£¾#²vşe{Š','‹/pó¡L†…Mã4Ó8','Spanisch','Honduras',NULL,'2020-04-04 21:03:14.193',NULL),('·3¨wOùŠ~×®¿ÏŞ','/»_ââšMpªXTÎ|ãâ','English','South Africa',NULL,'2020-04-04 21:03:14.192',NULL),('·3¨wOùŠ~×®¿ÏŞ','‹/pó¡L†…Mã4Ó8','Englisch','SÃ¼dafrika',NULL,'2020-04-04 21:03:14.192',NULL),('ºµIªõLt‡[xÔBO \'','/»_ââšMpªXTÎ|ãâ','Arabic','Tunisia',NULL,'2020-04-04 21:03:14.189',NULL),('ºµIªõLt‡[xÔBO \'','‹/pó¡L†…Mã4Ó8','Arabisch','Tunesien',NULL,'2020-04-04 21:03:14.189',NULL),('¼”Ëˆ©O‡÷øÿ˜†?K','/»_ââšMpªXTÎ|ãâ','Afrikaans','Namibia',NULL,'2020-04-04 21:03:14.187',NULL),('¼”Ëˆ©O‡÷øÿ˜†?K','‹/pó¡L†…Mã4Ó8','Afrikaans','Namibia',NULL,'2020-04-04 21:03:14.187',NULL),('½ıû¸vFn½ê³g›^Õ¹','/»_ââšMpªXTÎ|ãâ','Nyanja','Malawi',NULL,'2020-04-04 21:03:14.200',NULL),('½ıû¸vFn½ê³g›^Õ¹','‹/pó¡L†…Mã4Ó8','Nyanja-Sprache','Malawi',NULL,'2020-04-04 21:03:14.200',NULL),('¾XàÇh ItµÇÏ»9Ìÿ›','/»_ââšMpªXTÎ|ãâ','Kannada','India',NULL,'2020-04-04 21:03:14.197',NULL),('¾XàÇh ItµÇÏ»9Ìÿ›','‹/pó¡L†…Mã4Ó8','Kannada','Indien',NULL,'2020-04-04 21:03:14.197',NULL),('¾aI<-!NB,(ì\n€','/»_ââšMpªXTÎ|ãâ','Dutch','Netherlands',NULL,'2020-04-04 21:03:14.199',NULL),('¾aI<-!NB,(ì\n€','‹/pó¡L†…Mã4Ó8','NiederlÃ¤ndisch','Niederlande',NULL,'2020-04-04 21:03:14.199',NULL),('¿ö#ÎC¿¥ú±2¹&','/»_ââšMpªXTÎ|ãâ','Hungarian','Hungary',NULL,'2020-04-04 21:03:14.196',NULL),('¿ö#ÎC¿¥ú±2¹&','‹/pó¡L†…Mã4Ó8','Ungarisch','Ungarn',NULL,'2020-04-04 21:03:14.196',NULL),('Áj$ÚŸÚFØ’ü\0¢Iò','/»_ââšMpªXTÎ|ãâ','Belarusian','Belarus',NULL,'2020-04-04 21:03:14.189',NULL),('Áj$ÚŸÚFØ’ü\0¢Iò','‹/pó¡L†…Mã4Ó8','WeiÃŸrussisch','Belarus',NULL,'2020-04-04 21:03:14.189',NULL),('Âó&[™ÌG®I³ëÔ.','/»_ââšMpªXTÎ|ãâ','Tyap','Nigeria',NULL,'2020-04-04 21:03:14.197',NULL),('Âó&[™ÌG®I³ëÔ.','‹/pó¡L†…Mã4Ó8','Tyap','Nigeria',NULL,'2020-04-04 21:03:14.197',NULL),('ÆŒu²®K¨ºæ¤²±y','/»_ââšMpªXTÎ|ãâ','Tswana Language','South Africa',NULL,'2020-04-04 21:03:14.203',NULL),('ÆŒu²®K¨ºæ¤²±y','‹/pó¡L†…Mã4Ó8','Tswana-Sprache','SÃ¼dafrika',NULL,'2020-04-04 21:03:14.203',NULL),('É\n¹SKCšOÑ«ëÔ>','/»_ââšMpªXTÎ|ãâ','Bhutanese','Bhutan',NULL,'2020-04-04 21:03:14.190',NULL),('É\n¹SKCšOÑ«ëÔ>','‹/pó¡L†…Mã4Ó8','Bhutanisch','Bhutan',NULL,'2020-04-04 21:03:14.190',NULL),('Ë‰îÑDù£!šd¾œC','/»_ââšMpªXTÎ|ãâ','Romanian','Republic of Moldova',NULL,'2020-04-04 21:03:14.200',NULL),('Ë‰îÑDù£!šd¾œC','‹/pó¡L†…Mã4Ó8','RumÃ¤nisch','Republik Moldau',NULL,'2020-04-04 21:03:14.200',NULL),('Î\0YNƒK¬¸T{‘çÿHİ','/»_ââšMpªXTÎ|ãâ','Russian','Russian Federation',NULL,'2020-04-04 21:03:14.200',NULL),('Î\0YNƒK¬¸T{‘çÿHİ','‹/pó¡L†…Mã4Ó8','Russisch','Russische FÃ¶deration',NULL,'2020-04-04 21:03:14.200',NULL),('Ïƒ*ì(A‚‘sğ¶9Ö‰^','/»_ââšMpªXTÎ|ãâ','Chinese','Singapur',NULL,'2020-04-04 21:03:14.205',NULL),('Ïƒ*ì(A‚‘sğ¶9Ö‰^','‹/pó¡L†…Mã4Ó8','Chinesisch','Singapur',NULL,'2020-04-04 21:03:14.205',NULL),('ĞÃR¨qEŞfÒ,lª³','/»_ââšMpªXTÎ|ãâ','Northen Samian','Finland',NULL,'2020-04-04 21:03:14.201',NULL),('ĞÃR¨qEŞfÒ,lª³','‹/pó¡L†…Mã4Ó8','Nord-Samisch','Finnland',NULL,'2020-04-04 21:03:14.201',NULL),('ĞËâÚ|oDuˆeYNüPñ2','/»_ââšMpªXTÎ|ãâ','English','Pakistan',NULL,'2020-04-04 21:03:14.192',NULL),('ĞËâÚ|oDuˆeYNüPñ2','‹/pó¡L†…Mã4Ó8','Englisch','Pakistan',NULL,'2020-04-04 21:03:14.192',NULL),('Ñ#G]&Ml·eƒ3ïâW','/»_ââšMpªXTÎ|ãâ','Arabic','Egypt',NULL,'2020-04-04 21:03:14.188',NULL),('Ñ#G]&Ml·eƒ3ïâW','‹/pó¡L†…Mã4Ó8','Arabisch','Ã„gypten',NULL,'2020-04-04 21:03:14.188',NULL),('Ñ¢>z$JCŒÚÉpé?wê','/»_ââšMpªXTÎ|ãâ','French','Luxembourg',NULL,'2020-04-04 21:03:14.194',NULL),('Ñ¢>z$JCŒÚÉpé?wê','‹/pó¡L†…Mã4Ó8','FranzÃ¶sisch','Luxemburg',NULL,'2020-04-04 21:03:14.195',NULL),('ÒŒºdP5B¢¦gñç1è','/»_ââšMpªXTÎ|ãâ','Geez','Eritrea',NULL,'2020-04-04 21:03:14.195',NULL),('ÒŒºdP5B¢¦gñç1è','‹/pó¡L†…Mã4Ó8','Geez','Eritrea',NULL,'2020-04-04 21:03:14.195',NULL),('ÓBlË\Z C*‚&4ÎÈ©¿$','/»_ââšMpªXTÎ|ãâ','Konkani','India',NULL,'2020-04-04 21:03:14.197',NULL),('ÓBlË\Z C*‚&4ÎÈ©¿$','‹/pó¡L†…Mã4Ó8','Konkani','Indien',NULL,'2020-04-04 21:03:14.197',NULL),('Ô¯‚ogJ¦‚vıia¨Dæ','/»_ââšMpªXTÎ|ãâ','Spanish','Ecuador',NULL,'2020-04-04 21:03:14.193',NULL),('Ô¯‚ogJ¦‚vıia¨Dæ','‹/pó¡L†…Mã4Ó8','Spanisch','Ecuador',NULL,'2020-04-04 21:03:14.193',NULL),('Õÿx>È@‹”ä!!.]','/»_ââšMpªXTÎ|ãâ','Spanish','United States',NULL,'2020-04-04 21:03:14.194',NULL),('Õÿx>È@‹”ä!!.]','‹/pó¡L†…Mã4Ó8','Spanisch','Vereinigte Staaten',NULL,'2020-04-04 21:03:14.194',NULL),('Ö Ú\0:EO³T‹ıÿ„’','/»_ââšMpªXTÎ|ãâ','Igbo','Nigeria',NULL,'2020-04-04 21:03:14.196',NULL),('Ö Ú\0:EO³T‹ıÿ„’','‹/pó¡L†…Mã4Ó8','Igbo-Sprache','Nigeria',NULL,'2020-04-04 21:03:14.196',NULL),('Ö°`¨\rH½·øuf•','/»_ââšMpªXTÎ|ãâ','Yoruba','Nigeria',NULL,'2020-04-04 21:03:14.204',NULL),('Ö°`¨\rH½·øuf•','‹/pó¡L†…Mã4Ó8','Yoruba','Nigeria',NULL,'2020-04-04 21:03:14.204',NULL),('×.c<AyAÊš@ñZ\n„Èu','/»_ââšMpªXTÎ|ãâ','Somali','Kenya',NULL,'2020-04-04 21:03:14.201',NULL),('×.c<AyAÊš@ñZ\n„Èu','‹/pó¡L†…Mã4Ó8','Somali','Kenia',NULL,'2020-04-04 21:03:14.201',NULL),('×E Ö4@\Z´Éév+7U›','/»_ââšMpªXTÎ|ãâ','Greek','Cyprus',NULL,'2020-04-04 21:03:14.190',NULL),('×E Ö4@\Z´Éév+7U›','‹/pó¡L†…Mã4Ó8','Griechisch','Zypern',NULL,'2020-04-04 21:03:14.190',NULL),('ØÉĞÜO\0›ÔdØ‹â¸','/»_ââšMpªXTÎ|ãâ','Maldivian','Maldive Islands',NULL,'2020-04-04 21:03:14.190',NULL),('ØÉĞÜO\0›ÔdØ‹â¸','‹/pó¡L†…Mã4Ó8','Maledivisch','Malediven',NULL,'2020-04-04 21:03:14.190',NULL),('Ø[È}L\rAd…N1LŸë½','/»_ââšMpªXTÎ|ãâ','Gujarati','India',NULL,'2020-04-04 21:03:14.195',NULL),('Ø[È}L\rAd…N1LŸë½','‹/pó¡L†…Mã4Ó8','Gujarati','Indien',NULL,'2020-04-04 21:03:14.195',NULL),('Øe¡~M“±8\rñıØeç','/»_ââšMpªXTÎ|ãâ','Spanish','El Salvador',NULL,'2020-04-04 21:03:14.193',NULL),('Øe¡~M“±8\rñıØeç','‹/pó¡L†…Mã4Ó8','Spanisch','El Salvador',NULL,'2020-04-04 21:03:14.193',NULL),('ØÓk<¶]EEGÑÏÏÈ+¹','/»_ââšMpªXTÎ|ãâ','English','Canada',NULL,'2020-04-04 21:03:14.191',NULL),('ØÓk<¶]EEGÑÏÏÈ+¹','‹/pó¡L†…Mã4Ó8','Englisch','Kanada',NULL,'2020-04-04 21:03:14.191',NULL),('Ù&Åî€JJ¯›EE.S‡\nt','/»_ââšMpªXTÎ|ãâ','English','Philippines',NULL,'2020-04-04 21:03:14.192',NULL),('Ù&Åî€JJ¯›EE.S‡\nt','‹/pó¡L†…Mã4Ó8','Englisch','Philippinen',NULL,'2020-04-04 21:03:14.192',NULL),('ÙfŠ-‰JT²ÀÇ¿‚æ­‰','/»_ââšMpªXTÎ|ãâ','Basque','Spain',NULL,'2020-04-04 21:03:14.194',NULL),('ÙfŠ-‰JT²ÀÇ¿‚æ­‰','‹/pó¡L†…Mã4Ó8','Baskisch','Spanien',NULL,'2020-04-04 21:03:14.194',NULL),('Ùmë½“ZBkŠ_fŸ7û|','/»_ââšMpªXTÎ|ãâ','Bengali','India',NULL,'2020-04-04 21:03:14.189',NULL),('Ùmë½“ZBkŠ_fŸ7û|','‹/pó¡L†…Mã4Ó8','Bengalisch','Indien',NULL,'2020-04-04 21:03:14.189',NULL),('Û÷Õ)zFA±Zt3eˆ','/»_ââšMpªXTÎ|ãâ','Kurdish','Syria',NULL,'2020-04-04 21:03:14.198',NULL),('Û÷Õ)zFA±Zt3eˆ','‹/pó¡L†…Mã4Ó8','Kurdisch','Syrien',NULL,'2020-04-04 21:03:14.198',NULL),('ÜW›ªãpD½­+më£í¡','/»_ââšMpªXTÎ|ãâ','Tibetan','India',NULL,'2020-04-04 21:03:14.189',NULL),('ÜW›ªãpD½­+më£í¡','‹/pó¡L†…Mã4Ó8','Tibetisch','Indien',NULL,'2020-04-04 21:03:14.189',NULL),('Ü]v³\0@¬³¿äÍ\0Üš=','/»_ââšMpªXTÎ|ãâ','Swazi','Swaziland',NULL,'2020-04-04 21:03:14.202',NULL),('Ü]v³\0@¬³¿äÍ\0Üš=','‹/pó¡L†…Mã4Ó8','Swazi','Swasiland',NULL,'2020-04-04 21:03:14.202',NULL),('İõ“íÂ¸B4¤ı©Öe}÷\'','/»_ââšMpªXTÎ|ãâ','Hausa','Niger',NULL,'2020-04-04 21:03:14.195',NULL),('İõ“íÂ¸B4¤ı©Öe}÷\'','‹/pó¡L†…Mã4Ó8','Hausa','Niger',NULL,'2020-04-04 21:03:14.195',NULL),('Ş)úiŠÏM²¾–ôûÇcÂ6','/»_ââšMpªXTÎ|ãâ','Danish','Denmark',NULL,'2020-04-04 21:03:14.190',NULL),('Ş)úiŠÏM²¾–ôûÇcÂ6','‹/pó¡L†…Mã4Ó8','DÃ¤nisch','DÃ¤nemark',NULL,'2020-04-04 21:03:14.190',NULL),('â›_ºBVŸ^ÛrßUUø','/»_ââšMpªXTÎ|ãâ','Sichuan Yi','China',NULL,'2020-04-04 21:03:14.196',NULL),('â›_ºBVŸ^ÛrßUUø','‹/pó¡L†…Mã4Ó8','Sichuan Yi','China',NULL,'2020-04-04 21:03:14.196',NULL),('ä(¹|pÌM9°Uw‘KõĞ','/»_ââšMpªXTÎ|ãâ','Spanish','Dominican Republic',NULL,'2020-04-04 21:03:14.193',NULL),('ä(¹|pÌM9°Uw‘KõĞ','‹/pó¡L†…Mã4Ó8','Spanisch','Dominikanische Republik',NULL,'2020-04-04 21:03:14.193',NULL),('äœÛOy}B9’‰)^ÒÍIü','/»_ââšMpªXTÎ|ãâ','Turkish','Turkey',NULL,'2020-04-04 21:03:14.203',NULL),('äœÛOy}B9’‰)^ÒÍIü','‹/pó¡L†…Mã4Ó8','TÃ¼rkisch','TÃ¼rkei',NULL,'2020-04-04 21:03:14.203',NULL),('ä®äbMKà›¢|$…}Æ\0','/»_ââšMpªXTÎ|ãâ','Cambodian','Cambodia',NULL,'2020-04-04 21:03:14.197',NULL),('ä®äbMKà›¢|$…}Æ\0','‹/pó¡L†…Mã4Ó8','Kambodschanisch','Kambodscha',NULL,'2020-04-04 21:03:14.197',NULL),('äÓò›øOF®ÛtÌuYH','/»_ââšMpªXTÎ|ãâ','Xhosa','South Africa',NULL,'2020-04-04 21:03:14.204',NULL),('äÓò›øOF®ÛtÌuYH','‹/pó¡L†…Mã4Ó8','Xhosa','SÃ¼dafrika',NULL,'2020-04-04 21:03:14.204',NULL),('ænL]dD†K’úŒ.r•','/»_ââšMpªXTÎ|ãâ','Telugu','India',NULL,'2020-04-04 21:03:14.203',NULL),('ænL]dD†K’úŒ.r•','‹/pó¡L†…Mã4Ó8','Telugu','Indien',NULL,'2020-04-04 21:03:14.203',NULL),('æ½rƒr|E¶‘-9øtg:','/»_ââšMpªXTÎ|ãâ','Macedonian','Macedonia',NULL,'2020-04-04 21:03:14.198',NULL),('æ½rƒr|E¶‘-9øtg:','‹/pó¡L†…Mã4Ó8','Mazedonisch','Mazedonien',NULL,'2020-04-04 21:03:14.198',NULL),('æÎB0ìAGéª“\'6Ö¯','/»_ââšMpªXTÎ|ãâ','French','France',NULL,'2020-04-04 21:03:14.194',NULL),('æÎB0ìAGéª“\'6Ö¯','‹/pó¡L†…Mã4Ó8','FranzÃ¶sisch','Frankreich',NULL,'2020-04-04 21:03:14.194',NULL),('ç(êúWjDÊ“;[­(et','/»_ââšMpªXTÎ|ãâ','Marathi','India',NULL,'2020-04-04 21:03:14.199',NULL),('ç(êúWjDÊ“;[­(et','‹/pó¡L†…Mã4Ó8','Marathi','Indien',NULL,'2020-04-04 21:03:14.199',NULL),('çCôXcHB	ƒ(Úk5r','/»_ââšMpªXTÎ|ãâ','Swahili','Kenya',NULL,'2020-04-04 21:03:14.202',NULL),('çCôXcHB	ƒ(Úk5r','‹/pó¡L†…Mã4Ó8','Suaheli','Kenia',NULL,'2020-04-04 21:03:14.202',NULL),('èKNä²Eª±jŞß\\ÇÁ','/»_ââšMpªXTÎ|ãâ','Estonian','Estonia',NULL,'2020-04-04 21:03:14.194',NULL),('èKNä²Eª±jŞß\\ÇÁ','‹/pó¡L†…Mã4Ó8','Estnisch','Estland',NULL,'2020-04-04 21:03:14.194',NULL),('èç\\´AÚ‡9B5:L','/»_ââšMpªXTÎ|ãâ','Tamil','India',NULL,'2020-04-04 21:03:14.203',NULL),('èç\\´AÚ‡9B5:L','‹/pó¡L†…Mã4Ó8','Tamilisch','Indien',NULL,'2020-04-04 21:03:14.203',NULL),('ëUeïVÓJˆ²=M&vA‡“','/»_ââšMpªXTÎ|ãâ','Jju','Nigeria',NULL,'2020-04-04 21:03:14.197',NULL),('ëUeïVÓJˆ²=M&vA‡“','‹/pó¡L†…Mã4Ó8','Jju','Nigeria',NULL,'2020-04-04 21:03:14.197',NULL),('ëy†µ‚©O•±×’©Ë™(Ø','/»_ââšMpªXTÎ|ãâ','French','Monaco',NULL,'2020-04-04 21:03:14.195',NULL),('ëy†µ‚©O•±×’©Ë™(Ø','‹/pó¡L†…Mã4Ó8','FranzÃ¶sisch','Monaco',NULL,'2020-04-04 21:03:14.195',NULL),('ë¹8Vl;Aë€h:™°U®','/»_ââšMpªXTÎ|ãâ','Georgian','Georgia',NULL,'2020-04-04 21:03:14.197',NULL),('ë¹8Vl;Aë€h:™°U®','‹/pó¡L†…Mã4Ó8','Georgisch','Georgien',NULL,'2020-04-04 21:03:14.197',NULL),('ìÒÆV®B£¯â­\03pÑŞ','/»_ââšMpªXTÎ|ãâ','Tsonga','South Africa',NULL,'2020-04-04 21:03:14.203',NULL),('ìÒÆV®B£¯â­\03pÑŞ','‹/pó¡L†…Mã4Ó8','Tsonga','SÃ¼dafrika',NULL,'2020-04-04 21:03:14.203',NULL),('ğ#%,©HŸt¶’HÎ_','/»_ââšMpªXTÎ|ãâ','French','Switzerland',NULL,'2020-04-04 21:03:14.194',NULL),('ğ#%,©HŸt¶’HÎ_','‹/pó¡L†…Mã4Ó8','FranzÃ¶sisch','Schweiz',NULL,'2020-04-04 21:03:14.194',NULL),('ğŞ½ãx;NõŠØ³-n\rk²','/»_ââšMpªXTÎ|ãâ','Pashto','Afghanistan',NULL,'2020-04-04 21:03:14.200',NULL),('ğŞ½ãx;NõŠØ³-n\rk²','‹/pó¡L†…Mã4Ó8','Paschtu','Afghanistan',NULL,'2020-04-04 21:03:14.200',NULL),('ñG+iHr‚‹ )l	','/»_ââšMpªXTÎ|ãâ','Swedish','Finland',NULL,'2020-04-04 21:03:14.202',NULL),('ñG+iHr‚‹ )l	','‹/pó¡L†…Mã4Ó8','Schwedisch','Finnland',NULL,'2020-04-04 21:03:14.202',NULL),('ñqÄå„Bœ˜FeŠáùŞ','/»_ââšMpªXTÎ|ãâ','Czech','Czech Republic',NULL,'2020-04-04 21:03:14.190',NULL),('ñqÄå„Bœ˜FeŠáùŞ','‹/pó¡L†…Mã4Ó8','Tschechisch','Tschechische Republik',NULL,'2020-04-04 21:03:14.190',NULL),('ñ”oîø`Ft•™K{üg÷','/»_ââšMpªXTÎ|ãâ','Bengali','Bangladesh',NULL,'2020-04-04 21:03:14.189',NULL),('ñ”oîø`Ft•™K{üg÷','‹/pó¡L†…Mã4Ó8','Bengalisch','Bangladesch',NULL,'2020-04-04 21:03:14.189',NULL),('ò‹èÊÚH\n‚³‡\"—W','/»_ââšMpªXTÎ|ãâ','English','Guam',NULL,'2020-04-04 21:03:14.191',NULL),('ò‹èÊÚH\n‚³‡\"—W','‹/pó¡L†…Mã4Ó8','Englisch','Guam',NULL,'2020-04-04 21:03:14.191',NULL),('òâ#¥÷pJNû	;§„»','/»_ââšMpªXTÎ|ãâ','Rwandan','Rwanda',NULL,'2020-04-04 21:03:14.201',NULL),('òâ#¥÷pJNû	;§„»','‹/pó¡L†…Mã4Ó8','Ruandisch','Ruanda',NULL,'2020-04-04 21:03:14.201',NULL),('óÖJÜèËFş¬ò?¶áWg','/»_ââšMpªXTÎ|ãâ','Armenian','Armenia',NULL,'2020-04-04 21:03:14.196',NULL),('óÖJÜèËFş¬ò?¶áWg','‹/pó¡L†…Mã4Ó8','Armenisch','Armenien',NULL,'2020-04-04 21:03:14.196',NULL),('ôl0•oõF/´Bñvİ±','/»_ââšMpªXTÎ|ãâ','Sidamo','Ethiopia',NULL,'2020-04-04 21:03:14.201',NULL),('ôl0•oõF/´Bñvİ±','‹/pó¡L†…Mã4Ó8','Sidamo','Ã„thiopien',NULL,'2020-04-04 21:03:14.201',NULL),('ôÍ©^œüH¶—`ßÆVöŞ°','/»_ââšMpªXTÎ|ãâ','Chinese','China',NULL,'2020-04-04 21:03:14.204',NULL),('ôÍ©^œüH¶—`ßÆVöŞ°','‹/pó¡L†…Mã4Ó8','Chinesisch','China',NULL,'2020-04-04 21:03:14.204',NULL),('ö“b¢/CÁ„)íœ%Ã','/»_ââšMpªXTÎ|ãâ','Mongol','Mongolia',NULL,'2020-04-04 21:03:14.198',NULL),('ö“b¢/CÁ„)íœ%Ã','‹/pó¡L†…Mã4Ó8','Mongolisch','Mongolei',NULL,'2020-04-04 21:03:14.198',NULL),('ö€\\<Æ@Iñ ¨;§–Wó','/»_ââšMpªXTÎ|ãâ','Azerbaijani','Azerbaijan',NULL,'2020-04-04 21:03:14.189',NULL),('ö€\\<Æ@Iñ ¨;§–Wó','‹/pó¡L†…Mã4Ó8','Aserbaidschanisch','Aserbaidschan',NULL,'2020-04-04 21:03:14.189',NULL),('÷¼—ÍSN)§±ÔøÊ¯Òr','/»_ââšMpªXTÎ|ãâ','Arabic','Oman',NULL,'2020-04-04 21:03:14.188',NULL),('÷¼—ÍSN)§±ÔøÊ¯Òr','‹/pó¡L†…Mã4Ó8','Arabisch','Oman',NULL,'2020-04-04 21:03:14.188',NULL),('÷Áàå‘šGµ¬U·AlŠ˜ ','/»_ââšMpªXTÎ|ãâ','Norwegian BokmÃ¥l','Norway',NULL,'2020-04-04 21:03:14.199',NULL),('÷Áàå‘šGµ¬U·AlŠ˜ ','‹/pó¡L†…Mã4Ó8','Norwegisch BokmÃ¥l','Norwegen',NULL,'2020-04-04 21:03:14.199',NULL),('øß¥éC\"ŠR¥üÄá','/»_ââšMpªXTÎ|ãâ','Northen Samian','Norway',NULL,'2020-04-04 21:03:14.201',NULL),('øß¥éC\"ŠR¥üÄá','‹/pó¡L†…Mã4Ó8','Nord-Samisch','Norwegen',NULL,'2020-04-04 21:03:14.201',NULL),('ø‡«ÃW»MÛœŸjk','/»_ââšMpªXTÎ|ãâ','Uighur','China',NULL,'2020-04-04 21:03:14.203',NULL),('ø‡«ÃW»MÛœŸjk','‹/pó¡L†…Mã4Ó8','Uigurisch','China',NULL,'2020-04-04 21:03:14.203',NULL),('ùS­—rL‹}Äb+½^“','/»_ââšMpªXTÎ|ãâ','Italian','Italy',NULL,'2020-04-04 21:03:14.196',NULL),('ùS­—rL‹}Äb+½^“','‹/pó¡L†…Mã4Ó8','Italienisch','Italien',NULL,'2020-04-04 21:03:14.196',NULL),('ù£\rÍë‚C{™$ˆ~3)Ñ','/»_ââšMpªXTÎ|ãâ','Hindi','India',NULL,'2020-04-04 21:03:14.196',NULL),('ù£\rÍë‚C{™$ˆ~3)Ñ','‹/pó¡L†…Mã4Ó8','Hindi','Indien',NULL,'2020-04-04 21:03:14.196',NULL),('úĞANSšØLq‰B','/»_ââšMpªXTÎ|ãâ','Japanese','Japan',NULL,'2020-04-04 21:03:14.196',NULL),('úĞANSšØLq‰B','‹/pó¡L†…Mã4Ó8','Japanisch','Japan',NULL,'2020-04-04 21:03:14.196',NULL),('úÕqÇêPM°šèRu–øµ','/»_ââšMpªXTÎ|ãâ','Vietnamese','Vietnam',NULL,'2020-04-04 21:03:14.204',NULL),('úÕqÇêPM°šèRu–øµ','‹/pó¡L†…Mã4Ó8','Vietnamesisch','Vietnam',NULL,'2020-04-04 21:03:14.204',NULL),('û>!ÆBj«gO§}','/»_ââšMpªXTÎ|ãâ','Uzbek','Uzbekistan',NULL,'2020-04-04 21:03:14.204',NULL),('û>!ÆBj«gO§}','‹/pó¡L†…Mã4Ó8','Usbekisch','Usbekistan',NULL,'2020-04-04 21:03:14.204',NULL),('şx…Å©sN!²\"±ökk','/»_ââšMpªXTÎ|ãâ','Chinese','Taiwan',NULL,'2020-04-04 21:03:14.205',NULL),('şx…Å©sN!²\"±ökk','‹/pó¡L†…Mã4Ó8','Chinesisch','Taiwan',NULL,'2020-04-04 21:03:14.205',NULL);
-/*!40000 ALTER TABLE `locale_translation` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `log_entry`
---
-
-DROP TABLE IF EXISTS `log_entry`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `log_entry` (
-  `id` binary(16) NOT NULL,
-  `message` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `level` smallint(6) NOT NULL,
-  `channel` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `context` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `extra` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  CONSTRAINT `json.log_entry.context` CHECK (json_valid(`context`)),
-  CONSTRAINT `json.log_entry.extra` CHECK (json_valid(`extra`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `log_entry`
---
-
-LOCK TABLES `log_entry` WRITE;
-/*!40000 ALTER TABLE `log_entry` DISABLE KEYS */;
-/*!40000 ALTER TABLE `log_entry` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `mail_header_footer`
---
-
-DROP TABLE IF EXISTS `mail_header_footer`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `mail_header_footer` (
-  `id` binary(16) NOT NULL,
-  `system_default` tinyint(1) unsigned NOT NULL DEFAULT 0,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `mail_header_footer`
---
-
-LOCK TABLES `mail_header_footer` WRITE;
-/*!40000 ALTER TABLE `mail_header_footer` DISABLE KEYS */;
-/*!40000 ALTER TABLE `mail_header_footer` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `mail_header_footer_translation`
---
-
-DROP TABLE IF EXISTS `mail_header_footer_translation`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `mail_header_footer_translation` (
-  `mail_header_footer_id` binary(16) NOT NULL,
-  `language_id` binary(16) NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `description` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `header_html` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `header_plain` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `footer_html` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `footer_plain` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`mail_header_footer_id`,`language_id`),
-  KEY `fk.mail_header_footer_translation.language_id` (`language_id`),
-  CONSTRAINT `fk.mail_header_footer_translation.language_id` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.mail_header_footer_translation.mail_header_footer_id` FOREIGN KEY (`mail_header_footer_id`) REFERENCES `mail_header_footer` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `mail_header_footer_translation`
---
-
-LOCK TABLES `mail_header_footer_translation` WRITE;
-/*!40000 ALTER TABLE `mail_header_footer_translation` DISABLE KEYS */;
-/*!40000 ALTER TABLE `mail_header_footer_translation` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `mail_template`
---
-
-DROP TABLE IF EXISTS `mail_template`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `mail_template` (
-  `id` binary(16) NOT NULL,
-  `mail_template_type_id` binary(16) DEFAULT NULL,
-  `system_default` tinyint(1) unsigned NOT NULL DEFAULT 0,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk.mail_template.mail_template_type_id` (`mail_template_type_id`),
-  CONSTRAINT `fk.mail_template.mail_template_type_id` FOREIGN KEY (`mail_template_type_id`) REFERENCES `mail_template_type` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `mail_template`
---
-
-LOCK TABLES `mail_template` WRITE;
-/*!40000 ALTER TABLE `mail_template` DISABLE KEYS */;
-INSERT INTO `mail_template` VALUES ('šLş%OÚ¿Ã\"dy ','§?\nVFkJL¡ÊÆBsı',1,'2020-04-04 21:03:19.497',NULL),('œò\"MÛ¨Û_Ö,G™p','\"Ô»RK†º+<2Ñ',1,'2020-04-04 21:03:19.528',NULL),('\r‹İGT¿NÙšì–ÄA#ï','XÃ!NAÁ ÿˆ1´\Z`ğ',1,'2020-04-04 21:03:19.534',NULL),('1>»úşEŠ¼ÃïRjéş','ÔY\n…X C2‡x4.‘ÁéC',1,'2020-04-04 21:03:19.570',NULL),('%P/:Mş˜…îKæ©ª','©Ï‚Ñì\ZKÇ»Ğ¾^sz',1,'2020-04-04 21:03:19.576',NULL),(',OKï AX„¾ßl©k²;','î…fßïE7¹š‚Dít',1,'2020-04-04 21:03:19.558',NULL),('-FÂÅHˆ”8ÿ÷È 9Ì','ŸByfH·²h9Ú‰üù',1,'2020-04-04 21:03:14.421',NULL),('0r{²à®E¿ˆ¹ènx©î','öxS<ßF+„“J%3]4Ö',1,'2020-04-04 21:03:19.625',NULL),('>ÏÊEvÜJ3§›ï}-¾‚G','?CLÍÑ¼J©·ª>òaÑ£',1,'2020-04-04 21:03:19.545',NULL),('\\š»hÒNM3«¸À¶¤t','/èÅ†ì+Jî®-«(×°',1,'2020-04-04 21:03:19.588',NULL),('d³ğ&ê¯I{¯¼’õ6ò','/tõ¹Iùª7‘=Âj…\\',1,'2020-04-04 21:03:19.959',NULL),('…¸çÍ@â“î°ìK	','˜i73H© \Z[\"T',1,'2020-04-04 21:03:14.423',NULL),('‡âR–¦œC‰­Õ`\ZØÂã','‹7 lBQ®¯p4>¨ª',1,'2020-04-04 21:03:19.552',NULL),('J\\zÖ€FÙMåİ<Ö4','´–á(	h@¸7ÅÒVş‚',1,'2020-04-04 21:03:18.791',NULL),('>T¦D\"¸{>p¿ÀL7','9O¹ınBº¾i+…¯',1,'2020-04-04 21:03:14.430',NULL),('‘;/œ®€I³&Ã¾¢2MÔ','©‰·ú‰M^š=ØB¯AL',1,'2020-04-04 21:03:16.027',NULL),('•ã0Ò{Lì™½†Un-FF','Wbƒ<ËJi½äª´~]\n',1,'2020-04-04 21:03:19.612',NULL),('¼#È´O+ˆ‘»åO#','W$UM¥C†	d!}µ˜',1,'2020-04-04 21:03:14.423',NULL),('¿‚ÑQ©£Ik¹\"¬áö’L’','¸292JM±öw°Ì`P',1,'2020-04-04 21:03:19.516',NULL),('Â¨ûÏêAš“Ó~P)¹z','8È1>ÆçNG‚Å”r§º',1,'2020-04-04 21:03:19.564',NULL),('ÄáŠ08Il…ô´¶Ôe°ú','áè\0üN²³Ò\"~ófù',1,'2020-04-04 21:03:14.415',NULL),('Å*´©#ITªb>ø™¾','ëu¹ÄhyC©®À±è',1,'2020-04-04 21:03:14.414',NULL),('ÆtATå(DÅƒyE¥îkb','Õ?wÃKN7ªkÖ¸Vr',1,'2020-04-04 21:03:17.869',NULL),('Ú•º¢È_I>ˆdMoçVì$','Ë{Ğ–S@º¿Åf‘$¯ƒ',1,'2020-04-04 21:03:20.176',NULL),('Û‡€NÙGO† ıÉ:!†s$','ìáƒ!¦åG•©jNÙíM',1,'2020-04-04 21:03:19.595',NULL),('â¿\ZsE¶5fì¢5I)','UAëÚ¿ÒF>Š»è½Ö?5×',1,'2020-04-04 21:03:19.509',NULL),('ì¥‘ÃƒkGA¡:K×õşŸ','Ö¹‡ÇÕOËÅ%¬É9Ú',1,'2020-04-04 21:03:14.437',NULL),('ïcvFÉ…ÑW&ÛR²o','·˜+šD+‚‰äM¿MÔ',1,'2020-04-04 21:03:19.600',NULL);
-/*!40000 ALTER TABLE `mail_template` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `mail_template_media`
---
-
-DROP TABLE IF EXISTS `mail_template_media`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `mail_template_media` (
-  `id` binary(16) NOT NULL,
-  `mail_template_id` binary(16) NOT NULL,
-  `media_id` binary(16) NOT NULL,
-  `position` int(11) NOT NULL DEFAULT 1,
-  PRIMARY KEY (`id`),
-  KEY `fk.mail_template_media.mail_template_id` (`mail_template_id`),
-  KEY `fk.mail_template_media.media_id` (`media_id`),
-  CONSTRAINT `fk.mail_template_media.mail_template_id` FOREIGN KEY (`mail_template_id`) REFERENCES `mail_template` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.mail_template_media.media_id` FOREIGN KEY (`media_id`) REFERENCES `media` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `mail_template_media`
---
-
-LOCK TABLES `mail_template_media` WRITE;
-/*!40000 ALTER TABLE `mail_template_media` DISABLE KEYS */;
-/*!40000 ALTER TABLE `mail_template_media` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `mail_template_sales_channel`
---
-
-DROP TABLE IF EXISTS `mail_template_sales_channel`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `mail_template_sales_channel` (
-  `id` binary(16) NOT NULL,
-  `mail_template_id` binary(16) NOT NULL,
-  `mail_template_type_id` binary(16) NOT NULL,
-  `sales_channel_id` binary(16) DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  UNIQUE KEY `uniq.mail_template_id__sales_channel_id` (`mail_template_id`,`sales_channel_id`),
-  KEY `fk.mail_template_sales_channel.mail_template_type_id` (`mail_template_type_id`),
-  KEY `fk.mail_template_sales_channel.sales_channel_id` (`sales_channel_id`),
-  CONSTRAINT `fk.mail_template_sales_channel.mail_template_id` FOREIGN KEY (`mail_template_id`) REFERENCES `mail_template` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.mail_template_sales_channel.mail_template_type_id` FOREIGN KEY (`mail_template_type_id`) REFERENCES `mail_template_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.mail_template_sales_channel.sales_channel_id` FOREIGN KEY (`sales_channel_id`) REFERENCES `sales_channel` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `mail_template_sales_channel`
---
-
-LOCK TABLES `mail_template_sales_channel` WRITE;
-/*!40000 ALTER TABLE `mail_template_sales_channel` DISABLE KEYS */;
-INSERT INTO `mail_template_sales_channel` VALUES ('t^·—RF€ˆ÷ªûş7ë','J\\zÖ€FÙMåİ<Ö4','´–á(	h@¸7ÅÒVş‚','˜C-ï9üF$³2¥kŒ”M','2020-04-04 21:03:18.796',NULL);
-/*!40000 ALTER TABLE `mail_template_sales_channel` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `mail_template_translation`
---
-
-DROP TABLE IF EXISTS `mail_template_translation`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `mail_template_translation` (
-  `mail_template_id` binary(16) NOT NULL,
-  `language_id` binary(16) NOT NULL,
-  `sender_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `subject` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `description` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `content_html` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `content_plain` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`mail_template_id`,`language_id`),
-  KEY `fk.mail_template_translation.language_id` (`language_id`),
-  CONSTRAINT `fk.mail_template_translation.language_id` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.mail_template_translation.mail_template_id` FOREIGN KEY (`mail_template_id`) REFERENCES `mail_template` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `json.mail_template_translation.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `mail_template_translation`
---
-
-LOCK TABLES `mail_template_translation` WRITE;
-/*!40000 ALTER TABLE `mail_template_translation` DISABLE KEYS */;
-INSERT INTO `mail_template_translation` VALUES ('šLş%OÚ¿Ã\"dy ','/»_ââšMpªXTÎ|ãâ','{{ salesChannel.name }}','Your order with {{ salesChannel.name }} is partially delivered','Shopware Default Template','\n            <div style=\"font-family:arial; font-size:12px;\">\n               <br/>\n               <p>\n                   {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},<br/>\n                   <br/>\n                   the status of your delivery at {{ salesChannel.name }} (Number: {{order.orderNumber}}) on {{ order.orderDateTime|date }} has changed.<br/>\n                   <strong>The new status is as follows: {{order.deliveries.first.stateMachineState.name}}.</strong><br/>\n                   <br/>\n                   You can check the current status of your order on our website under \"My account\" - \"My orders\" anytime. But in case you have purchased without a registration or a customer account, you do not have this option.\n               </p>\n            </div>\n        ','\n        {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},\n        \n        the status of your delivery at {{ salesChannel.name }} (Number: {{order.orderNumber}}) on {{ order.orderDateTime|date }}  has changed.\n        The new status is as follows: {{order.deliveries.first.stateMachineState.name}}.\n        \n        You can check the current status of your order on our website under \"My account\" - \"My orders\" anytime. \n        But in case you have purchased without a registration or a customer account, you do not have this option.',NULL,'2020-04-04 21:03:19.498',NULL),('šLş%OÚ¿Ã\"dy ','‹/pó¡L†…Mã4Ó8','{{ salesChannel.name }}','Bestellung bei {{ salesChannel.name }} wurde teilweise ausgeliefert','Shopware Basis Template','\n            <div style=\"font-family:arial; font-size:12px;\">\n                <br/>\n                <p>\n                    {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},<br/>\n                    <br/>\n                    der Lieferstatys fÃ¼r Ihre Bestellung bei {{ salesChannel.name }} (Number: {{order.orderNumber}}) vom {{ order.orderDateTime|date }} hat sich geÃ¤ndert.<br/>\n                    <strong>Die Bestellung hat jetzt den Bestellstatus: {{order.deliveries.first.stateMachineState.name}}.</strong><br/>\n                    <br/>\n                    Den aktuellen Status Ihrer Bestellung kÃ¶nnen Sie auch jederzeit auf unserer Webseite im  Bereich \"Mein Konto\" - \"Meine Bestellungen\" abrufen. Sollten Sie allerdings den Kauf ohne Registrierung, also ohne Anlage eines Kundenkontos, gewÃ¤hlt haben, steht Ihnen diese MÃ¶glichkeit nicht zur VerfÃ¼gung.\n                </p>\n            </div>','\n            {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},\n        \n        der Lieferstatus fÃ¼r Ihre Bestellung bei {{ salesChannel.name }} (Number: {{order.orderNumber}}) vom {{ order.orderDateTime|date }} hat sich geÃ¤ndert!\n        Die Bestellung hat jetzt den Bestellstatus: {{order.deliveries.first.stateMachineState.name}}.\n        \n        Den aktuellen Status Ihrer Bestellung kÃ¶nnen Sie auch jederzeit auf unserer Webseite im  Bereich \"Mein Konto\" - \"Meine Bestellungen\" abrufen. \n        Sollten Sie allerdings den Kauf ohne Registrierung, also ohne Anlage eines Kundenkontos, gewÃ¤hlt haben, steht Ihnen diese MÃ¶glichkeit nicht zur VerfÃ¼gung.',NULL,'2020-04-04 21:03:19.500',NULL),('œò\"MÛ¨Û_Ö,G™p','/»_ââšMpªXTÎ|ãâ','{{ salesChannel.name }}','Your order with {{ salesChannel.name }} is cancelled','Shopware Default Template','<div style=\"font-family:arial; font-size:12px;\">\n                    <br/>\n                    <p>\n                        {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},<br/>\n                        <br/>\n                        the status of your delivery at {{ salesChannel.name }} (Number: {{order.orderNumber}}) on {{ order.orderDateTime|date }} has changed.<br/>\n                        <strong>The new status is as follows: {{order.deliveries.first.stateMachineState.name}}.</strong><br/>\n                        <br/>\n                        You can check the current status of your order on our website under \"My account\" - \"My orders\" anytime. But in case you have purchased without a registration or a customer account, you do not have this option.\n                    </p>\n                </div>','\n            {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},\n            \n            the status of your delivery at {{ salesChannel.name }} (Number: {{order.orderNumber}}) on {{ order.orderDateTime|date }}  has changed.\n            The new status is as follows: {{order.deliveries.first.stateMachineState.name}}.\n            \n            You can check the current status of your order on our website under \"My account\" - \"My orders\" anytime. \n            But in case you have purchased without a registration or a customer account, you do not have this option.',NULL,'2020-04-04 21:03:19.529',NULL),('œò\"MÛ¨Û_Ö,G™p','‹/pó¡L†…Mã4Ó8','{{ salesChannel.name }}','Stornierung der Bestellung bei {{ salesChannel.name }}','Shopware Basis Template','\n        <div style=\"font-family:arial; font-size:12px;\">\n           <br/>\n           <p>\n               {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},<br/>\n               <br/>\n               der Lieferstatus fÃ¼r Ihre Bestellung bei {{ salesChannel.name }} (Number: {{order.orderNumber}}) vom {{ order.orderDateTime|date }} hat sich geÃ¤ndert.<br/>\n               <strong>Die Bestellung hat jetzt den Zahlungsstatus: {{order.deliveries.first.stateMachineState.name}}.</strong><br/>\n               <br/>\n               Den aktuellen Status Ihrer Bestellung kÃ¶nnen Sie auch jederzeit auf unserer Webseite im  Bereich \"Mein Konto\" - \"Meine Bestellungen\" abrufen. Sollten Sie allerdings den Kauf ohne Registrierung, also ohne Anlage eines Kundenkontos, gewÃ¤hlt haben, steht Ihnen diese MÃ¶glichkeit nicht zur VerfÃ¼gung.\n           </p>\n        </div>','\n        {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},\n        \n        der Lieferstatus fÃ¼r Ihre Bestellung bei {{ salesChannel.name }} (Number: {{order.orderNumber}}) vom {{ order.orderDateTime|date }} hat sich geÃ¤ndert!\n        Die Bestellung hat jetzt den Zahlungsstatus: {{order.deliveries.first.stateMachineState.name}}.\n        \n        Den aktuellen Status Ihrer Bestellung kÃ¶nnen Sie auch jederzeit auf unserer Webseite im  Bereich \"Mein Konto\" - \"Meine Bestellungen\" abrufen. \n        Sollten Sie allerdings den Kauf ohne Registrierung, also ohne Anlage eines Kundenkontos, gewÃ¤hlt haben, steht Ihnen diese MÃ¶glichkeit nicht zur VerfÃ¼gung.',NULL,'2020-04-04 21:03:19.530',NULL),('\r‹İGT¿NÙšì–ÄA#ï','/»_ââšMpªXTÎ|ãâ','{{ salesChannel.name }}','Your order with {{ salesChannel.name }} is delivered','Shopware Default Template','\n            <div style=\"font-family:arial; font-size:12px;\">\n                <br/>\n                <p>\n                    {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},<br/>\n                    <br/>\n                    the status of your delivery at {{ salesChannel.name }} (Number: {{order.orderNumber}}) on {{ order.orderDateTime|date }} has changed.<br/>\n                    <strong>The new status is as follows: {{order.deliveries.first.stateMachineState.name}}.</strong><br/>\n                    <br/>\n                    You can check the current status of your order on our website under \"My account\" - \"My orders\" anytime. But in case you have purchased without a registration or a customer account, you do not have this option.\n                </p>\n            </div>\n        ','\n        {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},\n        \n        the status of your delivery at {{ salesChannel.name }} (Number: {{order.orderNumber}}) on {{ order.orderDateTime|date }}  has changed.\n        The new status is as follows: {{order.deliveries.first.stateMachineState.name}}.\n        \n        You can check the current status of your order on our website under \"My account\" - \"My orders\" anytime. \n        But in case you have purchased without a registration or a customer account, you do not have this option.',NULL,'2020-04-04 21:03:19.535',NULL),('\r‹İGT¿NÙšì–ÄA#ï','‹/pó¡L†…Mã4Ó8','{{ salesChannel.name }}','Bestellung bei {{ salesChannel.name }} wurde ausgeliefert','Shopware Basis Template','\n            <div style=\"font-family:arial; font-size:12px;\">\n                <br/>\n                <p>\n                    {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},<br/>\n                    <br/>\n                    der Lieferstatus fÃ¼r Ihre Bestellung bei {{ salesChannel.name }} (Number: {{order.orderNumber}}) vom {{ order.orderDateTime|date }} hat sich geÃ¤ndert.<br/>\n                    <strong>Die Bestellung hat jetzt den Bestellstatus: {{order.deliveries.first.stateMachineState.name}}.</strong><br/>\n                    <br/>\n                    Den aktuellen Status Ihrer Bestellung kÃ¶nnen Sie auch jederzeit auf unserer Webseite im  Bereich \"Mein Konto\" - \"Meine Bestellungen\" abrufen. Sollten Sie allerdings den Kauf ohne Registrierung, also ohne Anlage eines Kundenkontos, gewÃ¤hlt haben, steht Ihnen diese MÃ¶glichkeit nicht zur VerfÃ¼gung.\n                </p>\n            </div>\n        ','\n        {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},\n        \n        der Lieferstatus fÃ¼r Ihre Bestellung bei {{ salesChannel.name }} (Number: {{order.orderNumber}}) vom {{ order.orderDateTime|date }} hat sich geÃ¤ndert!\n        Die Bestellung hat jetzt den Bestellstatus: {{order.deliveries.first.stateMachineState.name}}.\n        \n        Den aktuellen Status Ihrer Bestellung kÃ¶nnen Sie auch jederzeit auf unserer Webseite im  Bereich \"Mein Konto\" - \"Meine Bestellungen\" abrufen. \n        Sollten Sie allerdings den Kauf ohne Registrierung, also ohne Anlage eines Kundenkontos, gewÃ¤hlt haben, steht Ihnen diese MÃ¶glichkeit nicht zur VerfÃ¼gung.',NULL,'2020-04-04 21:03:19.536',NULL),('1>»úşEŠ¼ÃïRjéş','/»_ââšMpªXTÎ|ãâ','{{ salesChannel.name }}','Your order with {{ salesChannel.name }} is partially refunded','Shopware Default Template','<div style=\"font-family:arial; font-size:12px;\">\n <br/>\n    <p>\n        {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},<br/>\n        <br/>\n        the status of your order at {{ salesChannel.name }} (Number: {{order.orderNumber}}) on {{ order.orderDateTime|date }} has changed.<br/>\n        <strong>The new status is as follows: {{order.transactions.first.stateMachineState.name}}.</strong><br/>\n        <br/>\n        You can check the current status of your order on our website under \"My account\" - \"My orders\" anytime. But in case you have purchased without a registration or a customer account, you do not have this option.\n    </p>\n</div>','\n        {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},\n        \n        the status of your order at {{ salesChannel.name }} (Number: {{order.orderNumber}}) on {{ order.orderDateTime|date }}  has changed.\n        The new status is as follows: {{order.transactions.first.stateMachineState.name}}.\n        \n        You can check the current status of your order on our website under \"My account\" - \"My orders\" anytime. \n        But in case you have purchased without a registration or a customer account, you do not have this option.',NULL,'2020-04-04 21:03:19.571',NULL),('1>»úşEŠ¼ÃïRjéş','‹/pó¡L†…Mã4Ó8','{{ salesChannel.name }}','Bestellung bei {{ salesChannel.name }} wurde teilweise erstattet','Shopware Basis Template','        <div style=\"font-family:arial; font-size:12px;\">\n         <br/>\n            <p>\n                {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},<br/>\n                <br/>\n                der Zahlungsstatus fÃ¼r Ihre Bestellung bei {{ salesChannel.name }} (Number: {{order.orderNumber}}) vom {{ order.orderDateTime|date }} has changed.<br/>\n                <strong>Die Bestellung hat jetzt den Zahlungsstatus: {{order.transactions.first.stateMachineState.name}}.</strong><br/>\n                <br/>\n                Den aktuellen Status Ihrer Bestellung kÃ¶nnen Sie auch jederzeit auf unserer Webseite im  Bereich \"Mein Konto\" - \"Meine Bestellungen\" abrufen. Sollten Sie allerdings den Kauf ohne Registrierung, also ohne Anlage eines Kundenkontos, gewÃ¤hlt haben, steht Ihnen diese MÃ¶glichkeit nicht zur VerfÃ¼gung.\n            </p>\n        </div>','\n        {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},\n        \n        der Zahlungsstatus fÃ¼r Ihre Bestellung bei {{ salesChannel.name }} (Number: {{order.orderNumber}}) vom {{ order.orderDateTime|date }} hat sich geÃ¤ndert!\n        Die Bestellung hat jetzt den Zahlungsstatus: {{order.transactions.first.stateMachineState.name}}.\n        \n        Den aktuellen Status Ihrer Bestellung kÃ¶nnen Sie auch jederzeit auf unserer Webseite im  Bereich \"Mein Konto\" - \"Meine Bestellungen\" abrufen. \n        Sollten Sie allerdings den Kauf ohne Registrierung, also ohne Anlage eines Kundenkontos, gewÃ¤hlt haben, steht Ihnen diese MÃ¶glichkeit nicht zur VerfÃ¼gung.',NULL,'2020-04-04 21:03:19.572',NULL),('%P/:Mş˜…îKæ©ª','/»_ââšMpªXTÎ|ãâ','{{ salesChannel.name }}','Reminder for your order with {{ salesChannel.name }}','Shopware Default Template','<div style=\"font-family:arial; font-size:12px;\">\n <br/>\n    <p>\n        {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},<br/>\n        <br/>\n        the status of your order at {{ salesChannel.name }} (Number: {{order.orderNumber}}) on {{ order.orderDateTime|date }} has changed.<br/>\n        <strong>The new status is as follows: {{order.transactions.first.stateMachineState.name}}.</strong><br/>\n        <br/>\n        You can check the current status of your order on our website under \"My account\" - \"My orders\" anytime. But in case you have purchased without a registration or a customer account, you do not have this option.\n    </p>\n</div>','\n        {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},\n        \n        the status of your order at {{ salesChannel.name }} (Number: {{order.orderNumber}}) on {{ order.orderDateTime|date }}  has changed.\n        The new status is as follows: {{order.transactions.first.stateMachineState.name}}.\n        \n        You can check the current status of your order on our website under \"My account\" - \"My orders\" anytime. \n        But in case you have purchased without a registration or a customer account, you do not have this option.',NULL,'2020-04-04 21:03:19.577',NULL),('%P/:Mş˜…îKæ©ª','‹/pó¡L†…Mã4Ó8','{{ salesChannel.name }}','Zahlungserinnerung fÃ¼r die Bestellung bei {{ salesChannel.name }}','Shopware Basis Template','        <div style=\"font-family:arial; font-size:12px;\">\n         <br/>\n            <p>\n                {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},<br/>\n                <br/>\n                der Zahlungsstatus fÃ¼r Ihre Bestellung bei {{ salesChannel.name }} (Number: {{order.orderNumber}}) vom {{ order.orderDateTime|date }} has changed.<br/>\n                <strong>Die Bestellung hat jetzt den Zahlungsstatus: {{order.transactions.first.stateMachineState.name}}.</strong><br/>\n                <br/>\n                Den aktuellen Status Ihrer Bestellung kÃ¶nnen Sie auch jederzeit auf unserer Webseite im  Bereich \"Mein Konto\" - \"Meine Bestellungen\" abrufen. Sollten Sie allerdings den Kauf ohne Registrierung, also ohne Anlage eines Kundenkontos, gewÃ¤hlt haben, steht Ihnen diese MÃ¶glichkeit nicht zur VerfÃ¼gung.\n            </p>\n        </div>','\n        {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},\n        \n        der Zahlungsstatus fÃ¼r Ihre Bestellung bei {{ salesChannel.name }} (Number: {{order.orderNumber}}) vom {{ order.orderDateTime|date }} hat sich geÃ¤ndert!\n        Die Bestellung hat jetzt den Zahlungsstatus: {{order.transactions.first.stateMachineState.name}}.\n        \n        Den aktuellen Status Ihrer Bestellung kÃ¶nnen Sie auch jederzeit auf unserer Webseite im  Bereich \"Mein Konto\" - \"Meine Bestellungen\" abrufen. \n        Sollten Sie allerdings den Kauf ohne Registrierung, also ohne Anlage eines Kundenkontos, gewÃ¤hlt haben, steht Ihnen diese MÃ¶glichkeit nicht zur VerfÃ¼gung.',NULL,'2020-04-04 21:03:19.584',NULL),(',OKï AX„¾ßl©k²;','/»_ââšMpªXTÎ|ãâ','{{ salesChannel.name }}','Your order with {{ salesChannel.name }} is completed','Shopware Default Template','<div style=\"font-family:arial; font-size:12px;\">\n <br/>\n    <p>\n        {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},<br/>\n        <br/>\n        the status of your order at {{ salesChannel.name }} (Number: {{order.orderNumber}}) on {{ order.orderDateTime|date }} has changed.<br/>\n        <strong>The new status is as follows: {{order.stateMachineState.name}}.</strong><br/>\n        <br/>\n        You can check the current status of your order on our website under \"My account\" - \"My orders\" anytime. But in case you have purchased without a registration or a customer account, you do not have this option.\n    </p>\n</div>','\n        {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},\n        \n        the status of your order at {{ salesChannel.name }} (Number: {{order.orderNumber}}) on {{ order.orderDateTime|date }}  has changed.\n        The new status is as follows: {{order.stateMachineState.name}}.\n        \n        You can check the current status of your order on our website under \"My account\" - \"My orders\" anytime. \n        But in case you have purchased without a registration or a customer account, you do not have this option.',NULL,'2020-04-04 21:03:19.559',NULL),(',OKï AX„¾ßl©k²;','‹/pó¡L†…Mã4Ó8','{{ salesChannel.name }}','Bestellung bei {{ salesChannel.name }} ist komplett abgeschlossen','Shopware Basis Template','        <div style=\"font-family:arial; font-size:12px;\">\n         <br/>\n            <p>\n                {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},<br/>\n                <br/>\n                der Bestellstatus fÃ¼r Ihre Bestellung bei {{ salesChannel.name }} (Number: {{order.orderNumber}}) vom {{ order.orderDateTime|date }} has changed.<br/>\n                <strong>Die Bestellung hat jetzt den Bestellstatus: {{order.stateMachineState.name}}.</strong><br/>\n                <br/>\n                Den aktuellen Status Ihrer Bestellung kÃ¶nnen Sie auch jederzeit auf unserer Webseite im  Bereich \"Mein Konto\" - \"Meine Bestellungen\" abrufen. Sollten Sie allerdings den Kauf ohne Registrierung, also ohne Anlage eines Kundenkontos, gewÃ¤hlt haben, steht Ihnen diese MÃ¶glichkeit nicht zur VerfÃ¼gung.\n            </p>\n        </div>','\n        {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},\n        \n        der Bestellstatus fÃ¼r Ihre Bestellung bei {{ salesChannel.name }} (Number: {{order.orderNumber}}) vom {{ order.orderDateTime|date }} hat sich geÃ¤ndert!\n        Die Bestellung hat jetzt den Bestellstatus: {{order.stateMachineState.name}}.\n        \n        Den aktuellen Status Ihrer Bestellung kÃ¶nnen Sie auch jederzeit auf unserer Webseite im  Bereich \"Mein Konto\" - \"Meine Bestellungen\" abrufen. \n        Sollten Sie allerdings den Kauf ohne Registrierung, also ohne Anlage eines Kundenkontos, gewÃ¤hlt haben, steht Ihnen diese MÃ¶glichkeit nicht zur VerfÃ¼gung.',NULL,'2020-04-04 21:03:19.560',NULL),('-FÂÅHˆ”8ÿ÷È 9Ì','/»_ââšMpªXTÎ|ãâ','{{ salesChannel.name }}','Order confirmation','','<div style=\"font-family:arial; font-size:12px;\">\n\n{% set currencyIsoCode = order.currency.isoCode %}\n{{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},<br>\n<br>\nThank you for your order at {{ salesChannel.name }} (Number: {{order.orderNumber}}) on {{ order.orderDateTime|date }}.<br>\n<br>\n<strong>Information on your order:</strong><br>\n<br>\n\n<table width=\"80%\" border=\"0\" style=\"font-family:Arial, Helvetica, sans-serif; font-size:12px;\">\n    <tr>\n        <td bgcolor=\"#F7F7F2\" style=\"border-bottom:1px solid #cccccc;\"><strong>Pos.</strong></td>\n        <td bgcolor=\"#F7F7F2\" style=\"border-bottom:1px solid #cccccc;\"><strong>Description</strong></td>\n        <td bgcolor=\"#F7F7F2\" style=\"border-bottom:1px solid #cccccc;\"><strong>Quantities</strong></td>\n        <td bgcolor=\"#F7F7F2\" style=\"border-bottom:1px solid #cccccc;\"><strong>Price</strong></td>\n        <td bgcolor=\"#F7F7F2\" style=\"border-bottom:1px solid #cccccc;\"><strong>Total</strong></td>\n    </tr>\n\n    {% for lineItem in order.lineItems %}\n    <tr>\n        <td style=\"border-bottom:1px solid #cccccc;\">{{ loop.index }} </td>\n        <td style=\"border-bottom:1px solid #cccccc;\">\n          {{ lineItem.label|u.wordwrap(80) }}<br>\n          Art. No.: {{ lineItem.payload.productNumber|u.wordwrap(80) }}\n        </td>\n        <td style=\"border-bottom:1px solid #cccccc;\">{{ lineItem.quantity }}</td>\n        <td style=\"border-bottom:1px solid #cccccc;\">{{ lineItem.unitPrice|currency(currencyIsoCode) }}</td>\n        <td style=\"border-bottom:1px solid #cccccc;\">{{ lineItem.totalPrice|currency(currencyIsoCode) }}</td>\n    </tr>\n    {% endfor %}\n</table>\n\n{% set delivery =order.deliveries.first %}\n<p>\n    <br>\n    <br>\n    Shipping costs: {{order.deliveries.first.shippingCosts.totalPrice|currency(currencyIsoCode) }}<br>\n    Net total: {{ order.amountNet|currency(currencyIsoCode) }}<br>\n    {% if order.taxStatus is same as(\'net\') %}\n        {% for calculatedTax in order.cartPrice.calculatedTaxes %}\n            plus {{ calculatedTax.taxRate }}% VAT. {{ calculatedTax.tax|currency(currencyIsoCode) }}<br>\n        {% endfor %}\n        <strong>Total gross: {{ order.amountTotal|currency(currencyIsoCode) }}</strong><br>\n    {% endif %}\n    <br>\n\n    <strong>Selected payment type:</strong> {{ order.transactions.first.paymentMethod.name }}<br>\n    {{ order.transactions.first.paymentMethod.description }}<br>\n    <br>\n\n    <strong>Selected shipping type:</strong> {{ delivery.shippingMethod.name }}<br>\n    {{ delivery.shippingMethod.description }}<br>\n    <br>\n\n    {% set billingAddress = order.addresses.get(order.billingAddressId) %}\n    <strong>Billing address:</strong><br>\n    {{ billingAddress.company }}<br>\n    {{ billingAddress.firstName }} {{ billingAddress.lastName }}<br>\n    {{ billingAddress.street }} <br>\n    {{ billingAddress.zipcode }} {{ billingAddress.city }}<br>\n    {{ billingAddress.country.name }}<br>\n    <br>\n\n    <strong>Shipping address:</strong><br>\n    {{ delivery.shippingOrderAddress.company }}<br>\n    {{ delivery.shippingOrderAddress.firstName }} {{ delivery.shippingOrderAddress.lastName }}<br>\n    {{ delivery.shippingOrderAddress.street }} <br>\n    {{ delivery.shippingOrderAddress.zipcode}} {{ delivery.shippingOrderAddress.city }}<br>\n    {{ delivery.shippingOrderAddress.country.name }}<br>\n    <br>\n    {% if billingAddress.vatId %}\n        Your VAT-ID: {{ billingAddress.vatId }}\n        In case of a successful order and if you are based in one of the EU countries, you will receive your goods exempt from turnover tax.<br>\n    {% endif %}\n\n    If you have any questions, do not hesitate to contact us.\n\n</p>\n<br>\n</div>','{% set currencyIsoCode = order.currency.isoCode %}\n{{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},\n\nThank you for your order at {{ salesChannel.name }} (Number: {{order.orderNumber}}) on {{ order.orderDateTime|date }}.\n\nInformation on your order:\n\nPos.   Art.No.			Description			Quantities			Price			Total\n\n{% for lineItem in order.lineItems %}\n{{ loop.index }}      {{ lineItem.payload.productNumber|u.wordwrap(80) }}				{{ lineItem.label|u.wordwrap(80) }}			{{ lineItem.quantity }}			{{ lineItem.unitPrice|currency(currencyIsoCode) }}			{{ lineItem.totalPrice|currency(currencyIsoCode) }}\n{% endfor %}\n\n{% set delivery =order.deliveries.first %}\n\nShipping costs: {{order.deliveries.first.shippingCosts.totalPrice|currency(currencyIsoCode) }}\nNet total: {{ order.amountNet|currency(currencyIsoCode) }}\n{% if order.taxStatus is same as(\'net\') %}\n	{% for calculatedTax in order.cartPrice.calculatedTaxes %}\n		plus {{ calculatedTax.taxRate }}% VAT. {{ calculatedTax.tax|currency(currencyIsoCode) }}\n	{% endfor %}\n	Total gross: {{ order.amountTotal|currency(currencyIsoCode) }}\n{% endif %}\n\nSelected payment type: {{ order.transactions.first.paymentMethod.name }}\n{{ order.transactions.first.paymentMethod.description }}\n\nSelected shipping type: {{ delivery.shippingMethod.name }}\n{{ delivery.shippingMethod.description }}\n\n{% set billingAddress = order.addresses.get(order.billingAddressId) %}\nBilling address:\n{{ billingAddress.company }}\n{{ billingAddress.firstName }} {{ billingAddress.lastName }}\n{{ billingAddress.street }}\n{{ billingAddress.zipcode }} {{ billingAddress.city }}\n{{ billingAddress.country.name }}\n\nShipping address:\n{{ delivery.shippingOrderAddress.company }}\n{{ delivery.shippingOrderAddress.firstName }} {{ delivery.shippingOrderAddress.lastName }}\n{{ delivery.shippingOrderAddress.street }}\n{{ delivery.shippingOrderAddress.zipcode}} {{ delivery.shippingOrderAddress.city }}\n{{ delivery.shippingOrderAddress.country.name }}\n\n{% if billingAddress.vatId %}\nYour VAT-ID: {{ billingAddress.vatId }}\nIn case of a successful order and if you are based in one of the EU countries, you will receive your goods exempt from turnover tax.\n{% endif %}\n\nIf you have any questions, do not hesitate to contact us.\n\n',NULL,'2020-04-04 21:03:14.422',NULL),('-FÂÅHˆ”8ÿ÷È 9Ì','‹/pó¡L†…Mã4Ó8','{{ salesChannel.name }}','BestellbestÃ¤tigung','','<div style=\"font-family:arial; font-size:12px;\">\n\n{% set currencyIsoCode = order.currency.isoCode %}\nHallo {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},<br>\n<br>\nvielen Dank fÃ¼r Ihre Bestellung im {{ salesChannel.name }} (Nummer: {{order.orderNumber}}) am {{ order.orderDateTime|date }}.<br>\n<br>\n<strong>Informationen zu Ihrer Bestellung:</strong><br>\n<br>\n\n<table width=\"80%\" border=\"0\" style=\"font-family:Arial, Helvetica, sans-serif; font-size:12px;\">\n    <tr>\n        <td bgcolor=\"#F7F7F2\" style=\"border-bottom:1px solid #cccccc;\"><strong>Pos.</strong></td>\n        <td bgcolor=\"#F7F7F2\" style=\"border-bottom:1px solid #cccccc;\"><strong>Bezeichnung</strong></td>\n        <td bgcolor=\"#F7F7F2\" style=\"border-bottom:1px solid #cccccc;\"><strong>Menge</strong></td>\n        <td bgcolor=\"#F7F7F2\" style=\"border-bottom:1px solid #cccccc;\"><strong>Preis</strong></td>\n        <td bgcolor=\"#F7F7F2\" style=\"border-bottom:1px solid #cccccc;\"><strong>Summe</strong></td>\n    </tr>\n\n    {% for lineItem in order.lineItems %}\n    <tr>\n        <td style=\"border-bottom:1px solid #cccccc;\">{{ loop.index }} </td>\n        <td style=\"border-bottom:1px solid #cccccc;\">\n          {{ lineItem.label|u.wordwrap(80) }}<br>\n          Artikel-Nr: {{ lineItem.payload.productNumber|u.wordwrap(80) }}\n        </td>\n        <td style=\"border-bottom:1px solid #cccccc;\">{{ lineItem.quantity }}</td>\n        <td style=\"border-bottom:1px solid #cccccc;\">{{ lineItem.unitPrice|currency(currencyIsoCode) }}</td>\n        <td style=\"border-bottom:1px solid #cccccc;\">{{ lineItem.totalPrice|currency(currencyIsoCode) }}</td>\n    </tr>\n    {% endfor %}\n</table>\n\n{% set delivery =order.deliveries.first %}\n<p>\n    <br>\n    <br>\n    Versandkosten: {{order.deliveries.first.shippingCosts.totalPrice|currency(currencyIsoCode) }}<br>\n    Gesamtkosten Netto: {{ order.amountNet|currency(currencyIsoCode) }}<br>\n    {% if order.taxStatus is same as(\'net\') %}\n        {% for calculatedTax in order.cartPrice.calculatedTaxes %}\n            zzgl. {{ calculatedTax.taxRate }}% MwSt. {{ calculatedTax.tax|currency(currencyIsoCode) }}<br>\n        {% endfor %}\n        <strong>Gesamtkosten Brutto: {{ order.amountTotal|currency(currencyIsoCode) }}</strong><br>\n    {% endif %}\n    <br>\n\n    <strong>GewÃ¤hlte Zahlungsart:</strong> {{ order.transactions.first.paymentMethod.name }}<br>\n    {{ order.transactions.first.paymentMethod.description }}<br>\n    <br>\n\n    <strong>GewÃ¤hlte Versandtart:</strong> {{ delivery.shippingMethod.name }}<br>\n    {{ delivery.shippingMethod.description }}<br>\n    <br>\n\n    {% set billingAddress = order.addresses.get(order.billingAddressId) %}\n    <strong>Rechnungsaddresse:</strong><br>\n    {{ billingAddress.company }}<br>\n    {{ billingAddress.firstName }} {{ billingAddress.lastName }}<br>\n    {{ billingAddress.street }} <br>\n    {{ billingAddress.zipcode }} {{ billingAddress.city }}<br>\n    {{ billingAddress.country.name }}<br>\n    <br>\n\n    <strong>Lieferadresse:</strong><br>\n    {{ delivery.shippingOrderAddress.company }}<br>\n    {{ delivery.shippingOrderAddress.firstName }} {{ delivery.shippingOrderAddress.lastName }}<br>\n    {{ delivery.shippingOrderAddress.street }} <br>\n    {{ delivery.shippingOrderAddress.zipcode}} {{ delivery.shippingOrderAddress.city }}<br>\n    {{ delivery.shippingOrderAddress.country.name }}<br>\n    <br>\n    {% if billingAddress.vatId %}\n        Ihre Umsatzsteuer-ID: {{ billingAddress.vatId }}\n        Bei erfolgreicher PrÃ¼fung und sofern Sie aus dem EU-Ausland\n        bestellen, erhalten Sie Ihre Ware umsatzsteuerbefreit. <br>\n    {% endif %}\n\n    FÃ¼r RÃ¼ckfragen stehen wir Ihnen jederzeit gerne zur VerfÃ¼gung.\n\n</p>\n<br>\n</div>','{% set currencyIsoCode = order.currency.isoCode %}\nHallo {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},\n\nvielen Dank fÃ¼r Ihre Bestellung im {{ salesChannel.name }} (Nummer: {{order.orderNumber}}) am {{ order.orderDateTime|date }}.\n\nInformationen zu Ihrer Bestellung:\n\nPos.   Artikel-Nr.			Beschreibung			Menge			Preis			Summe\n{% for lineItem in order.lineItems %}\n{{ loop.index }}     {{ lineItem.payload.productNumber|u.wordwrap(80) }}				{{ lineItem.label|u.wordwrap(80) }}			{{ lineItem.quantity }}			{{ lineItem.unitPrice|currency(currencyIsoCode) }}			{{ lineItem.totalPrice|currency(currencyIsoCode) }}\n{% endfor %}\n\n{% set delivery =order.deliveries.first %}\n\nVersandtkosten: {{order.deliveries.first.shippingCosts.totalPrice|currency(currencyIsoCode) }}\nGesamtkosten Netto: {{ order.amountNet|currency(currencyIsoCode) }}\n{% if order.taxStatus is same as(\'net\') %}\n	{% for calculatedTax in order.cartPrice.calculatedTaxes %}\n		zzgl. {{ calculatedTax.taxRate }}% MwSt. {{ calculatedTax.tax|currency(currencyIsoCode) }}\n	{% endfor %}\n	Gesamtkosten Brutto: {{ order.amountTotal|currency(currencyIsoCode) }}\n{% endif %}\n\nGewÃ¤hlte Zahlungsart: {{ order.transactions.first.paymentMethod.name }}\n{{ order.transactions.first.paymentMethod.description }}\n\nGewÃ¤hlte Versandtart: {{ delivery.shippingMethod.name }}\n{{ delivery.shippingMethod.description }}\n\n{% set billingAddress = order.addresses.get(order.billingAddressId) %}\nRechnungsadresse:\n{{ billingAddress.company }}\n{{ billingAddress.firstName }} {{ billingAddress.lastName }}\n{{ billingAddress.street }}\n{{ billingAddress.zipcode }} {{ billingAddress.city }}\n{{ billingAddress.country.name }}\n\nLieferadresse:\n{{ delivery.shippingOrderAddress.company }}\n{{ delivery.shippingOrderAddress.firstName }} {{ delivery.shippingOrderAddress.lastName }}\n{{ delivery.shippingOrderAddress.street }}\n{{ delivery.shippingOrderAddress.zipcode}} {{ delivery.shippingOrderAddress.city }}\n{{ delivery.shippingOrderAddress.country.name }}\n\n{% if billingAddress.vatId %}\nIhre Umsatzsteuer-ID: {{ billingAddress.vatId }}\nBei erfolgreicher PrÃ¼fung und sofern Sie aus dem EU-Ausland\nbestellen, erhalten Sie Ihre Ware umsatzsteuerbefreit.\n{% endif %}\n\nFÃ¼r RÃ¼ckfragen stehen wir Ihnen jederzeit gerne zur VerfÃ¼gung.\n\n',NULL,'2020-04-04 21:03:14.422',NULL),('0r{²à®E¿ˆ¹ènx©î','/»_ââšMpªXTÎ|ãâ','{{ salesChannel.name }}','Your order with {{ salesChannel.name }} is partially paid','Shopware Default Template','<div style=\"font-family:arial; font-size:12px;\">\n <br/>\n    <p>\n        {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},<br/>\n        <br/>\n        the status of your order at {{ salesChannel.name }} (Number: {{order.orderNumber}}) on {{ order.orderDateTime|date }} has changed.<br/>\n        <strong>The new status is as follows: {{order.transactions.first.stateMachineState.name}}.</strong><br/>\n        <br/>\n        You can check the current status of your order on our website under \"My account\" - \"My orders\" anytime. But in case you have purchased without a registration or a customer account, you do not have this option.\n    </p>\n</div>','\n        {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},\n        \n        the status of your order at {{ salesChannel.name }} (Number: {{order.orderNumber}}) on {{ order.orderDateTime|date }}  has changed.\n        The new status is as follows: {{order.transactions.first.stateMachineState.name}}.\n        \n        You can check the current status of your order on our website under \"My account\" - \"My orders\" anytime. \n        But in case you have purchased without a registration or a customer account, you do not have this option.',NULL,'2020-04-04 21:03:19.626',NULL),('0r{²à®E¿ˆ¹ènx©î','‹/pó¡L†…Mã4Ó8','{{ salesChannel.name }}','Deine Bestellung bei {{ salesChannel.name }} wurde teilweise bezahlt','Shopware Basis Template','        <div style=\"font-family:arial; font-size:12px;\">\n         <br/>\n            <p>\n                {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},<br/>\n                <br/>\n                der Zahlungsstatus fÃ¼r Ihre Bestellung bei {{ salesChannel.name }} (Number: {{order.orderNumber}}) vom {{ order.orderDateTime|date }} has changed.<br/>\n                <strong>Die Bestellung hat jetzt den Zahlungsstatus: {{order.transactions.first.stateMachineState.name}}.</strong><br/>\n                <br/>\n                Den aktuellen Status Ihrer Bestellung kÃ¶nnen Sie auch jederzeit auf unserer Webseite im  Bereich \"Mein Konto\" - \"Meine Bestellungen\" abrufen. Sollten Sie allerdings den Kauf ohne Registrierung, also ohne Anlage eines Kundenkontos, gewÃ¤hlt haben, steht Ihnen diese MÃ¶glichkeit nicht zur VerfÃ¼gung.\n            </p>\n        </div>','\n        {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},\n        \n        der Zahlungsstatus fÃ¼r Ihre Bestellung bei {{ salesChannel.name }} (Number: {{order.orderNumber}}) vom {{ order.orderDateTime|date }} hat sich geÃ¤ndert!\n        Die Bestellung hat jetzt den Zahlungsstatus: {{order.transactions.first.stateMachineState.name}}.\n        \n        Den aktuellen Status Ihrer Bestellung kÃ¶nnen Sie auch jederzeit auf unserer Webseite im  Bereich \"Mein Konto\" - \"Meine Bestellungen\" abrufen. \n        Sollten Sie allerdings den Kauf ohne Registrierung, also ohne Anlage eines Kundenkontos, gewÃ¤hlt haben, steht Ihnen diese MÃ¶glichkeit nicht zur VerfÃ¼gung.',NULL,'2020-04-04 21:03:19.628',NULL),('>ÏÊEvÜJ3§›ï}-¾‚G','/»_ââšMpªXTÎ|ãâ','{{ salesChannel.name }}','Your order with {{ salesChannel.name }} is open','Shopware Default Template','<div style=\"font-family:arial; font-size:12px;\">\n <br/>\n    <p>\n        {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},<br/>\n        <br/>\n        the status of your order at {{ salesChannel.name }} (Number: {{order.orderNumber}}) on {{ order.orderDateTime|date }} has changed.<br/>\n        <strong>The new status is as follows: {{order.stateMachineState.name}}.</strong><br/>\n        <br/>\n        You can check the current status of your order on our website under \"My account\" - \"My orders\" anytime. But in case you have purchased without a registration or a customer account, you do not have this option.\n    </p>\n</div>','\n        {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},\n        \n        the status of your order at {{ salesChannel.name }} (Number: {{order.orderNumber}}) on {{ order.orderDateTime|date }}  has changed.\n        The new status is as follows: {{order.stateMachineState.name}}.\n        \n        You can check the current status of your order on our website under \"My account\" - \"My orders\" anytime. \n        But in case you have purchased without a registration or a customer account, you do not have this option.',NULL,'2020-04-04 21:03:19.546',NULL),('>ÏÊEvÜJ3§›ï}-¾‚G','‹/pó¡L†…Mã4Ó8','{{ salesChannel.name }}','Bestellung bei {{ salesChannel.name }} ist offen','Shopware Basis Template','        <div style=\"font-family:arial; font-size:12px;\">\n         <br/>\n            <p>\n                {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},<br/>\n                <br/>\n                der Bestellstatus fÃ¼r Ihre Bestellung bei {{ salesChannel.name }} (Number: {{order.orderNumber}}) vom {{ order.orderDateTime|date }} has changed.<br/>\n                <strong>Die Bestellung hat jetzt den Bestellstatus: {{order.stateMachineState.name}}.</strong><br/>\n                <br/>\n                Den aktuellen Status Ihrer Bestellung kÃ¶nnen Sie auch jederzeit auf unserer Webseite im  Bereich \"Mein Konto\" - \"Meine Bestellungen\" abrufen. Sollten Sie allerdings den Kauf ohne Registrierung, also ohne Anlage eines Kundenkontos, gewÃ¤hlt haben, steht Ihnen diese MÃ¶glichkeit nicht zur VerfÃ¼gung.\n            </p>\n        </div>','\n        {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},\n        \n        der Bestellstatus fÃ¼r Ihre Bestellung bei {{ salesChannel.name }} (Number: {{order.orderNumber}}) vom {{ order.orderDateTime|date }} hat sich geÃ¤ndert!\n        Die Bestellung hat jetzt den Bestellstatus: {{order.stateMachineState.name}}.\n        \n        Den aktuellen Status Ihrer Bestellung kÃ¶nnen Sie auch jederzeit auf unserer Webseite im  Bereich \"Mein Konto\" - \"Meine Bestellungen\" abrufen. \n        Sollten Sie allerdings den Kauf ohne Registrierung, also ohne Anlage eines Kundenkontos, gewÃ¤hlt haben, steht Ihnen diese MÃ¶glichkeit nicht zur VerfÃ¼gung.',NULL,'2020-04-04 21:03:19.548',NULL),('\\š»hÒNM3«¸À¶¤t','/»_ââšMpªXTÎ|ãâ','{{ salesChannel.name }}','Your order with {{ salesChannel.name }}','Shopware Default Template','<div style=\"font-family:arial; font-size:12px;\">\n <br/>\n    <p>\n        {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},<br/>\n        <br/>\n        the status of your order at {{ salesChannel.name }} (Number: {{order.orderNumber}}) on {{ order.orderDateTime|date }} has changed.<br/>\n        <strong>The new status is as follows: {{order.transactions.first.stateMachineState.name}}.</strong><br/>\n        <br/>\n        You can check the current status of your order on our website under \"My account\" - \"My orders\" anytime. But in case you have purchased without a registration or a customer account, you do not have this option.\n    </p>\n</div>','\n        {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},\n        \n        the status of your order at {{ salesChannel.name }} (Number: {{order.orderNumber}}) on {{ order.orderDateTime|date }}  has changed.\n        The new status is as follows: {{order.transactions.first.stateMachineState.name}}.\n        \n        You can check the current status of your order on our website under \"My account\" - \"My orders\" anytime. \n        But in case you have purchased without a registration or a customer account, you do not have this option.',NULL,'2020-04-04 21:03:19.589',NULL),('\\š»hÒNM3«¸À¶¤t','‹/pó¡L†…Mã4Ó8','{{ salesChannel.name }}','Deine Bestellung bei {{ salesChannel.name }}','Shopware Basis Template','        <div style=\"font-family:arial; font-size:12px;\">\n         <br/>\n            <p>\n                {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},<br/>\n                <br/>\n                der Zahlungsstatus fÃ¼r Ihre Bestellung bei {{ salesChannel.name }} (Number: {{order.orderNumber}}) vom {{ order.orderDateTime|date }} has changed.<br/>\n                <strong>Die Bestellung hat jetzt den Zahlungsstatus: {{order.transactions.first.stateMachineState.name}}.</strong><br/>\n                <br/>\n                Den aktuellen Status Ihrer Bestellung kÃ¶nnen Sie auch jederzeit auf unserer Webseite im  Bereich \"Mein Konto\" - \"Meine Bestellungen\" abrufen. Sollten Sie allerdings den Kauf ohne Registrierung, also ohne Anlage eines Kundenkontos, gewÃ¤hlt haben, steht Ihnen diese MÃ¶glichkeit nicht zur VerfÃ¼gung.\n            </p>\n        </div>','\n        {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},\n        \n        der Zahlungsstatus fÃ¼r Ihre Bestellung bei {{ salesChannel.name }} (Number: {{order.orderNumber}}) vom {{ order.orderDateTime|date }} hat sich geÃ¤ndert!\n        Die Bestellung hat jetzt den Zahlungsstatus: {{order.transactions.first.stateMachineState.name}}.\n        \n        Den aktuellen Status Ihrer Bestellung kÃ¶nnen Sie auch jederzeit auf unserer Webseite im  Bereich \"Mein Konto\" - \"Meine Bestellungen\" abrufen. \n        Sollten Sie allerdings den Kauf ohne Registrierung, also ohne Anlage eines Kundenkontos, gewÃ¤hlt haben, steht Ihnen diese MÃ¶glichkeit nicht zur VerfÃ¼gung.',NULL,'2020-04-04 21:03:19.591',NULL),('d³ğ&ê¯I{¯¼’õ6ò','/»_ââšMpªXTÎ|ãâ','{{ salesChannel.name }}','Please confirm your registration at {{ salesChannel.name }}','Registration confirmation','\n            <div style=\"font-family:arial; font-size:12px;\">\n                <p>\n                    Hello {{ customer.salutation.displayName }} {{ customer.lastName }},<br/>\n                    <br/>\n                    thank you for your registration at {{ salesChannel.name }}.<br/>\n                    Please confirm the registration via the following link:<br/>\n                    <br/>\n                    <a href=\"{{ confirmUrl }}\">Completing registration</a><br/>\n                    <br/>\n                    By this confirmation, you also agree that we may send you further emails as part of the fulfillment of the contract.\n                </p>\n            </div>\n        ','\n            Hello {{ customer.salutation.displayName }} {{ customer.lastName }},\n            \n            thank you for your registration at {{ salesChannel.name }}.\n            Please confirm the registration via the following link:\n            \n            {{ confirmUrl }}\n            \n            By this confirmation, you also agree that we may send you further emails as part of the fulfillment of the contract.\n        ',NULL,'2020-04-04 21:03:19.961',NULL),('d³ğ&ê¯I{¯¼’õ6ò','‹/pó¡L†…Mã4Ó8','{{ salesChannel.name }}','Bitte bestÃ¤tigen Sie Ihre Anmeldung bei {{ salesChannel.name }}','AnmeldebestÃ¤tigung','\n            <div style=\"font-family:arial; font-size:12px;\">\n                <p>\n                    Hallo {{ customer.salutation.displayName }} {{ customer.lastName }},<br/>\n                    <br/>\n                    vielen Dank fÃ¼r Ihre Anmeldung bei {{ salesChannel.name }}.<br/>\n                    Bitte bestÃ¤tigen Sie die Registrierung Ã¼ber den nachfolgenden Link:<br/>\n                    <br/>\n                    <a href=\"{{ confirmUrl }}\">Anmeldung abschlieÃŸen</a><br/>\n                    <br/>\n                    Durch diese BestÃ¤tigung erklÃ¤ren Sie sich ebenso damit einverstanden, dass wir Ihnen im Rahmen der VertragserfÃ¼llung weitere E-Mails senden dÃ¼rfen.\n                </p>\n            </div>\n        ','\n            Hallo {{ customer.salutation.displayName }} {{ customer.lastName }},\n            \n            vielen Dank fÃ¼r Ihre Anmeldung bei {{ salesChannel.name }}.\n            Bitte bestÃ¤tigen Sie die Registrierung Ã¼ber den nachfolgenden Link:\n            \n            {{ confirmUrl }}\n            \n            Durch diese BestÃ¤tigung erklÃ¤ren Sie sich ebenso damit einverstanden, dass wir Ihnen im Rahmen der VertragserfÃ¼llung weitere E-Mails senden dÃ¼rfen.\n        ',NULL,'2020-04-04 21:03:19.962',NULL),('…¸çÍ@â“î°ìK	','/»_ââšMpªXTÎ|ãâ','{{ salesChannel.name }}','Password reset - {{ salesChannel.name }}','Password reset request','<div style=\"font-family:arial; font-size:12px;\">\n    <p>\n        {{ customer.salutation.letterName }} {{ customer.firstName }} {{ customer.lastName }},<br/>\n        <br/>\n        there has been a request to reset you Password in the Shop {{ salesChannel.name }}\n        Please confirm the link below to specify a new password.<br/>\n        <br/>\n        <a href=\"{{ urlResetPassword }}\">Reset passwort</a><br/>\n        <br/>\n        This link is valid for the next 2 hours. After that you have to request a new confirmation link.<br/>\n        If you do not want to reset your password, please ignore this email. No changes will be made.\n    </p>\n</div>','\n        {{ customer.salutation.letterName }} {{customer.firstName}} {{ customer.lastName }},\n\n        there has been a request to reset you Password in the Shop {{ salesChannel.name }}\n        Please confirm the link below to specify a new password.\n\n        Reset password: {{ urlResetPassword }}\n\n        This link is valid for the next 2 hours. After that you have to request a new confirmation link.\n        If you do not want to reset your password, please ignore this email. No changes will be made.\n    ',NULL,'2020-04-04 21:03:14.423',NULL),('…¸çÍ@â“î°ìK	','‹/pó¡L†…Mã4Ó8','{{ salesChannel.name }}','Password zurÃ¼cksetzen - {{ salesChannel.name }}','Passwort zurÃ¼cksetzen Anfrage','<div style=\"font-family:arial; font-size:12px;\">\n    <p>\n        Hallo {{ customer.salutation.letterName }} {{customer.firstName}} {{ customer.lastName }},<br/>\n        <br/>\n        im Shop {{ salesChannel.name }} wurde eine Anfrage gestellt, um Ihr Passwort zurÃ¼ck zu setzen.\n        Bitte bestÃ¤tigen Sie den unten stehenden Link, um ein neues Passwort zu definieren.<br/>\n        <br/>\n        <a href=\"{{ urlResetPassword }}\">Passwort zurÃ¼cksetzen</a><br/>\n        <br/>\n        Dieser Link ist nur fÃ¼r die nÃ¤chsten 2 Stunden gÃ¼ltig. Danach muss das ZurÃ¼cksetzen des Passwortes erneut beantragt werden.\n        Falls Sie Ihr Passwort nicht zurÃ¼cksetzen mÃ¶chten, ignorieren Sie diese E-Mail - es wird dann keine Ã„nderung vorgenommen.\n    </p>\n</div>','\n        Hallo {{ customer.salutation.letterName }} {{customer.firstName}} {{ customer.lastName }},\n    \n        im Shop {{ salesChannel.name }} wurde eine Anfrage gestellt, um Ihr Passwort zurÃ¼ck zu setzen.\n        Bitte bestÃ¤tigen Sie den unten stehenden Link, um ein neues Passwort zu definieren.\n\n        Passwort zurÃ¼cksetzen: {{ urlResetPassword }}\n\n        Dieser Link ist nur fÃ¼r die nÃ¤chsten 2 Stunden gÃ¼ltig. Danach muss das ZurÃ¼cksetzen des Passwortes erneut beantragt werden.\n        Falls Sie Ihr Passwort nicht zurÃ¼cksetzen mÃ¶chten, ignorieren Sie diese E-Mail - es wird dann keine Ã„nderung vorgenommen.\n',NULL,'2020-04-04 21:03:14.424',NULL),('‡âR–¦œC‰­Õ`\ZØÂã','/»_ââšMpªXTÎ|ãâ','{{ salesChannel.name }}','Your order with {{ salesChannel.name }} is in process','Shopware Default Template','<div style=\"font-family:arial; font-size:12px;\">\n <br/>\n    <p>\n        {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},<br/>\n        <br/>\n        the status of your order at {{ salesChannel.name }} (Number: {{order.orderNumber}}) on {{ order.orderDateTime|date }} has changed.<br/>\n        <strong>The new status is as follows: {{order.stateMachineState.name}}.</strong><br/>\n        <br/>\n        You can check the current status of your order on our website under \"My account\" - \"My orders\" anytime. But in case you have purchased without a registration or a customer account, you do not have this option.\n    </p>\n</div>','\n        {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},\n        \n        the status of your order at {{ salesChannel.name }} (Number: {{order.orderNumber}}) on {{ order.orderDateTime|date }}  has changed.\n        The new status is as follows: {{order.stateMachineState.name}}.\n        \n        You can check the current status of your order on our website under \"My account\" - \"My orders\" anytime. \n        But in case you have purchased without a registration or a customer account, you do not have this option.',NULL,'2020-04-04 21:03:19.553',NULL),('‡âR–¦œC‰­Õ`\ZØÂã','‹/pó¡L†…Mã4Ó8','{{ salesChannel.name }}','Bestellung bei {{ salesChannel.name }} ist in Bearbeitung','Shopware Basis Template','        <div style=\"font-family:arial; font-size:12px;\">\n         <br/>\n            <p>\n                {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},<br/>\n                <br/>\n                der Bestellstatus fÃ¼r Ihre Bestellung bei {{ salesChannel.name }} (Number: {{order.orderNumber}}) vom {{ order.orderDateTime|date }} has changed.<br/>\n                <strong>Die Bestellung hat jetzt den Bestellstatus: {{order.stateMachineState.name}}.</strong><br/>\n                <br/>\n                Den aktuellen Status Ihrer Bestellung kÃ¶nnen Sie auch jederzeit auf unserer Webseite im  Bereich \"Mein Konto\" - \"Meine Bestellungen\" abrufen. Sollten Sie allerdings den Kauf ohne Registrierung, also ohne Anlage eines Kundenkontos, gewÃ¤hlt haben, steht Ihnen diese MÃ¶glichkeit nicht zur VerfÃ¼gung.\n            </p>\n        </div>','\n        {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},\n        \n        der Bestellstatus fÃ¼r Ihre Bestellung bei {{ salesChannel.name }} (Number: {{order.orderNumber}}) vom {{ order.orderDateTime|date }} hat sich geÃ¤ndert!\n        Die Bestellung hat jetzt den Bestellstatus: {{order.stateMachineState.name}}.\n        \n        Den aktuellen Status Ihrer Bestellung kÃ¶nnen Sie auch jederzeit auf unserer Webseite im  Bereich \"Mein Konto\" - \"Meine Bestellungen\" abrufen. \n        Sollten Sie allerdings den Kauf ohne Registrierung, also ohne Anlage eines Kundenkontos, gewÃ¤hlt haben, steht Ihnen diese MÃ¶glichkeit nicht zur VerfÃ¼gung.',NULL,'2020-04-04 21:03:19.554',NULL),('J\\zÖ€FÙMåİ<Ö4','/»_ââšMpªXTÎ|ãâ','{{ shopName }}','Password recovery','','<div style=\"font-family:arial; font-size:12px;\">\n    <p>\n        Hello {{ customerRecovery.customer.firstName }} {{ customerRecovery.customer.lastName }},<br/>\n        <br/>\n        You have requested a new password for your {{ shopName }} account.\n        Click on the following link to reset your password:<br/>\n        <br/>\n        <a href=\"{{ resetUrl }}\">{{ resetUrl }}</a><br/>\n        <br/>\n        This link is valid for the next 2 hours.\n        If you don\'t want to reset your password, ignore this email and no changes will be made.<br/>\n        <br/>\n        Yours sincerely\n        Your {{ shopName }} team\n    </p>\n</div>','        Hello {{ customerRecovery.customer.firstName }} {{ customerRecovery.customer.lastName }},\n        \n        You have requested a new password for your {{ shopName }} account.\n        Click on the following link to reset your password:\n        \n        {{ resetUrl }}\n        \n        This link is valid for the next 2 hours.\n        If you don\'t want to reset your password, ignore this email and no changes will be made.\n        \n        Yours sincerely\n        Your {{ shopName }}-Team',NULL,'2020-04-04 21:03:18.794',NULL),('J\\zÖ€FÙMåİ<Ö4','‹/pó¡L†…Mã4Ó8','{{ shopName }}','Password Wiederherstellung','','<div style=\"font-family:arial; font-size:12px;\">\n    <p>\n        Hallo {{ customerRecovery.customer.firstName }} {{ customerRecovery.customer.lastName }},<br/>\n        <br/>\n        Sie haben ein neues Passwort fÃ¼r Ihren {{ shopName }}-Account angefordert.\n        Klicken Sie auf folgenden Link, um Ihr Passwort zurÃ¼ckzusetzen:<br/>\n        <br/>\n        <a href=\"{{ resetUrl }}\">{{ resetUrl }}</a><br/>\n        <br/>\n        Dieser Link ist fÃ¼r die nÃ¤chsten 2 Stunden gÃ¼ltig.\n        Falls Sie Ihr Passwort nicht zurÃ¼cksetzen mÃ¶chten, ignorieren Sie diese E-Mail - es wird dann keine Ã„nderung vorgenommen.<br/>\n        <br/>\n        Mit freundlichen GrÃ¼ÃŸen\n        Ihr {{ shopName }}-Team\n    </p>\n</div>','        Hallo {{ customerRecovery.customer.firstName }} {{ customerRecovery.customer.lastName }},\n        \n        Sie haben ein neues Passwort fÃ¼r Ihren {{ shopName }}-Account angefordert.\n        Klicken Sie auf folgenden Link, um Ihr Passwort zurÃ¼ckzusetzen:\n        \n        {{ resetUrl }}\n        \n        Dieser Link ist fÃ¼r die nÃ¤chsten 2 Stunden gÃ¼ltig.\n        Falls Sie Ihr Passwort nicht zurÃ¼cksetzen mÃ¶chten, ignorieren Sie diese E-Mail - es wird dann keine Ã„nderung vorgenommen.\n        \n        Mit freundlichen GrÃ¼ÃŸen\n        Ihr {{ shopName }}-Team',NULL,'2020-04-04 21:03:18.792',NULL),('>T¦D\"¸{>p¿ÀL7','/»_ââšMpªXTÎ|ãâ','{{ salesChannel.name }}','Your merchant account has been unlocked - {{ salesChannel.name }}','Customer Group Change accepted','<div style=\"font-family:arial; font-size:12px;\">\n    <p>\n        Hello,<br/>\n        <br/>\n        your merchant account at {{ salesChannel.name }} has been unlocked.<br/>\n        From now on, we will charge you the net purchase price.\n    </p>\n</div>','\n        Hello,\n\n        your merchant account at {{ salesChannel.name }} has been unlocked.\n        From now on, we will charge you the net purchase price.\n    ',NULL,'2020-04-04 21:03:14.430',NULL),('>T¦D\"¸{>p¿ÀL7','‹/pó¡L†…Mã4Ó8','{{ salesChannel.name }}','Ihr HÃ¤ndleraccount wurde freigeschaltet - {{ salesChannel.name }}','Kundengruppenwechsel freigeschaltet','<div style=\"font-family:arial; font-size:12px;\">\n    <p>\n        Hallo,<br/>\n        <br/>\n        ihr HÃ¤ndlerkonto bei {{ salesChannel.name }} wurde freigeschaltet.<br/>\n        Von nun an werden wir Ihnen den Netto-Preis berechnen.\n    </p>\n</div>','\n        Hallo,\n    \n        ihr HÃ¤ndlerkonto bei {{ salesChannel.name }} wurde freigeschaltet.\n        Von nun an werden wir Ihnen den Netto-Preis berechnen.\n    ',NULL,'2020-04-04 21:03:14.437',NULL),('‘;/œ®€I³&Ã¾¢2MÔ','/»_ââšMpªXTÎ|ãâ','Shopware Administration','Password recovery','','<div style=\"font-family:arial; font-size:12px;\">\n    <p>\n        Dear {{ userRecovery.user.firstName }} {{ userRecovery.user.lastName }},<br/>\n        <br/>\n        there has been a request to reset your password.\n        Please confirm the link below to specify a new password.<br/>\n        <br/>\n        <a href=\"{{ resetUrl }}\">Reset passwort</a><br/>\n        <br/>\n        This link is valid for the next 2 hours. After that you have to request a new confirmation link.<br/>\n        If you do not want to reset your password, please ignore this email. No changes will be made.\n    </p>\n</div>','        Dear {{ userRecovery.user.firstName }} {{ userRecovery.user.lastName }},\n\n        there has been a request to reset your password.\n        Please confirm the link below to specify a new password.\n\n        Reset password: {{ resetUrl }}\n\n        This link is valid for the next 2 hours. After that you have to request a new confirmation link.\n        If you do not want to reset your password, please ignore this email. No changes will be made.',NULL,'2020-04-04 21:03:16.030',NULL),('‘;/œ®€I³&Ã¾¢2MÔ','‹/pó¡L†…Mã4Ó8','Shopware Administration','Password Wiederherstellung','','<div style=\"font-family:arial; font-size:12px;\">\n    <p>\n        Hallo {{ userRecovery.user.firstName }} {{ userRecovery.user.lastName }},<br/>\n        <br/>\n        es wurde eine Anfrage gestellt, um Ihr Passwort zurÃ¼ck zu setzen.\n        Bitte bestÃ¤tigen Sie den unten stehenden Link, um ein neues Passwort zu definieren.<br/>\n        <br/>\n        <a href=\"{{ resetUrl }}\">Passwort zurÃ¼cksetzen</a><br/>\n        <br/>\n        Dieser Link ist nur fÃ¼r die nÃ¤chsten 2 Stunden gÃ¼ltig. Danach muss das ZurÃ¼cksetzen des Passwortes erneut beantragt werden.\n        Falls Sie Ihr Passwort nicht zurÃ¼cksetzen mÃ¶chten, ignorieren Sie diese E-Mail - es wird dann keine Ã„nderung vorgenommen.\n    </p>\n</div>','        Hallo {{ userRecovery.user.firstName }} {{ userRecovery.user.lastName }},\n    \n        es wurde eine Anfrage gestellt, um Ihr Passwort zurÃ¼ck zu setzen.\n        Bitte bestÃ¤tigen Sie den unten stehenden Link, um ein neues Passwort zu definieren.\n\n        Passwort zurÃ¼cksetzen: {{ resetUrl }}\n\n        Dieser Link ist nur fÃ¼r die nÃ¤chsten 2 Stunden gÃ¼ltig. Danach muss das ZurÃ¼cksetzen des Passwortes erneut beantragt werden.\n        Falls Sie Ihr Passwort nicht zurÃ¼cksetzen mÃ¶chten, ignorieren Sie diese E-Mail - es wird dann keine Ã„nderung vorgenommen.',NULL,'2020-04-04 21:03:16.029',NULL),('•ã0Ò{Lì™½†Un-FF','/»_ââšMpªXTÎ|ãâ','{{ salesChannel.name }}','Your order with {{ salesChannel.name }} is refunded','Shopware Default Template','<div style=\"font-family:arial; font-size:12px;\">\n <br/>\n    <p>\n        {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},<br/>\n        <br/>\n        the status of your order at {{ salesChannel.name }} (Number: {{order.orderNumber}}) on {{ order.orderDateTime|date }} has changed.<br/>\n        <strong>The new status is as follows: {{order.transactions.first.stateMachineState.name}}.</strong><br/>\n        <br/>\n        You can check the current status of your order on our website under \"My account\" - \"My orders\" anytime. But in case you have purchased without a registration or a customer account, you do not have this option.\n    </p>\n</div>','\n        {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},\n        \n        the status of your order at {{ salesChannel.name }} (Number: {{order.orderNumber}}) on {{ order.orderDateTime|date }}  has changed.\n        The new status is as follows: {{order.transactions.first.stateMachineState.name}}.\n        \n        You can check the current status of your order on our website under \"My account\" - \"My orders\" anytime. \n        But in case you have purchased without a registration or a customer account, you do not have this option.',NULL,'2020-04-04 21:03:19.613',NULL),('•ã0Ò{Lì™½†Un-FF','‹/pó¡L†…Mã4Ó8','{{ salesChannel.name }}','Bestellung bei {{ salesChannel.name }} wurde erstattet','Shopware Basis Template','        <div style=\"font-family:arial; font-size:12px;\">\n         <br/>\n            <p>\n                {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},<br/>\n                <br/>\n                der Zahlungsstatus fÃ¼r Ihre Bestellung bei {{ salesChannel.name }} (Number: {{order.orderNumber}}) vom {{ order.orderDateTime|date }} has changed.<br/>\n                <strong>Die Bestellung hat jetzt den Zahlungsstatus: {{order.transactions.first.stateMachineState.name}}.</strong><br/>\n                <br/>\n                Den aktuellen Status Ihrer Bestellung kÃ¶nnen Sie auch jederzeit auf unserer Webseite im  Bereich \"Mein Konto\" - \"Meine Bestellungen\" abrufen. Sollten Sie allerdings den Kauf ohne Registrierung, also ohne Anlage eines Kundenkontos, gewÃ¤hlt haben, steht Ihnen diese MÃ¶glichkeit nicht zur VerfÃ¼gung.\n            </p>\n        </div>','\n        {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},\n        \n        der Zahlungsstatus fÃ¼r Ihre Bestellung bei {{ salesChannel.name }} (Number: {{order.orderNumber}}) vom {{ order.orderDateTime|date }} hat sich geÃ¤ndert!\n        Die Bestellung hat jetzt den Zahlungsstatus: {{order.transactions.first.stateMachineState.name}}.\n        \n        Den aktuellen Status Ihrer Bestellung kÃ¶nnen Sie auch jederzeit auf unserer Webseite im  Bereich \"Mein Konto\" - \"Meine Bestellungen\" abrufen. \n        Sollten Sie allerdings den Kauf ohne Registrierung, also ohne Anlage eines Kundenkontos, gewÃ¤hlt haben, steht Ihnen diese MÃ¶glichkeit nicht zur VerfÃ¼gung.',NULL,'2020-04-04 21:03:19.615',NULL),('¼#È´O+ˆ‘»åO#','/»_ââšMpªXTÎ|ãâ','{{ salesChannel.name }}','Your Registration at {{ salesChannel.name }}','Registration confirmation','<div style=\"font-family:arial; font-size:12px;\">\n            <p>\n                {{ customer.salutation.letterName }} {{ customer.firstName }} {{ customer.lastName }},<br/>\n                <br/>\n                thank you for your registration with our Shop.<br/>\n                You will gain access via the email address <strong>{{ customer.email }}</strong> and the password you have chosen.<br/>\n                You can change your password anytime.\n            </p>\n        </div>','{{ customer.salutation.letterName }} {{customer.firstName}} {{ customer.lastName }},\n                \n                thank you for your registration with our Shop.\n                You will gain access via the email address {{ customer.email }} and the password you have chosen.\n                You can change your password anytime.        \n        ',NULL,'2020-04-04 21:03:14.423',NULL),('¼#È´O+ˆ‘»åO#','‹/pó¡L†…Mã4Ó8','{{ salesChannel.name }}','Deine Registrierung bei {{ salesChannel.name }}','RegistrierungsbestÃ¤tigung','<div style=\"font-family:arial; font-size:12px;\">\n            <p>\n                Hallo {{ customer.salutation.letterName }} {{customer.firstName}} {{ customer.lastName }},<br/>\n                <br/>\n                vielen Dank fÃ¼r Ihre Anmeldung in unserem Shop.<br/>\n                Sie erhalten Zugriff Ã¼ber Ihre E-Mail-Adresse <strong>{{ customer.email }}</strong> und dem von Ihnen gewÃ¤hlten Kennwort.<br/>\n                Sie kÃ¶nnen Ihr Kennwort jederzeit nachtrÃ¤glich Ã¤ndern.\n            </p>\n        </div>','Hallo {{ customer.salutation.letterName }} {{customer.firstName}} {{ customer.lastName }},\n                \n                vielen Dank fÃ¼r Ihre Anmeldung in unserem Shop.\n                Sie erhalten Zugriff Ã¼ber Ihre E-Mail-Adresse {{ customer.email }} und dem von Ihnen gewÃ¤hlten Kennwort.\n                Sie kÃ¶nnen Ihr Kennwort jederzeit nachtrÃ¤glich Ã¤ndern.\n',NULL,'2020-04-04 21:03:14.423',NULL),('¿‚ÑQ©£Ik¹\"¬áö’L’','/»_ââšMpªXTÎ|ãâ','{{ salesChannel.name }}','Your order with {{ salesChannel.name }} is returned','Shopware Default Template','\n            <div style=\"font-family:arial; font-size:12px;\">\n                <br/>\n                  <p>\n                      {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},<br/>\n                      <br/>\n                      the status of your delivery at {{ salesChannel.name }} (Number: {{order.orderNumber}}) on {{ order.orderDateTime|date }} has changed.<br/>\n                      <strong>The new status is as follows: {{order.deliveries.first.stateMachineState.name}}.</strong><br/>\n                      <br/>\n                      You can check the current status of your order on our website under \"My account\" - \"My orders\" anytime. But in case you have purchased without a registration or a customer account, you do not have this option.\n                </p>\n            </div>\n        ','\n            {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},\n            \n            the status of your delivery at {{ salesChannel.name }} (Number: {{order.orderNumber}}) on {{ order.orderDateTime|date }}  has changed.\n            The new status is as follows: {{order.deliveries.first.stateMachineState.name}}.\n            \n            You can check the current status of your order on our website under \"My account\" - \"My orders\" anytime. \n            But in case you have purchased without a registration or a customer account, you do not have this option.',NULL,'2020-04-04 21:03:19.516',NULL),('¿‚ÑQ©£Ik¹\"¬áö’L’','‹/pó¡L†…Mã4Ó8','{{ salesChannel.name }}','Bestellung bei {{ salesChannel.name }} wurde retourniert','Shopware Basis Template','\n            <div style=\"font-family:arial; font-size:12px;\">\n                <br/>\n                <p>\n                    {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},<br/>\n                    <br/>\n                    der Lieferstatus fÃ¼r Ihre Bestellung bei {{ salesChannel.name }} (Number: {{order.orderNumber}}) vom {{ order.orderDateTime|date }} hat sich geÃ¤ndert.<br/>\n                    <strong>Die Bestellung hat jetzt den Bestellstatus: {{order.deliveries.first.stateMachineState.name}}.</strong><br/>\n                    <br/>\n                    Den aktuellen Status Ihrer Bestellung kÃ¶nnen Sie auch jederzeit auf unserer Webseite im  Bereich \"Mein Konto\" - \"Meine Bestellungen\" abrufen. Sollten Sie allerdings den Kauf ohne Registrierung, also ohne Anlage eines Kundenkontos, gewÃ¤hlt haben, steht Ihnen diese MÃ¶glichkeit nicht zur VerfÃ¼gung.\n                </p>\n            </div>','\n        {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},\n        \n        der Lieferstatus fÃ¼r Ihre Bestellung bei {{ salesChannel.name }} (Number: {{order.orderNumber}}) vom {{ order.orderDateTime|date }} hat sich geÃ¤ndert!\n        Die Bestellung hat jetzt den Bestellstatus: {{order.deliveries.first.stateMachineState.name}}.\n        \n        Den aktuellen Status Ihrer Bestellung kÃ¶nnen Sie auch jederzeit auf unserer Webseite im  Bereich \"Mein Konto\" - \"Meine Bestellungen\" abrufen. \n        Sollten Sie allerdings den Kauf ohne Registrierung, also ohne Anlage eines Kundenkontos, gewÃ¤hlt haben, steht Ihnen diese MÃ¶glichkeit nicht zur VerfÃ¼gung.',NULL,'2020-04-04 21:03:19.524',NULL),('Â¨ûÏêAš“Ó~P)¹z','/»_ââšMpªXTÎ|ãâ','{{ salesChannel.name }}','Your order with {{ salesChannel.name }} is cancelled','Shopware Default Template','<div style=\"font-family:arial; font-size:12px;\">\n <br/>\n    <p>\n        {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},<br/>\n        <br/>\n        the status of your order at {{ salesChannel.name }} (Number: {{order.orderNumber}}) on {{ order.orderDateTime|date }} has changed.<br/>\n        <strong>The new status is as follows: {{order.stateMachineState.name}}.</strong><br/>\n        <br/>\n        You can check the current status of your order on our website under \"My account\" - \"My orders\" anytime. But in case you have purchased without a registration or a customer account, you do not have this option.\n    </p>\n</div>','\n        {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},\n        \n        the status of your order at {{ salesChannel.name }} (Number: {{order.orderNumber}}) on {{ order.orderDateTime|date }}  has changed.\n        The new status is as follows: {{order.stateMachineState.name}}.\n        \n        You can check the current status of your order on our website under \"My account\" - \"My orders\" anytime. \n        But in case you have purchased without a registration or a customer account, you do not have this option.',NULL,'2020-04-04 21:03:19.565',NULL),('Â¨ûÏêAš“Ó~P)¹z','‹/pó¡L†…Mã4Ó8','{{ salesChannel.name }}','Stornierung der Bestellung bei {{ salesChannel.name }}','Shopware Basis Template','        <div style=\"font-family:arial; font-size:12px;\">\n         <br/>\n            <p>\n                {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},<br/>\n                <br/>\n                der Bestellstatus fÃ¼r Ihre Bestellung bei {{ salesChannel.name }} (Number: {{order.orderNumber}}) vom {{ order.orderDateTime|date }} has changed.<br/>\n                <strong>Die Bestellung hat jetzt den Bestellstatus: {{order.stateMachineState.name}}.</strong><br/>\n                <br/>\n                Den aktuellen Status Ihrer Bestellung kÃ¶nnen Sie auch jederzeit auf unserer Webseite im  Bereich \"Mein Konto\" - \"Meine Bestellungen\" abrufen. Sollten Sie allerdings den Kauf ohne Registrierung, also ohne Anlage eines Kundenkontos, gewÃ¤hlt haben, steht Ihnen diese MÃ¶glichkeit nicht zur VerfÃ¼gung.\n            </p>\n        </div>','\n        {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},\n        \n        der Bestellstatus fÃ¼r Ihre Bestellung bei {{ salesChannel.name }} (Number: {{order.orderNumber}}) vom {{ order.orderDateTime|date }} hat sich geÃ¤ndert!\n        Die Bestellung hat jetzt den Bestellstatus: {{order.stateMachineState.name}}.\n        \n        Den aktuellen Status Ihrer Bestellung kÃ¶nnen Sie auch jederzeit auf unserer Webseite im  Bereich \"Mein Konto\" - \"Meine Bestellungen\" abrufen. \n        Sollten Sie allerdings den Kauf ohne Registrierung, also ohne Anlage eines Kundenkontos, gewÃ¤hlt haben, steht Ihnen diese MÃ¶glichkeit nicht zur VerfÃ¼gung.',NULL,'2020-04-04 21:03:19.566',NULL),('ÄáŠ08Il…ô´¶Ôe°ú','/»_ââšMpªXTÎ|ãâ','{{ salesChannel.name }}','Register','','<h3>Hello {{ newsletterRecipient.firstName }} {{ newsletterRecipient.lastName }}</h3>\n                <p>thank you very much for your registration.</p>\n                <p>You have successfully subscribed to our newsletter.</p>\n        ','Hello {{ newsletterRecipient.firstName }} {{ newsletterRecipient.lastName }}\n            \n                thank you very much for your registration.\n            \n                You have successfully subscribed to our newsletter.\n        ',NULL,'2020-04-04 21:03:14.415',NULL),('ÄáŠ08Il…ô´¶Ôe°ú','‹/pó¡L†…Mã4Ó8','{{ salesChannel.name }}','Register','','<h3>Hallo {{ newsletterRecipient.firstName }} {{ newsletterRecipient.lastName }}</h3>\n                <p>vielen Dank fÃ¼r Ihre Anmeldung.</p>\n                <p>Sie haben sich erfolgreich zu unserem Newsletter angemeldet.</p>\n        ','Hallo {{ newsletterRecipient.firstName }} {{ newsletterRecipient.lastName }}\n            \n                vielen Dank fÃ¼r Ihre Anmeldung.\n            \n                Sie haben sich erfolgreich zu unserem Newsletter angemeldet.\n        ',NULL,'2020-04-04 21:03:14.415',NULL),('Å*´©#ITªb>ø™¾','/»_ââšMpªXTÎ|ãâ','{{ salesChannel.name }}','Newsletter','','<h3>Hello {{ newsletterRecipient.firstName }} {{ newsletterRecipient.lastName }}</h3>\n                <p>Thank you for your interest in our newsletter!</p>\n                <p>In order to prevent misuse of your email address, we have sent you this confirmation email. Confirm that you wish to receive the newsletter regularly by clicking <a href=\"{{ url }}\">here</a>.</p>\n                <p>If you have not subscribed to the newsletter, please ignore this email.</p>\n        ','Hello {{ newsletterRecipient.firstName }} {{ newsletterRecipient.lastName }}\n        \n                Thank you for your interest in our newsletter!\n                \n                In order to prevent misuse of your email address, we have sent you this confirmation email. Confirm that you wish to receive the newsletter regularly by clicking on the link: {{ url }}\n                \n                If you have not subscribed to the newsletter, please ignore this email.\n        ',NULL,'2020-04-04 21:03:14.414',NULL),('Å*´©#ITªb>ø™¾','‹/pó¡L†…Mã4Ó8','{{ salesChannel.name }}','Newsletter','','<h3>Hallo {{ newsletterRecipient.firstName }} {{ newsletterRecipient.lastName }}</h3>\n                <p>SchÃ¶n, dass Sie sich fÃ¼r unseren Newsletter interessieren!</p>\n                <p>Um einem Missbrauch Ihrer E-Mail-Adresse vorzubeugen, haben wir Ihnen diese BestÃ¤tigungsmail gesendet. BestÃ¤tigen Sie, dass Sie den Newsletter regelmÃ¤ÃŸig erhalten wollen, indem Sie <a href=\"{{ url }}\">hier</a> klicken.</p>\n                <p>Sollten Sie den Newsletter nicht angefordert haben, ignorieren Sie diese E-Mail.</p>\n        ','Hallo {{ newsletterRecipient.firstName }} {{ newsletterRecipient.lastName }}\n        \n                SchÃ¶n, dass Sie sich fÃ¼r unseren Newsletter interessieren! \n                \n                Um einem Missbrauch Ihrer E-Mail-Adresse vorzubeugen, haben wir Ihnen diese BestÃ¤tigungsmail gesendet. BestÃ¤tigen Sie, dass Sie den Newsletter regelmÃ¤ÃŸig erhalten wollen, indem Sie auf den folgenden Link klicken: {{ url }} \n                \n                Sollten Sie den Newsletter nicht angefordert haben, ignorieren Sie diese E-Mail.\n        ',NULL,'2020-04-04 21:03:14.415',NULL),('ÆtATå(DÅƒyE¥îkb','/»_ââšMpªXTÎ|ãâ','{{ salesChannel.name }}','Contact form received - {{ salesChannel.name }}','Contact form received','<div style=\"font-family:arial; font-size:12px;\">\n            <p>\n                Following Message was sent to you by {{ contactFormData.firstName }} {{ contactFormData.lastName }} via the contact form.<br/>\n                <br/>\n                Contact email address: {{ contactFormData.email }}<br/>\n                Phone: {{ contactFormData.phone }}<br/><br/>\n                Subject: {{ contactFormData.subject }}<br/>\n                <br/>\n                Message: {{ contactFormData.comment }}<br/>\n            </p>\n        </div>','Following Message was sent to you by {{ contactFormData.firstName }} {{ contactFormData.lastName }} via the contact form.\n\n                Contact email address: {{ contactFormData.email }}\n                Phone: {{ contactFormData.phone }}\n                \n                Subject: {{ contactFormData.subject }}\n                \n                Message: {{ contactFormData.comment }}',NULL,'2020-04-04 21:03:17.870',NULL),('ÆtATå(DÅƒyE¥îkb','‹/pó¡L†…Mã4Ó8','{{ salesChannel.name }}','Kontaktanfrage erhalten - {{ salesChannel.name }}','Kontaktanfrage erhalten','<div style=\"font-family:arial; font-size:12px;\">\n    <p>\n        Folgende Nachricht wurde von {{ contactFormData.firstName }} {{ contactFormData.lastName }} an Sie via Kontakt-Formular gesendet.<br/>\n        <br/>\n        Kontakt E-Mail: {{ contactFormData.email }}<br/>\n        <br>\n        Telefonnummer: {{ contactFormData.phone }}<br/>\n        <br/>\n        Betreff: {{ contactFormData.subject }}<br/>\n        <br/>\n        Message: {{ contactFormData.comment }}<br/>\n    </p>\n</div>','Folgende Nachricht wurde von {{ contactFormData.firstName }} {{ contactFormData.lastName }} an Sie via Kontakt-Formular gesendet.\n\nKontakt E-Mail: {{ contactFormData.email }}\n\nTelefonnummer: {{ contactFormData.phone }}\n\nBetreff: {{ contactFormData.subject }}\n\nNachricht: {{ contactFormData.comment }}',NULL,'2020-04-04 21:03:23.000',NULL),('Ú•º¢È_I>ˆdMoçVì$','/»_ââšMpªXTÎ|ãâ','{{ salesChannel.name }}','Please confirm your email address at {{ salesChannel.name }}','Email confirmation at guest orders','\n            <div style=\"font-family:arial; font-size:12px;\">\n                <p>\n                    Hello {{ customer.salutation.displayName }} {{ customer.lastName }},<br/>\n                    <br/>\n                    Please confirm your email address via the following link:<br/>\n                    <br/>\n                    <a href=\"{{ confirmUrl }}\">Confirm email</a><br/>\n                    <br/>\n                    After the confirmation, you will be directed to the checkout, where you can check and complete your order again.<br/>\n                    By this confirmation, you also agree that we may send you further emails as part of the fulfillment of the contract.\n                </p>\n            </div>\n        ','\n            Hello {{ customer.salutation.displayName }} {{ customer.lastName }},\n            \n            Please confirm your email address via the following link:\n            \n            {{ confirmUrl }}\n            \n            After the confirmation, you will be directed to the checkout, where you can check and complete your order again.\n            By this confirmation, you also agree that we may send you further emails as part of the fulfillment of the contract.\n        ',NULL,'2020-04-04 21:03:20.178',NULL),('Ú•º¢È_I>ˆdMoçVì$','‹/pó¡L†…Mã4Ó8','{{ salesChannel.name }}','Bitte bestÃ¤tigen Sie Ihre E-Mail-Adresse bei {{ salesChannel.name }}','AnmeldebestÃ¤tigung bei Gastbestellungen','\n            <div style=\"font-family:arial; font-size:12px;\">\n                <p>\n                    Hallo {{ customer.salutation.displayName }} {{ customer.lastName }},<br/>\n                    <br/>\n                    Bitte bestÃ¤tigen Sie Ihre E-Mail-Adresse Ã¼ber den nachfolgenden Link:<br/>\n                    <br/>\n                    <a href=\"{{ confirmUrl }}\">E-Mail bestÃ¤tigen</a><br/>\n                    <br/>\n                    Nach der BestÃ¤tigung werden Sie in den Bestellabschluss geleitet, dort kÃ¶nnen Sie Ihre Bestellung nochmals Ã¼berprÃ¼fen und abschlieÃŸen.<br/>\n                    Durch diese BestÃ¤tigung erklÃ¤ren Sie sich ebenso damit einverstanden, dass wir Ihnen im Rahmen der VertragserfÃ¼llung weitere E-Mails senden dÃ¼rfen.\n                </p>\n            </div>\n        ','\n            Hallo {{ customer.salutation.displayName }} {{ customer.lastName }},\n            \n            Bitte bestÃ¤tigen Sie Ihre E-Mail-Adresse Ã¼ber den nachfolgenden Link:\n            \n            {{ confirmUrl }}\n            \n            Nach der BestÃ¤tigung werden Sie in den Bestellabschluss geleitet, dort kÃ¶nnen Sie Ihre Bestellung nochmals Ã¼berprÃ¼fen und abschlieÃŸen.\n            Durch diese BestÃ¤tigung erklÃ¤ren Sie sich ebenso damit einverstanden, dass wir Ihnen im Rahmen der VertragserfÃ¼llung weitere E-Mails senden dÃ¼rfen.\n        ',NULL,'2020-04-04 21:03:20.179',NULL),('Û‡€NÙGO† ıÉ:!†s$','/»_ââšMpªXTÎ|ãâ','{{ salesChannel.name }}','Your order with {{ salesChannel.name }} is completly paid','Shopware Default Template','<div style=\"font-family:arial; font-size:12px;\">\n <br/>\n    <p>\n        {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},<br/>\n        <br/>\n        the status of your order at {{ salesChannel.name }} (Number: {{order.orderNumber}}) on {{ order.orderDateTime|date }} has changed.<br/>\n        <strong>The new status is as follows: {{order.transactions.first.stateMachineState.name}}.</strong><br/>\n        <br/>\n        You can check the current status of your order on our website under \"My account\" - \"My orders\" anytime. But in case you have purchased without a registration or a customer account, you do not have this option.\n    </p>\n</div>','\n        {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},\n        \n        the status of your order at {{ salesChannel.name }} (Number: {{order.orderNumber}}) on {{ order.orderDateTime|date }}  has changed.\n        The new status is as follows: {{order.transactions.first.stateMachineState.name}}.\n        \n        You can check the current status of your order on our website under \"My account\" - \"My orders\" anytime. \n        But in case you have purchased without a registration or a customer account, you do not have this option.',NULL,'2020-04-04 21:03:19.595',NULL),('Û‡€NÙGO† ıÉ:!†s$','‹/pó¡L†…Mã4Ó8','{{ salesChannel.name }}','Deine Bestellung bei {{ salesChannel.name }} wurde komplett bezahlt','Shopware Basis Template','        <div style=\"font-family:arial; font-size:12px;\">\n         <br/>\n            <p>\n                {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},<br/>\n                <br/>\n                der Zahlungsstatus fÃ¼r Ihre Bestellung bei {{ salesChannel.name }} (Number: {{order.orderNumber}}) vom {{ order.orderDateTime|date }} has changed.<br/>\n                <strong>Die Bestellung hat jetzt den Zahlungsstatus: {{order.transactions.first.stateMachineState.name}}.</strong><br/>\n                <br/>\n                Den aktuellen Status Ihrer Bestellung kÃ¶nnen Sie auch jederzeit auf unserer Webseite im  Bereich \"Mein Konto\" - \"Meine Bestellungen\" abrufen. Sollten Sie allerdings den Kauf ohne Registrierung, also ohne Anlage eines Kundenkontos, gewÃ¤hlt haben, steht Ihnen diese MÃ¶glichkeit nicht zur VerfÃ¼gung.\n            </p>\n        </div>','\n        {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},\n        \n        der Zahlungsstatus fÃ¼r Ihre Bestellung bei {{ salesChannel.name }} (Number: {{order.orderNumber}}) vom {{ order.orderDateTime|date }} hat sich geÃ¤ndert!\n        Die Bestellung hat jetzt den Zahlungsstatus: {{order.transactions.first.stateMachineState.name}}.\n        \n        Den aktuellen Status Ihrer Bestellung kÃ¶nnen Sie auch jederzeit auf unserer Webseite im  Bereich \"Mein Konto\" - \"Meine Bestellungen\" abrufen. \n        Sollten Sie allerdings den Kauf ohne Registrierung, also ohne Anlage eines Kundenkontos, gewÃ¤hlt haben, steht Ihnen diese MÃ¶glichkeit nicht zur VerfÃ¼gung.',NULL,'2020-04-04 21:03:19.597',NULL),('â¿\ZsE¶5fì¢5I)','/»_ââšMpªXTÎ|ãâ','{{ salesChannel.name }}','Your order with {{ salesChannel.name }} is partially returned','Shopware Default Template','\n            <div style=\"font-family:arial; font-size:12px;\">\n                <br/>\n                <p>\n                    {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},<br/>\n                    <br/>\n                    the status of your delivery at {{ salesChannel.name }} (Number: {{order.orderNumber}}) on {{ order.orderDateTime|date }} has changed.<br/>\n                    <strong>The new status is as follows: {{order.deliveries.first.stateMachineState.name}}.</strong><br/>\n                    <br/>\n                    You can check the current status of your order on our website under \"My account\" - \"My orders\" anytime. But in case you have purchased without a registration or a customer account, you do not have this option.\n                </p>\n            </div>\n        ','\n        {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},\n        \n        the status of your delivery at {{ salesChannel.name }} (Number: {{order.orderNumber}}) on {{ order.orderDateTime|date }}  has changed.\n        The new status is as follows: {{order.deliveries.first.stateMachineState.name}}.\n        \n        You can check the current status of your order on our website under \"My account\" - \"My orders\" anytime. \n        But in case you have purchased without a registration or a customer account, you do not have this option.',NULL,'2020-04-04 21:03:19.510',NULL),('â¿\ZsE¶5fì¢5I)','‹/pó¡L†…Mã4Ó8','{{ salesChannel.name }}','Bestellung bei {{ salesChannel.name }} wurde teilweise retourniert','Shopware Basis Template','\n            <div style=\"font-family:arial; font-size:12px;\">\n                <br/>\n                <p>\n                    {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},<br/>\n                    <br/>\n                    der Lieferstatus fÃ¼r Ihre Bestellung bei {{ salesChannel.name }} (Number: {{order.orderNumber}}) vom {{ order.orderDateTime|date }} hat sich geÃ¤ndert.<br/>\n                    <strong>Die Bestellung hat jetzt den Bestellstatus: {{order.deliveries.first.stateMachineState.name}}.</strong><br/>\n                    <br/>\n                    Den aktuellen Status Ihrer Bestellung kÃ¶nnen Sie auch jederzeit auf unserer Webseite im  Bereich \"Mein Konto\" - \"Meine Bestellungen\" abrufen. Sollten Sie allerdings den Kauf ohne Registrierung, also ohne Anlage eines Kundenkontos, gewÃ¤hlt haben, steht Ihnen diese MÃ¶glichkeit nicht zur VerfÃ¼gung.\n                </p>\n            </div>\n        ','\n        {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},\n        \n        der Lieferstatus fÃ¼r Ihre Bestellung bei {{ salesChannel.name }} (Number: {{order.orderNumber}}) vom {{ order.orderDateTime|date }} hat sich geÃ¤ndert!\n        Die Bestellung hat jetzt den Bestellstatus: {{order.deliveries.first.stateMachineState.name}}.\n        \n        Den aktuellen Status Ihrer Bestellung kÃ¶nnen Sie auch jederzeit auf unserer Webseite im  Bereich \"Mein Konto\" - \"Meine Bestellungen\" abrufen. \n        Sollten Sie allerdings den Kauf ohne Registrierung, also ohne Anlage eines Kundenkontos, gewÃ¤hlt haben, steht Ihnen diese MÃ¶glichkeit nicht zur VerfÃ¼gung.',NULL,'2020-04-04 21:03:19.512',NULL),('ì¥‘ÃƒkGA¡:K×õşŸ','/»_ââšMpªXTÎ|ãâ','{{ salesChannel.name }}','Your trader account has not been accepted - {{ salesChannel.name }}','Customer Group Change rejected','<div style=\"font-family:arial; font-size:12px;\">\n    <p>\n        Hello,<br/>\n		<br/>\n        thank you for your interest in our trade prices. \n        Unfortunately, we do not have a trading license yet so that we cannot accept you as a merchant.<br/>\n        In case of further questions please do not hesitate to contact us via telephone, fax or email.\n    </p>\n</div>','\n        Hello,\n\n        thank you for your interest in our trade prices. Unfortunately, \n        we do not have a trading license yet so that we cannot accept you as a merchant.\n        In case of further questions please do not hesitate to contact us via telephone, fax or email.\n    ',NULL,'2020-04-04 21:03:14.438',NULL),('ì¥‘ÃƒkGA¡:K×õşŸ','‹/pó¡L†…Mã4Ó8','{{ salesChannel.name }}','Ihr HÃ¤ndleraccountantrag wurde abgelehnt - {{ salesChannel.name }}','Kundengruppenwechsel abgelehnt','<div style=\"font-family:arial; font-size:12px;\">\n    <p>\n        Hallo,<br/>\n        <br/>\n        elen Dank fÃ¼r ihr Interesse an unseren GroÃŸhandelspreisen. Leider liegt uns bisher keine <br/>\n        HÃ¤ndlerauthentifizierung vor, und daher kÃ¶nnen wir Ihre Anfrage nicht bestÃ¤tigen. <br/>\n        Bei weiteren Fragen kontaktieren Sie uns gerne per Telefon, Fax oder E-Mail. <br/>\n    </p>\n</div>','\n        Hallo,\n\n        vielen Dank fÃ¼r ihr Interesse an unseren GroÃŸhandelspreisen. Leider liegt uns bisher keine \n        HÃ¤ndlerauthentifizierung vor, und daher kÃ¶nnen wir Ihre Anfrage nicht bestÃ¤tigen.\n        Bei weiteren Fragen kontaktieren Sie uns gerne per Telefon, Fax oder E-Mail.\n    ',NULL,'2020-04-04 21:03:14.439',NULL),('ïcvFÉ…ÑW&ÛR²o','/»_ââšMpªXTÎ|ãâ','{{ salesChannel.name }}','The payment for your order with {{ salesChannel.name }} is cancelled','Shopware Default Template','<div style=\"font-family:arial; font-size:12px;\">\n <br/>\n    <p>\n        {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},<br/>\n        <br/>\n        the status of your order at {{ salesChannel.name }} (Number: {{order.orderNumber}}) on {{ order.orderDateTime|date }} has changed.<br/>\n        <strong>The new status is as follows: {{order.transactions.first.stateMachineState.name}}.</strong><br/>\n        <br/>\n        You can check the current status of your order on our website under \"My account\" - \"My orders\" anytime. But in case you have purchased without a registration or a customer account, you do not have this option.\n    </p>\n</div>','\n        {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},\n        \n        the status of your order at {{ salesChannel.name }} (Number: {{order.orderNumber}}) on {{ order.orderDateTime|date }}  has changed.\n        The new status is as follows: {{order.transactions.first.stateMachineState.name}}.\n        \n        You can check the current status of your order on our website under \"My account\" - \"My orders\" anytime. \n        But in case you have purchased without a registration or a customer account, you do not have this option.',NULL,'2020-04-04 21:03:19.601',NULL),('ïcvFÉ…ÑW&ÛR²o','‹/pó¡L†…Mã4Ó8','{{ salesChannel.name }}','Die Zahlung fÃ¼r ihre Bestellung bei {{ salesChannel.name }} wurde storniert','Shopware Basis Template','        <div style=\"font-family:arial; font-size:12px;\">\n         <br/>\n            <p>\n                {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},<br/>\n                <br/>\n                der Zahlungsstatus fÃ¼r Ihre Bestellung bei {{ salesChannel.name }} (Number: {{order.orderNumber}}) vom {{ order.orderDateTime|date }} has changed.<br/>\n                <strong>Die Bestellung hat jetzt den Zahlungsstatus: {{order.transactions.first.stateMachineState.name}}.</strong><br/>\n                <br/>\n                Den aktuellen Status Ihrer Bestellung kÃ¶nnen Sie auch jederzeit auf unserer Webseite im  Bereich \"Mein Konto\" - \"Meine Bestellungen\" abrufen. Sollten Sie allerdings den Kauf ohne Registrierung, also ohne Anlage eines Kundenkontos, gewÃ¤hlt haben, steht Ihnen diese MÃ¶glichkeit nicht zur VerfÃ¼gung.\n            </p>\n        </div>','\n        {{order.orderCustomer.salutation.letterName }} {{order.orderCustomer.firstName}} {{order.orderCustomer.lastName}},\n        \n        der Zahlungsstatus fÃ¼r Ihre Bestellung bei {{ salesChannel.name }} (Number: {{order.orderNumber}}) vom {{ order.orderDateTime|date }} hat sich geÃ¤ndert!\n        Die Bestellung hat jetzt den Zahlungsstatus: {{order.transactions.first.stateMachineState.name}}.\n        \n        Den aktuellen Status Ihrer Bestellung kÃ¶nnen Sie auch jederzeit auf unserer Webseite im  Bereich \"Mein Konto\" - \"Meine Bestellungen\" abrufen. \n        Sollten Sie allerdings den Kauf ohne Registrierung, also ohne Anlage eines Kundenkontos, gewÃ¤hlt haben, steht Ihnen diese MÃ¶glichkeit nicht zur VerfÃ¼gung.',NULL,'2020-04-04 21:03:19.603',NULL);
-/*!40000 ALTER TABLE `mail_template_translation` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `mail_template_type`
---
-
-DROP TABLE IF EXISTS `mail_template_type`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `mail_template_type` (
-  `id` binary(16) NOT NULL,
-  `technical_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `available_entities` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uniq.mail_template_type.technical_name` (`technical_name`),
-  CONSTRAINT `json.mail_template_type.available_entities` CHECK (json_valid(`available_entities`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `mail_template_type`
---
-
-LOCK TABLES `mail_template_type` WRITE;
-/*!40000 ALTER TABLE `mail_template_type` DISABLE KEYS */;
-INSERT INTO `mail_template_type` VALUES ('XÃ!NAÁ ÿˆ1´\Z`ğ','order_delivery.state.shipped','{\"order\":\"order\",\"previousState\":\"state_machine_state\",\"newState\":\"state_machine_state\",\"salesChannel\":\"sales_channel\"}','2020-04-04 21:03:14.410',NULL),('˜i73H© \Z[\"T','password_change','{\"customer\":\"customer\",\"urlResetPassword\":null,\"salesChannel\":\"sales_channel\"}','2020-04-04 21:03:14.408',NULL),('\"Ô»RK†º+<2Ñ','order_delivery.state.cancelled','{\"order\":\"order\",\"previousState\":\"state_machine_state\",\"newState\":\"state_machine_state\",\"salesChannel\":\"sales_channel\"}','2020-04-04 21:03:14.410',NULL),('/tõ¹Iùª7‘=Âj…\\','customer_register.double_opt_in','{\"customer\":\"customer\",\"salesChannel\":\"sales_channel\"}','2020-04-04 21:03:19.954',NULL),('/èÅ†ì+Jî®-«(×°','order_transaction.state.open','{\"order\":\"order\",\"previousState\":\"state_machine_state\",\"newState\":\"state_machine_state\",\"salesChannel\":\"sales_channel\"}','2020-04-04 21:03:14.413',NULL),('8È1>ÆçNG‚Å”r§º','order.state.cancelled','{\"order\":\"order\",\"previousState\":\"state_machine_state\",\"newState\":\"state_machine_state\",\"salesChannel\":\"sales_channel\"}','2020-04-04 21:03:14.414',NULL),('9O¹ınBº¾i+…¯','customer_group_change_accept','{\"customer\":\"customer\",\"salesChannel\":\"sales_channel\"}','2020-04-04 21:03:14.408',NULL),('?CLÍÑ¼J©·ª>òaÑ£','order.state.open','{\"order\":\"order\",\"previousState\":\"state_machine_state\",\"newState\":\"state_machine_state\",\"salesChannel\":\"sales_channel\"}','2020-04-04 21:03:14.413',NULL),('UAëÚ¿ÒF>Š»è½Ö?5×','order_delivery.state.returned_partially','{\"order\":\"order\",\"previousState\":\"state_machine_state\",\"newState\":\"state_machine_state\",\"salesChannel\":\"sales_channel\"}','2020-04-04 21:03:14.409',NULL),('W$UM¥C†	d!}µ˜','customer_register','{\"customer\":\"customer\",\"salesChannel\":\"sales_channel\"}','2020-04-04 21:03:14.406',NULL),('Wbƒ<ËJi½äª´~]\n','order_transaction.state.refunded','{\"order\":\"order\",\"previousState\":\"state_machine_state\",\"newState\":\"state_machine_state\",\"salesChannel\":\"sales_channel\"}','2020-04-04 21:03:14.412',NULL),('‹7 lBQ®¯p4>¨ª','order.state.in_progress','{\"order\":\"order\",\"previousState\":\"state_machine_state\",\"newState\":\"state_machine_state\",\"salesChannel\":\"sales_channel\"}','2020-04-04 21:03:14.413',NULL),('šCIœC\r™CËF.‰','product_stock_warning','{\"product\":\"product\",\"salesChannel\":\"sales_channel\"}','2020-04-04 21:03:14.409',NULL),('ŸByfH·²h9Ú‰üù','order_confirmation_mail','{\"order\":\"order\",\"salesChannel\":\"sales_channel\"}','2020-04-04 21:03:14.407',NULL),('§?\nVFkJL¡ÊÆBsı','order_delivery.state.shipped_partially','{\"order\":\"order\",\"previousState\":\"state_machine_state\",\"newState\":\"state_machine_state\",\"salesChannel\":\"sales_channel\"}','2020-04-04 21:03:14.410',NULL),('©‰·ú‰M^š=ØB¯AL','user.recovery.request','{\"userRecovery\":\"user_recovery\"}','2020-04-04 21:03:16.023',NULL),('©Ï‚Ñì\ZKÇ»Ğ¾^sz','order_transaction.state.reminded','{\"order\":\"order\",\"previousState\":\"state_machine_state\",\"newState\":\"state_machine_state\",\"salesChannel\":\"sales_channel\"}','2020-04-04 21:03:14.411',NULL),('°Ô?­±D—³F{÷PA','sepa_confirmation','{\"order\":\"order\",\"salesChannel\":\"sales_channel\"}','2020-04-04 21:03:14.409',NULL),('´–á(	h@¸7ÅÒVş‚','customer.recovery.request','{\"customerRecovery\":\"customer_recovery\"}','2020-04-04 21:03:18.786',NULL),('·˜+šD+‚‰äM¿MÔ','order_transaction.state.cancelled','{\"order\":\"order\",\"previousState\":\"state_machine_state\",\"newState\":\"state_machine_state\",\"salesChannel\":\"sales_channel\"}','2020-04-04 21:03:14.411',NULL),('¸292JM±öw°Ì`P','order_delivery.state.returned','{\"order\":\"order\",\"previousState\":\"state_machine_state\",\"newState\":\"state_machine_state\",\"salesChannel\":\"sales_channel\"}','2020-04-04 21:03:14.410',NULL),('Ë{Ğ–S@º¿Åf‘$¯ƒ','guest_order.double_opt_in','{\"customer\":\"customer\",\"salesChannel\":\"sales_channel\"}','2020-04-04 21:03:20.172',NULL),('ÔY\n…X C2‡x4.‘ÁéC','order_transaction.state.refunded_partially','{\"order\":\"order\",\"previousState\":\"state_machine_state\",\"newState\":\"state_machine_state\",\"salesChannel\":\"sales_channel\"}','2020-04-04 21:03:14.411',NULL),('Õ?wÃKN7ªkÖ¸Vr','contact_form','{\"salesChannel\":\"sales_channel\"}','2020-04-04 21:03:16.758',NULL),('Ö¹‡ÇÕOËÅ%¬É9Ú','customer_group_change_reject','{\"customer\":\"customer\",\"salesChannel\":\"sales_channel\"}','2020-04-04 21:03:14.408',NULL),('áè\0üN²³Ò\"~ófù','newsletterRegister','{\"newsletterRecipient\":\"newsletter_recipient\",\"salesChannel\":\"sales_channel\"}','2020-04-04 21:03:14.407',NULL),('ëu¹ÄhyC©®À±è','newsletterDoubleOptIn','{\"newsletterRecipient\":\"newsletter_recipient\",\"salesChannel\":\"sales_channel\"}','2020-04-04 21:03:14.406',NULL),('ìáƒ!¦åG•©jNÙíM','order_transaction.state.paid','{\"order\":\"order\",\"previousState\":\"state_machine_state\",\"newState\":\"state_machine_state\",\"salesChannel\":\"sales_channel\"}','2020-04-04 21:03:14.412',NULL),('î…fßïE7¹š‚Dít','order.state.completed','{\"order\":\"order\",\"previousState\":\"state_machine_state\",\"newState\":\"state_machine_state\",\"salesChannel\":\"sales_channel\"}','2020-04-04 21:03:14.414',NULL),('öxS<ßF+„“J%3]4Ö','order_transaction.state.paid_partially','{\"order\":\"order\",\"previousState\":\"state_machine_state\",\"newState\":\"state_machine_state\",\"salesChannel\":\"sales_channel\"}','2020-04-04 21:03:14.412',NULL);
-/*!40000 ALTER TABLE `mail_template_type` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `mail_template_type_translation`
---
-
-DROP TABLE IF EXISTS `mail_template_type_translation`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `mail_template_type_translation` (
-  `mail_template_type_id` binary(16) NOT NULL,
-  `language_id` binary(16) NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`mail_template_type_id`,`language_id`),
-  KEY `fk.mail_template_type_translation.language_id` (`language_id`),
-  CONSTRAINT `fk.mail_template_type_translation.language_id` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.mail_template_type_translation.mail_template_type_id` FOREIGN KEY (`mail_template_type_id`) REFERENCES `mail_template_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `json.mail_template_type_translation.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `mail_template_type_translation`
---
-
-LOCK TABLES `mail_template_type_translation` WRITE;
-/*!40000 ALTER TABLE `mail_template_type_translation` DISABLE KEYS */;
-INSERT INTO `mail_template_type_translation` VALUES ('XÃ!NAÁ ÿˆ1´\Z`ğ','/»_ââšMpªXTÎ|ãâ','Enter delivery state: Shipped',NULL,'2020-04-04 21:03:14.410',NULL),('XÃ!NAÁ ÿˆ1´\Z`ğ','‹/pó¡L†…Mã4Ó8','Eintritt Lieferstatus: Versandt',NULL,'2020-04-04 21:03:14.410',NULL),('˜i73H© \Z[\"T','/»_ââšMpªXTÎ|ãâ','Password change request',NULL,'2020-04-04 21:03:14.408',NULL),('˜i73H© \Z[\"T','‹/pó¡L†…Mã4Ó8','Passwort Ã„nderungsanfrage',NULL,'2020-04-04 21:03:14.408',NULL),('\"Ô»RK†º+<2Ñ','/»_ââšMpªXTÎ|ãâ','Enter delivery state: Cancelled',NULL,'2020-04-04 21:03:14.411',NULL),('\"Ô»RK†º+<2Ñ','‹/pó¡L†…Mã4Ó8','Eintritt Lieferstatus: Abgebrochen',NULL,'2020-04-04 21:03:14.411',NULL),('/tõ¹Iùª7‘=Âj…\\','/»_ââšMpªXTÎ|ãâ','Double opt in registration',NULL,'2020-04-04 21:03:19.957',NULL),('/tõ¹Iùª7‘=Âj…\\','‹/pó¡L†…Mã4Ó8','Double-Opt-In-Registrierung',NULL,'2020-04-04 21:03:19.958',NULL),('/èÅ†ì+Jî®-«(×°','/»_ââšMpªXTÎ|ãâ','Enter payment state: Open',NULL,'2020-04-04 21:03:14.413',NULL),('/èÅ†ì+Jî®-«(×°','‹/pó¡L†…Mã4Ó8','Eintritt Zahlungsstatus: Offen',NULL,'2020-04-04 21:03:14.413',NULL),('8È1>ÆçNG‚Å”r§º','/»_ââšMpªXTÎ|ãâ','Enter order state: Cancelled',NULL,'2020-04-04 21:03:14.414',NULL),('8È1>ÆçNG‚Å”r§º','‹/pó¡L†…Mã4Ó8','Eintritt Bestellstatus: Abgebrochen',NULL,'2020-04-04 21:03:14.414',NULL),('9O¹ınBº¾i+…¯','/»_ââšMpªXTÎ|ãâ','Customer group change accepted',NULL,'2020-04-04 21:03:14.408',NULL),('9O¹ınBº¾i+…¯','‹/pó¡L†…Mã4Ó8','Kundengruppenwechsel akzeptiert',NULL,'2020-04-04 21:03:14.408',NULL),('?CLÍÑ¼J©·ª>òaÑ£','/»_ââšMpªXTÎ|ãâ','Enter order state: Open',NULL,'2020-04-04 21:03:14.413',NULL),('?CLÍÑ¼J©·ª>òaÑ£','‹/pó¡L†…Mã4Ó8','Eintritt Bestellstatus: Offen',NULL,'2020-04-04 21:03:14.413',NULL),('UAëÚ¿ÒF>Š»è½Ö?5×','/»_ââšMpªXTÎ|ãâ','Enter delivery state: Open',NULL,'2020-04-04 21:03:14.409',NULL),('UAëÚ¿ÒF>Š»è½Ö?5×','‹/pó¡L†…Mã4Ó8','Eintritt Lieferstatus: Offen',NULL,'2020-04-04 21:03:14.409',NULL),('W$UM¥C†	d!}µ˜','/»_ââšMpªXTÎ|ãâ','Customer registration',NULL,'2020-04-04 21:03:14.406',NULL),('W$UM¥C†	d!}µ˜','‹/pó¡L†…Mã4Ó8','Kunden-Registrierung',NULL,'2020-04-04 21:03:14.406',NULL),('Wbƒ<ËJi½äª´~]\n','/»_ââšMpªXTÎ|ãâ','Enter payment state: Refunded',NULL,'2020-04-04 21:03:14.412',NULL),('Wbƒ<ËJi½äª´~]\n','‹/pó¡L†…Mã4Ó8','Eintritt Zahlungsstatus: Erstattet',NULL,'2020-04-04 21:03:14.412',NULL),('‹7 lBQ®¯p4>¨ª','/»_ââšMpªXTÎ|ãâ','Enter order state: In progress',NULL,'2020-04-04 21:03:14.413',NULL),('‹7 lBQ®¯p4>¨ª','‹/pó¡L†…Mã4Ó8','Eintritt Bestellstatus: In Bearbeitung',NULL,'2020-04-04 21:03:14.414',NULL),('šCIœC\r™CËF.‰','/»_ââšMpªXTÎ|ãâ','Product stock warning',NULL,'2020-04-04 21:03:14.409',NULL),('šCIœC\r™CËF.‰','‹/pó¡L†…Mã4Ó8','Lagerbestandshinweis',NULL,'2020-04-04 21:03:14.409',NULL),('ŸByfH·²h9Ú‰üù','/»_ââšMpªXTÎ|ãâ','Order confirmation',NULL,'2020-04-04 21:03:14.407',NULL),('ŸByfH·²h9Ú‰üù','‹/pó¡L†…Mã4Ó8','BestellbestÃ¤tigung',NULL,'2020-04-04 21:03:14.408',NULL),('§?\nVFkJL¡ÊÆBsı','/»_ââšMpªXTÎ|ãâ','Enter delivery state: Shipped (partially)',NULL,'2020-04-04 21:03:14.410',NULL),('§?\nVFkJL¡ÊÆBsı','‹/pó¡L†…Mã4Ó8','Eintritt Lieferstatus: Teilweise versandt',NULL,'2020-04-04 21:03:14.410',NULL),('©‰·ú‰M^š=ØB¯AL','/»_ââšMpªXTÎ|ãâ','User password recovery',NULL,'2020-04-04 21:03:16.025',NULL),('©‰·ú‰M^š=ØB¯AL','‹/pó¡L†…Mã4Ó8','Benutzer Passwort Wiederherstellung',NULL,'2020-04-04 21:03:16.026',NULL),('©Ï‚Ñì\ZKÇ»Ğ¾^sz','/»_ââšMpªXTÎ|ãâ','Enter payment state: Reminded',NULL,'2020-04-04 21:03:14.411',NULL),('©Ï‚Ñì\ZKÇ»Ğ¾^sz','‹/pó¡L†…Mã4Ó8','Eintritt Zahlungsstatus: Erinnert',NULL,'2020-04-04 21:03:14.411',NULL),('°Ô?­±D—³F{÷PA','/»_ââšMpªXTÎ|ãâ','SEPA authorization',NULL,'2020-04-04 21:03:14.409',NULL),('°Ô?­±D—³F{÷PA','‹/pó¡L†…Mã4Ó8','SEPA-Autorisierung',NULL,'2020-04-04 21:03:14.409',NULL),('´–á(	h@¸7ÅÒVş‚','/»_ââšMpªXTÎ|ãâ','Customer password recovery',NULL,'2020-04-04 21:03:18.788',NULL),('´–á(	h@¸7ÅÒVş‚','‹/pó¡L†…Mã4Ó8','Benutzer Passwort Wiederherstellung',NULL,'2020-04-04 21:03:18.790',NULL),('·˜+šD+‚‰äM¿MÔ','/»_ââšMpªXTÎ|ãâ','Enter payment state: Cancelled',NULL,'2020-04-04 21:03:14.412',NULL),('·˜+šD+‚‰äM¿MÔ','‹/pó¡L†…Mã4Ó8','Eintritt Zahlungsstatus: Abgebrochen',NULL,'2020-04-04 21:03:14.412',NULL),('¸292JM±öw°Ì`P','/»_ââšMpªXTÎ|ãâ','Enter delivery state: Returned',NULL,'2020-04-04 21:03:14.410',NULL),('¸292JM±öw°Ì`P','‹/pó¡L†…Mã4Ó8','Eintritt Lieferstatus: Retour',NULL,'2020-04-04 21:03:14.410',NULL),('Ë{Ğ–S@º¿Åf‘$¯ƒ','/»_ââšMpªXTÎ|ãâ','Double opt in guest order',NULL,'2020-04-04 21:03:20.174',NULL),('Ë{Ğ–S@º¿Åf‘$¯ƒ','‹/pó¡L†…Mã4Ó8','Double-Opt-In-Gast-Bestellung',NULL,'2020-04-04 21:03:20.175',NULL),('ÔY\n…X C2‡x4.‘ÁéC','/»_ââšMpªXTÎ|ãâ','Enter payment state: Refunded (partially)',NULL,'2020-04-04 21:03:14.411',NULL),('ÔY\n…X C2‡x4.‘ÁéC','‹/pó¡L†…Mã4Ó8','Eintritt Zahlungsstatus: Teilweise erstattet',NULL,'2020-04-04 21:03:14.411',NULL),('Õ?wÃKN7ªkÖ¸Vr','/»_ââšMpªXTÎ|ãâ','Contact form',NULL,'2020-04-04 21:03:16.759',NULL),('Õ?wÃKN7ªkÖ¸Vr','‹/pó¡L†…Mã4Ó8','Kontaktformular',NULL,'2020-04-04 21:03:16.761',NULL),('Ö¹‡ÇÕOËÅ%¬É9Ú','/»_ââšMpªXTÎ|ãâ','Customer group change rejected',NULL,'2020-04-04 21:03:14.408',NULL),('Ö¹‡ÇÕOËÅ%¬É9Ú','‹/pó¡L†…Mã4Ó8','Kundengruppenwechsel abgelehnt',NULL,'2020-04-04 21:03:14.408',NULL),('áè\0üN²³Ò\"~ófù','/»_ââšMpªXTÎ|ãâ','Newsletter registration',NULL,'2020-04-04 21:03:14.407',NULL),('áè\0üN²³Ò\"~ófù','‹/pó¡L†…Mã4Ó8','Newsletter-Registrierung',NULL,'2020-04-04 21:03:14.407',NULL),('ëu¹ÄhyC©®À±è','/»_ââšMpªXTÎ|ãâ','Newsletter double opt-in',NULL,'2020-04-04 21:03:14.407',NULL),('ëu¹ÄhyC©®À±è','‹/pó¡L†…Mã4Ó8','Newsletter Double-Opt-In',NULL,'2020-04-04 21:03:14.407',NULL),('ìáƒ!¦åG•©jNÙíM','/»_ââšMpªXTÎ|ãâ','Enter payment state: Paid',NULL,'2020-04-04 21:03:14.412',NULL),('ìáƒ!¦åG•©jNÙíM','‹/pó¡L†…Mã4Ó8','Eintritt Zahlungsstatus: Bezahlt',NULL,'2020-04-04 21:03:14.412',NULL),('î…fßïE7¹š‚Dít','/»_ââšMpªXTÎ|ãâ','Enter order state: Done',NULL,'2020-04-04 21:03:14.414',NULL),('î…fßïE7¹š‚Dít','‹/pó¡L†…Mã4Ó8','Eintritt Bestellstatus: Abgeschlossen',NULL,'2020-04-04 21:03:14.414',NULL),('öxS<ßF+„“J%3]4Ö','/»_ââšMpªXTÎ|ãâ','Enter payment state: Paid (partially)',NULL,'2020-04-04 21:03:14.412',NULL),('öxS<ßF+„“J%3]4Ö','‹/pó¡L†…Mã4Ó8','Eintritt Zahlungsstatus: Teilweise bezahlt',NULL,'2020-04-04 21:03:14.413',NULL);
-/*!40000 ALTER TABLE `mail_template_type_translation` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `main_category`
---
-
-DROP TABLE IF EXISTS `main_category`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `main_category` (
-  `id` binary(16) NOT NULL,
-  `product_id` binary(16) NOT NULL,
-  `product_version_id` binary(16) NOT NULL,
-  `category_id` binary(16) NOT NULL,
-  `category_version_id` binary(16) NOT NULL,
-  `sales_channel_id` binary(16) NOT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uniq.main_category.sales_channel_product` (`product_id`,`product_version_id`,`sales_channel_id`),
-  KEY `fk.main_category.sales_channel_id` (`sales_channel_id`),
-  KEY `fk.main_category.category_id` (`category_id`,`category_version_id`),
-  CONSTRAINT `fk.main_category.category_id` FOREIGN KEY (`category_id`, `category_version_id`) REFERENCES `category` (`id`, `version_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.main_category.product_id` FOREIGN KEY (`product_id`, `product_version_id`) REFERENCES `product` (`id`, `version_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.main_category.sales_channel_id` FOREIGN KEY (`sales_channel_id`) REFERENCES `sales_channel` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `main_category`
---
-
-LOCK TABLES `main_category` WRITE;
-/*!40000 ALTER TABLE `main_category` DISABLE KEYS */;
-/*!40000 ALTER TABLE `main_category` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `media`
---
-
-DROP TABLE IF EXISTS `media`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `media` (
-  `id` binary(16) NOT NULL,
-  `user_id` binary(16) DEFAULT NULL,
-  `media_folder_id` binary(16) DEFAULT NULL,
-  `mime_type` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `file_extension` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `file_size` int(10) unsigned DEFAULT NULL,
-  `meta_data` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `file_name` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `media_type` longblob DEFAULT NULL,
-  `thumbnails_ro` longblob DEFAULT NULL,
-  `private` tinyint(1) NOT NULL DEFAULT 0,
-  `uploaded_at` datetime(3) DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk.media.user_id` (`user_id`),
-  KEY `fk.media.media_folder_id` (`media_folder_id`),
-  CONSTRAINT `fk.media.media_folder_id` FOREIGN KEY (`media_folder_id`) REFERENCES `media_folder` (`id`) ON DELETE SET NULL,
-  CONSTRAINT `fk.media.user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `json.media.meta_data` CHECK (json_valid(`meta_data`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `media`
---
-
-LOCK TABLES `media` WRITE;
-/*!40000 ALTER TABLE `media` DISABLE KEYS */;
-INSERT INTO `media` VALUES ('*Æ+¢sG¦ˆ\nÁy\r·','+BĞ[Bl½Ø5ºà|:Í','¤‘wÃîC\'´™·œ.','image/jpeg','jpg',21481,'{\"width\":600,\"height\":600,\"type\":2}','shirt_600x600','O:47:\"Shopware\\Core\\Content\\Media\\MediaType\\ImageType\":3:{s:7:\"\0*\0name\";s:5:\"IMAGE\";s:8:\"\0*\0flags\";a:0:{}s:13:\"\0*\0extensions\";a:0:{}}','O:77:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnail\\MediaThumbnailCollection\":2:{s:11:\"\0*\0elements\";a:3:{s:32:\"61d90db94bd04f559662f020372d5ec3\";O:73:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnail\\MediaThumbnailEntity\":13:{s:8:\"\0*\0width\";i:1920;s:9:\"\0*\0height\";i:1920;s:6:\"\0*\0url\";s:58:\"/thumbnail/f9/0d/df/1586034317/shirt_600x600_1920x1920.jpg\";s:10:\"\0*\0mediaId\";s:32:\"102ac62ba27347a688030a05c1790db7\";s:8:\"\0*\0media\";N;s:15:\"\0*\0customFields\";N;s:20:\"\0*\0_uniqueIdentifier\";s:32:\"61d90db94bd04f559662f020372d5ec3\";s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";O:17:\"DateTimeImmutable\":3:{s:4:\"date\";s:26:\"2020-04-04 21:05:18.427000\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:1:{s:11:\"foreignKeys\";O:42:\"Shopware\\Core\\Framework\\Struct\\ArrayEntity\":7:{s:7:\"\0*\0data\";a:0:{}s:20:\"\0*\0_uniqueIdentifier\";N;s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";N;s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:0:{}}}s:5:\"\0*\0id\";s:32:\"61d90db94bd04f559662f020372d5ec3\";}s:32:\"8a54aad35fe14e1ea2f155e745c37453\";O:73:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnail\\MediaThumbnailEntity\":13:{s:8:\"\0*\0width\";i:800;s:9:\"\0*\0height\";i:800;s:6:\"\0*\0url\";s:56:\"/thumbnail/f9/0d/df/1586034317/shirt_600x600_800x800.jpg\";s:10:\"\0*\0mediaId\";s:32:\"102ac62ba27347a688030a05c1790db7\";s:8:\"\0*\0media\";N;s:15:\"\0*\0customFields\";N;s:20:\"\0*\0_uniqueIdentifier\";s:32:\"8a54aad35fe14e1ea2f155e745c37453\";s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";O:17:\"DateTimeImmutable\":3:{s:4:\"date\";s:26:\"2020-04-04 21:05:18.427000\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:1:{s:11:\"foreignKeys\";O:42:\"Shopware\\Core\\Framework\\Struct\\ArrayEntity\":7:{s:7:\"\0*\0data\";a:0:{}s:20:\"\0*\0_uniqueIdentifier\";N;s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";N;s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:0:{}}}s:5:\"\0*\0id\";s:32:\"8a54aad35fe14e1ea2f155e745c37453\";}s:32:\"ac0ae80bbc204d8b9849d9250e9678d8\";O:73:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnail\\MediaThumbnailEntity\":13:{s:8:\"\0*\0width\";i:400;s:9:\"\0*\0height\";i:400;s:6:\"\0*\0url\";s:56:\"/thumbnail/f9/0d/df/1586034317/shirt_600x600_400x400.jpg\";s:10:\"\0*\0mediaId\";s:32:\"102ac62ba27347a688030a05c1790db7\";s:8:\"\0*\0media\";N;s:15:\"\0*\0customFields\";N;s:20:\"\0*\0_uniqueIdentifier\";s:32:\"ac0ae80bbc204d8b9849d9250e9678d8\";s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";O:17:\"DateTimeImmutable\":3:{s:4:\"date\";s:26:\"2020-04-04 21:05:18.426000\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:1:{s:11:\"foreignKeys\";O:42:\"Shopware\\Core\\Framework\\Struct\\ArrayEntity\":7:{s:7:\"\0*\0data\";a:0:{}s:20:\"\0*\0_uniqueIdentifier\";N;s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";N;s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:0:{}}}s:5:\"\0*\0id\";s:32:\"ac0ae80bbc204d8b9849d9250e9678d8\";}}s:13:\"\0*\0extensions\";a:0:{}}',0,'2020-04-04 21:05:17.317','2020-04-04 21:05:17.185','2020-04-04 21:05:18.427'),('÷TØLĞ¥š]4›L›Z',NULL,'ŒTŠÖD è3nrl#','image/jpeg','jpg',35472,'{\"width\":228,\"height\":138,\"type\":2}','defaultThemePreview','O:47:\"Shopware\\Core\\Content\\Media\\MediaType\\ImageType\":3:{s:7:\"\0*\0name\";s:5:\"IMAGE\";s:8:\"\0*\0flags\";a:0:{}s:13:\"\0*\0extensions\";a:0:{}}','O:77:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnail\\MediaThumbnailCollection\":2:{s:11:\"\0*\0elements\";a:0:{}s:13:\"\0*\0extensions\";a:0:{}}',0,'2020-04-05 17:38:29.819','2020-04-05 17:38:29.790','2020-04-05 17:38:29.820'),('P<ÁÃE{±¯•÷J\n‡I',NULL,'ŒTŠÖD è3nrl#','image/png','png',549,'{\"width\":32,\"height\":32,\"type\":3}','favicon','O:47:\"Shopware\\Core\\Content\\Media\\MediaType\\ImageType\":3:{s:7:\"\0*\0name\";s:5:\"IMAGE\";s:8:\"\0*\0flags\";a:1:{i:0;s:11:\"transparent\";}s:13:\"\0*\0extensions\";a:0:{}}','O:77:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnail\\MediaThumbnailCollection\":2:{s:11:\"\0*\0elements\";a:0:{}s:13:\"\0*\0extensions\";a:0:{}}',0,'2020-04-05 17:38:29.858','2020-04-05 17:38:29.792','2020-04-05 17:38:29.859'),('-à)‘ÍH¤¬lÃ\\±s ','+BĞ[Bl½Ø5ºà|:Í','¤‘wÃîC\'´™·œ.','image/jpeg','jpg',20132,'{\"width\":600,\"height\":600,\"type\":2}','handschuh_600x600','O:47:\"Shopware\\Core\\Content\\Media\\MediaType\\ImageType\":3:{s:7:\"\0*\0name\";s:5:\"IMAGE\";s:8:\"\0*\0flags\";a:0:{}s:13:\"\0*\0extensions\";a:0:{}}','O:77:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnail\\MediaThumbnailCollection\":2:{s:11:\"\0*\0elements\";a:3:{s:32:\"5d24ff9af165428c813ed1200829fca6\";O:73:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnail\\MediaThumbnailEntity\":13:{s:8:\"\0*\0width\";i:400;s:9:\"\0*\0height\";i:400;s:6:\"\0*\0url\";s:60:\"/thumbnail/4c/81/b7/1586034317/handschuh_600x600_400x400.jpg\";s:10:\"\0*\0mediaId\";s:32:\"2de02991cd0548a4ac6cc35cb11773a0\";s:8:\"\0*\0media\";N;s:15:\"\0*\0customFields\";N;s:20:\"\0*\0_uniqueIdentifier\";s:32:\"5d24ff9af165428c813ed1200829fca6\";s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";O:17:\"DateTimeImmutable\":3:{s:4:\"date\";s:26:\"2020-04-04 21:05:18.826000\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:1:{s:11:\"foreignKeys\";O:42:\"Shopware\\Core\\Framework\\Struct\\ArrayEntity\":7:{s:7:\"\0*\0data\";a:0:{}s:20:\"\0*\0_uniqueIdentifier\";N;s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";N;s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:0:{}}}s:5:\"\0*\0id\";s:32:\"5d24ff9af165428c813ed1200829fca6\";}s:32:\"79fbcd55fee64db6be40afc24f142104\";O:73:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnail\\MediaThumbnailEntity\":13:{s:8:\"\0*\0width\";i:1920;s:9:\"\0*\0height\";i:1920;s:6:\"\0*\0url\";s:62:\"/thumbnail/4c/81/b7/1586034317/handschuh_600x600_1920x1920.jpg\";s:10:\"\0*\0mediaId\";s:32:\"2de02991cd0548a4ac6cc35cb11773a0\";s:8:\"\0*\0media\";N;s:15:\"\0*\0customFields\";N;s:20:\"\0*\0_uniqueIdentifier\";s:32:\"79fbcd55fee64db6be40afc24f142104\";s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";O:17:\"DateTimeImmutable\":3:{s:4:\"date\";s:26:\"2020-04-04 21:05:18.826000\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:1:{s:11:\"foreignKeys\";O:42:\"Shopware\\Core\\Framework\\Struct\\ArrayEntity\":7:{s:7:\"\0*\0data\";a:0:{}s:20:\"\0*\0_uniqueIdentifier\";N;s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";N;s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:0:{}}}s:5:\"\0*\0id\";s:32:\"79fbcd55fee64db6be40afc24f142104\";}s:32:\"e2843a0a6eb74c1d8185cf88dd23ee81\";O:73:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnail\\MediaThumbnailEntity\":13:{s:8:\"\0*\0width\";i:800;s:9:\"\0*\0height\";i:800;s:6:\"\0*\0url\";s:60:\"/thumbnail/4c/81/b7/1586034317/handschuh_600x600_800x800.jpg\";s:10:\"\0*\0mediaId\";s:32:\"2de02991cd0548a4ac6cc35cb11773a0\";s:8:\"\0*\0media\";N;s:15:\"\0*\0customFields\";N;s:20:\"\0*\0_uniqueIdentifier\";s:32:\"e2843a0a6eb74c1d8185cf88dd23ee81\";s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";O:17:\"DateTimeImmutable\":3:{s:4:\"date\";s:26:\"2020-04-04 21:05:18.827000\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:1:{s:11:\"foreignKeys\";O:42:\"Shopware\\Core\\Framework\\Struct\\ArrayEntity\":7:{s:7:\"\0*\0data\";a:0:{}s:20:\"\0*\0_uniqueIdentifier\";N;s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";N;s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:0:{}}}s:5:\"\0*\0id\";s:32:\"e2843a0a6eb74c1d8185cf88dd23ee81\";}}s:13:\"\0*\0extensions\";a:0:{}}',0,'2020-04-04 21:05:17.356','2020-04-04 21:05:17.210','2020-04-04 21:05:18.827'),('XÑ””AT•Ùx-Ü’®','+BĞ[Bl½Ø5ºà|:Í','¤‘wÃîC\'´™·œ.','image/jpeg','jpg',21518,'{\"width\":600,\"height\":600,\"type\":2}','hemd_600x600','O:47:\"Shopware\\Core\\Content\\Media\\MediaType\\ImageType\":3:{s:7:\"\0*\0name\";s:5:\"IMAGE\";s:8:\"\0*\0flags\";a:0:{}s:13:\"\0*\0extensions\";a:0:{}}','O:77:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnail\\MediaThumbnailCollection\":2:{s:11:\"\0*\0elements\";a:3:{s:32:\"60a38eec7273495b92810ef0a966e9f2\";O:73:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnail\\MediaThumbnailEntity\":13:{s:8:\"\0*\0width\";i:1920;s:9:\"\0*\0height\";i:1920;s:6:\"\0*\0url\";s:57:\"/thumbnail/2f/b0/e2/1586034317/hemd_600x600_1920x1920.jpg\";s:10:\"\0*\0mediaId\";s:32:\"5808d194947f415495d9782d8fdc92ae\";s:8:\"\0*\0media\";N;s:15:\"\0*\0customFields\";N;s:20:\"\0*\0_uniqueIdentifier\";s:32:\"60a38eec7273495b92810ef0a966e9f2\";s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";O:17:\"DateTimeImmutable\":3:{s:4:\"date\";s:26:\"2020-04-04 21:05:19.281000\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:1:{s:11:\"foreignKeys\";O:42:\"Shopware\\Core\\Framework\\Struct\\ArrayEntity\":7:{s:7:\"\0*\0data\";a:0:{}s:20:\"\0*\0_uniqueIdentifier\";N;s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";N;s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:0:{}}}s:5:\"\0*\0id\";s:32:\"60a38eec7273495b92810ef0a966e9f2\";}s:32:\"9e6476b75a914615a59d97e03d00ff32\";O:73:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnail\\MediaThumbnailEntity\":13:{s:8:\"\0*\0width\";i:400;s:9:\"\0*\0height\";i:400;s:6:\"\0*\0url\";s:55:\"/thumbnail/2f/b0/e2/1586034317/hemd_600x600_400x400.jpg\";s:10:\"\0*\0mediaId\";s:32:\"5808d194947f415495d9782d8fdc92ae\";s:8:\"\0*\0media\";N;s:15:\"\0*\0customFields\";N;s:20:\"\0*\0_uniqueIdentifier\";s:32:\"9e6476b75a914615a59d97e03d00ff32\";s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";O:17:\"DateTimeImmutable\":3:{s:4:\"date\";s:26:\"2020-04-04 21:05:19.280000\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:1:{s:11:\"foreignKeys\";O:42:\"Shopware\\Core\\Framework\\Struct\\ArrayEntity\":7:{s:7:\"\0*\0data\";a:0:{}s:20:\"\0*\0_uniqueIdentifier\";N;s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";N;s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:0:{}}}s:5:\"\0*\0id\";s:32:\"9e6476b75a914615a59d97e03d00ff32\";}s:32:\"e377ec931fe24b8cb12cea8ca203b003\";O:73:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnail\\MediaThumbnailEntity\":13:{s:8:\"\0*\0width\";i:800;s:9:\"\0*\0height\";i:800;s:6:\"\0*\0url\";s:55:\"/thumbnail/2f/b0/e2/1586034317/hemd_600x600_800x800.jpg\";s:10:\"\0*\0mediaId\";s:32:\"5808d194947f415495d9782d8fdc92ae\";s:8:\"\0*\0media\";N;s:15:\"\0*\0customFields\";N;s:20:\"\0*\0_uniqueIdentifier\";s:32:\"e377ec931fe24b8cb12cea8ca203b003\";s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";O:17:\"DateTimeImmutable\":3:{s:4:\"date\";s:26:\"2020-04-04 21:05:19.281000\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:1:{s:11:\"foreignKeys\";O:42:\"Shopware\\Core\\Framework\\Struct\\ArrayEntity\":7:{s:7:\"\0*\0data\";a:0:{}s:20:\"\0*\0_uniqueIdentifier\";N;s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";N;s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:0:{}}}s:5:\"\0*\0id\";s:32:\"e377ec931fe24b8cb12cea8ca203b003\";}}s:13:\"\0*\0extensions\";a:0:{}}',0,'2020-04-04 21:05:17.382','2020-04-04 21:05:17.222','2020-04-04 21:05:19.281'),('ih­dˆˆDg™Æ8äIÿÅ','+BĞ[Bl½Ø5ºà|:Í','¤‘wÃîC\'´™·œ.','image/jpeg','jpg',13088,'{\"width\":600,\"height\":600,\"type\":2}','schokolade_600x600','O:47:\"Shopware\\Core\\Content\\Media\\MediaType\\ImageType\":3:{s:7:\"\0*\0name\";s:5:\"IMAGE\";s:8:\"\0*\0flags\";a:0:{}s:13:\"\0*\0extensions\";a:0:{}}','O:77:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnail\\MediaThumbnailCollection\":2:{s:11:\"\0*\0elements\";a:3:{s:32:\"3f1ad19fa8a24e7ca84b19fa747a81a6\";O:73:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnail\\MediaThumbnailEntity\":13:{s:8:\"\0*\0width\";i:800;s:9:\"\0*\0height\";i:800;s:6:\"\0*\0url\";s:61:\"/thumbnail/11/34/dd/1586034317/schokolade_600x600_800x800.jpg\";s:10:\"\0*\0mediaId\";s:32:\"6968ad64888844679918c638e449ffc5\";s:8:\"\0*\0media\";N;s:15:\"\0*\0customFields\";N;s:20:\"\0*\0_uniqueIdentifier\";s:32:\"3f1ad19fa8a24e7ca84b19fa747a81a6\";s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";O:17:\"DateTimeImmutable\":3:{s:4:\"date\";s:26:\"2020-04-04 21:05:19.656000\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:1:{s:11:\"foreignKeys\";O:42:\"Shopware\\Core\\Framework\\Struct\\ArrayEntity\":7:{s:7:\"\0*\0data\";a:0:{}s:20:\"\0*\0_uniqueIdentifier\";N;s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";N;s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:0:{}}}s:5:\"\0*\0id\";s:32:\"3f1ad19fa8a24e7ca84b19fa747a81a6\";}s:32:\"5c4ae6609513476582e0c8d45d7b87b5\";O:73:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnail\\MediaThumbnailEntity\":13:{s:8:\"\0*\0width\";i:400;s:9:\"\0*\0height\";i:400;s:6:\"\0*\0url\";s:61:\"/thumbnail/11/34/dd/1586034317/schokolade_600x600_400x400.jpg\";s:10:\"\0*\0mediaId\";s:32:\"6968ad64888844679918c638e449ffc5\";s:8:\"\0*\0media\";N;s:15:\"\0*\0customFields\";N;s:20:\"\0*\0_uniqueIdentifier\";s:32:\"5c4ae6609513476582e0c8d45d7b87b5\";s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";O:17:\"DateTimeImmutable\":3:{s:4:\"date\";s:26:\"2020-04-04 21:05:19.655000\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:1:{s:11:\"foreignKeys\";O:42:\"Shopware\\Core\\Framework\\Struct\\ArrayEntity\":7:{s:7:\"\0*\0data\";a:0:{}s:20:\"\0*\0_uniqueIdentifier\";N;s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";N;s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:0:{}}}s:5:\"\0*\0id\";s:32:\"5c4ae6609513476582e0c8d45d7b87b5\";}s:32:\"91c92a9e2bb84022958547e7b078bbfa\";O:73:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnail\\MediaThumbnailEntity\":13:{s:8:\"\0*\0width\";i:1920;s:9:\"\0*\0height\";i:1920;s:6:\"\0*\0url\";s:63:\"/thumbnail/11/34/dd/1586034317/schokolade_600x600_1920x1920.jpg\";s:10:\"\0*\0mediaId\";s:32:\"6968ad64888844679918c638e449ffc5\";s:8:\"\0*\0media\";N;s:15:\"\0*\0customFields\";N;s:20:\"\0*\0_uniqueIdentifier\";s:32:\"91c92a9e2bb84022958547e7b078bbfa\";s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";O:17:\"DateTimeImmutable\":3:{s:4:\"date\";s:26:\"2020-04-04 21:05:19.655000\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:1:{s:11:\"foreignKeys\";O:42:\"Shopware\\Core\\Framework\\Struct\\ArrayEntity\":7:{s:7:\"\0*\0data\";a:0:{}s:20:\"\0*\0_uniqueIdentifier\";N;s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";N;s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:0:{}}}s:5:\"\0*\0id\";s:32:\"91c92a9e2bb84022958547e7b078bbfa\";}}s:13:\"\0*\0extensions\";a:0:{}}',0,'2020-04-04 21:05:17.412','2020-04-04 21:05:17.234','2020-04-04 21:05:19.656'),('l»Ü´?B¾€µ÷RÕ¡Ä','+BĞ[Bl½Ø5ºà|:Í','¤‘wÃîC\'´™·œ.','image/jpeg','jpg',20017,'{\"width\":600,\"height\":600,\"type\":2}','shirt_blue_600x600','O:47:\"Shopware\\Core\\Content\\Media\\MediaType\\ImageType\":3:{s:7:\"\0*\0name\";s:5:\"IMAGE\";s:8:\"\0*\0flags\";a:0:{}s:13:\"\0*\0extensions\";a:0:{}}','O:77:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnail\\MediaThumbnailCollection\":2:{s:11:\"\0*\0elements\";a:3:{s:32:\"109d3a5840334b45aecded03dfe73b3c\";O:73:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnail\\MediaThumbnailEntity\":13:{s:8:\"\0*\0width\";i:800;s:9:\"\0*\0height\";i:800;s:6:\"\0*\0url\";s:61:\"/thumbnail/1d/01/7b/1586034317/shirt_blue_600x600_800x800.jpg\";s:10:\"\0*\0mediaId\";s:32:\"6cbbdc03b43f4207be80b5f752d5a1c4\";s:8:\"\0*\0media\";N;s:15:\"\0*\0customFields\";N;s:20:\"\0*\0_uniqueIdentifier\";s:32:\"109d3a5840334b45aecded03dfe73b3c\";s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";O:17:\"DateTimeImmutable\":3:{s:4:\"date\";s:26:\"2020-04-04 21:05:21.017000\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:1:{s:11:\"foreignKeys\";O:42:\"Shopware\\Core\\Framework\\Struct\\ArrayEntity\":7:{s:7:\"\0*\0data\";a:0:{}s:20:\"\0*\0_uniqueIdentifier\";N;s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";N;s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:0:{}}}s:5:\"\0*\0id\";s:32:\"109d3a5840334b45aecded03dfe73b3c\";}s:32:\"406ed87cf1d74e799854c00aa9664302\";O:73:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnail\\MediaThumbnailEntity\":13:{s:8:\"\0*\0width\";i:400;s:9:\"\0*\0height\";i:400;s:6:\"\0*\0url\";s:61:\"/thumbnail/1d/01/7b/1586034317/shirt_blue_600x600_400x400.jpg\";s:10:\"\0*\0mediaId\";s:32:\"6cbbdc03b43f4207be80b5f752d5a1c4\";s:8:\"\0*\0media\";N;s:15:\"\0*\0customFields\";N;s:20:\"\0*\0_uniqueIdentifier\";s:32:\"406ed87cf1d74e799854c00aa9664302\";s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";O:17:\"DateTimeImmutable\":3:{s:4:\"date\";s:26:\"2020-04-04 21:05:21.016000\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:1:{s:11:\"foreignKeys\";O:42:\"Shopware\\Core\\Framework\\Struct\\ArrayEntity\":7:{s:7:\"\0*\0data\";a:0:{}s:20:\"\0*\0_uniqueIdentifier\";N;s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";N;s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:0:{}}}s:5:\"\0*\0id\";s:32:\"406ed87cf1d74e799854c00aa9664302\";}s:32:\"e56551de8c49469faa24a0235c3f2eb6\";O:73:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnail\\MediaThumbnailEntity\":13:{s:8:\"\0*\0width\";i:1920;s:9:\"\0*\0height\";i:1920;s:6:\"\0*\0url\";s:63:\"/thumbnail/1d/01/7b/1586034317/shirt_blue_600x600_1920x1920.jpg\";s:10:\"\0*\0mediaId\";s:32:\"6cbbdc03b43f4207be80b5f752d5a1c4\";s:8:\"\0*\0media\";N;s:15:\"\0*\0customFields\";N;s:20:\"\0*\0_uniqueIdentifier\";s:32:\"e56551de8c49469faa24a0235c3f2eb6\";s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";O:17:\"DateTimeImmutable\":3:{s:4:\"date\";s:26:\"2020-04-04 21:05:21.017000\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:1:{s:11:\"foreignKeys\";O:42:\"Shopware\\Core\\Framework\\Struct\\ArrayEntity\":7:{s:7:\"\0*\0data\";a:0:{}s:20:\"\0*\0_uniqueIdentifier\";N;s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";N;s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:0:{}}}s:5:\"\0*\0id\";s:32:\"e56551de8c49469faa24a0235c3f2eb6\";}}s:13:\"\0*\0extensions\";a:0:{}}',0,'2020-04-04 21:05:17.441','2020-04-04 21:05:17.246','2020-04-04 21:05:21.017'),('pãR \\E	ÆZ[G	J*','+BĞ[Bl½Ø5ºà|:Í','¤‘wÃîC\'´™·œ.','image/jpeg','jpg',11756,'{\"width\":600,\"height\":600,\"type\":2}','mobile_600x600','O:47:\"Shopware\\Core\\Content\\Media\\MediaType\\ImageType\":3:{s:7:\"\0*\0name\";s:5:\"IMAGE\";s:8:\"\0*\0flags\";a:0:{}s:13:\"\0*\0extensions\";a:0:{}}','O:77:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnail\\MediaThumbnailCollection\":2:{s:11:\"\0*\0elements\";a:3:{s:32:\"19254c1750ba4124af97ef0c8f55f321\";O:73:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnail\\MediaThumbnailEntity\":13:{s:8:\"\0*\0width\";i:1920;s:9:\"\0*\0height\";i:1920;s:6:\"\0*\0url\";s:59:\"/thumbnail/3a/ee/ba/1586034317/mobile_600x600_1920x1920.jpg\";s:10:\"\0*\0mediaId\";s:32:\"70e352200b5c45098dc65a5b47094a2a\";s:8:\"\0*\0media\";N;s:15:\"\0*\0customFields\";N;s:20:\"\0*\0_uniqueIdentifier\";s:32:\"19254c1750ba4124af97ef0c8f55f321\";s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";O:17:\"DateTimeImmutable\":3:{s:4:\"date\";s:26:\"2020-04-04 21:05:21.363000\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:1:{s:11:\"foreignKeys\";O:42:\"Shopware\\Core\\Framework\\Struct\\ArrayEntity\":7:{s:7:\"\0*\0data\";a:0:{}s:20:\"\0*\0_uniqueIdentifier\";N;s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";N;s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:0:{}}}s:5:\"\0*\0id\";s:32:\"19254c1750ba4124af97ef0c8f55f321\";}s:32:\"7b1a97ab993649d892a2f794626ac71b\";O:73:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnail\\MediaThumbnailEntity\":13:{s:8:\"\0*\0width\";i:400;s:9:\"\0*\0height\";i:400;s:6:\"\0*\0url\";s:57:\"/thumbnail/3a/ee/ba/1586034317/mobile_600x600_400x400.jpg\";s:10:\"\0*\0mediaId\";s:32:\"70e352200b5c45098dc65a5b47094a2a\";s:8:\"\0*\0media\";N;s:15:\"\0*\0customFields\";N;s:20:\"\0*\0_uniqueIdentifier\";s:32:\"7b1a97ab993649d892a2f794626ac71b\";s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";O:17:\"DateTimeImmutable\":3:{s:4:\"date\";s:26:\"2020-04-04 21:05:21.363000\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:1:{s:11:\"foreignKeys\";O:42:\"Shopware\\Core\\Framework\\Struct\\ArrayEntity\":7:{s:7:\"\0*\0data\";a:0:{}s:20:\"\0*\0_uniqueIdentifier\";N;s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";N;s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:0:{}}}s:5:\"\0*\0id\";s:32:\"7b1a97ab993649d892a2f794626ac71b\";}s:32:\"8c29e04dcc884901892ae24e694a3f5d\";O:73:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnail\\MediaThumbnailEntity\":13:{s:8:\"\0*\0width\";i:800;s:9:\"\0*\0height\";i:800;s:6:\"\0*\0url\";s:57:\"/thumbnail/3a/ee/ba/1586034317/mobile_600x600_800x800.jpg\";s:10:\"\0*\0mediaId\";s:32:\"70e352200b5c45098dc65a5b47094a2a\";s:8:\"\0*\0media\";N;s:15:\"\0*\0customFields\";N;s:20:\"\0*\0_uniqueIdentifier\";s:32:\"8c29e04dcc884901892ae24e694a3f5d\";s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";O:17:\"DateTimeImmutable\":3:{s:4:\"date\";s:26:\"2020-04-04 21:05:21.364000\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:1:{s:11:\"foreignKeys\";O:42:\"Shopware\\Core\\Framework\\Struct\\ArrayEntity\":7:{s:7:\"\0*\0data\";a:0:{}s:20:\"\0*\0_uniqueIdentifier\";N;s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";N;s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:0:{}}}s:5:\"\0*\0id\";s:32:\"8c29e04dcc884901892ae24e694a3f5d\";}}s:13:\"\0*\0extensions\";a:0:{}}',0,'2020-04-04 21:05:17.466','2020-04-04 21:05:17.260','2020-04-04 21:05:21.364'),('„5jq#=K>ŸA}ÌˆPÈ/','+BĞ[Bl½Ø5ºà|:Í','¤‘wÃîC\'´™·œ.','image/jpeg','jpg',22648,'{\"width\":600,\"height\":600,\"type\":2}','waschmaschine_600x600','O:47:\"Shopware\\Core\\Content\\Media\\MediaType\\ImageType\":3:{s:7:\"\0*\0name\";s:5:\"IMAGE\";s:8:\"\0*\0flags\";a:0:{}s:13:\"\0*\0extensions\";a:0:{}}','O:77:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnail\\MediaThumbnailCollection\":2:{s:11:\"\0*\0elements\";a:3:{s:32:\"4e9203011305455681f541d854c1fbff\";O:73:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnail\\MediaThumbnailEntity\":13:{s:8:\"\0*\0width\";i:400;s:9:\"\0*\0height\";i:400;s:6:\"\0*\0url\";s:64:\"/thumbnail/63/80/61/1586034317/waschmaschine_600x600_400x400.jpg\";s:10:\"\0*\0mediaId\";s:32:\"84356a71233d4b3e9f417dcc8850c82f\";s:8:\"\0*\0media\";N;s:15:\"\0*\0customFields\";N;s:20:\"\0*\0_uniqueIdentifier\";s:32:\"4e9203011305455681f541d854c1fbff\";s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";O:17:\"DateTimeImmutable\":3:{s:4:\"date\";s:26:\"2020-04-04 21:05:21.682000\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:1:{s:11:\"foreignKeys\";O:42:\"Shopware\\Core\\Framework\\Struct\\ArrayEntity\":7:{s:7:\"\0*\0data\";a:0:{}s:20:\"\0*\0_uniqueIdentifier\";N;s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";N;s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:0:{}}}s:5:\"\0*\0id\";s:32:\"4e9203011305455681f541d854c1fbff\";}s:32:\"f8b45fd7010045ac9800fcdbc9a0c6c8\";O:73:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnail\\MediaThumbnailEntity\":13:{s:8:\"\0*\0width\";i:1920;s:9:\"\0*\0height\";i:1920;s:6:\"\0*\0url\";s:66:\"/thumbnail/63/80/61/1586034317/waschmaschine_600x600_1920x1920.jpg\";s:10:\"\0*\0mediaId\";s:32:\"84356a71233d4b3e9f417dcc8850c82f\";s:8:\"\0*\0media\";N;s:15:\"\0*\0customFields\";N;s:20:\"\0*\0_uniqueIdentifier\";s:32:\"f8b45fd7010045ac9800fcdbc9a0c6c8\";s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";O:17:\"DateTimeImmutable\":3:{s:4:\"date\";s:26:\"2020-04-04 21:05:21.682000\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:1:{s:11:\"foreignKeys\";O:42:\"Shopware\\Core\\Framework\\Struct\\ArrayEntity\":7:{s:7:\"\0*\0data\";a:0:{}s:20:\"\0*\0_uniqueIdentifier\";N;s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";N;s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:0:{}}}s:5:\"\0*\0id\";s:32:\"f8b45fd7010045ac9800fcdbc9a0c6c8\";}s:32:\"ff64ea36d92b46589647381e6d3d7d6f\";O:73:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnail\\MediaThumbnailEntity\":13:{s:8:\"\0*\0width\";i:800;s:9:\"\0*\0height\";i:800;s:6:\"\0*\0url\";s:64:\"/thumbnail/63/80/61/1586034317/waschmaschine_600x600_800x800.jpg\";s:10:\"\0*\0mediaId\";s:32:\"84356a71233d4b3e9f417dcc8850c82f\";s:8:\"\0*\0media\";N;s:15:\"\0*\0customFields\";N;s:20:\"\0*\0_uniqueIdentifier\";s:32:\"ff64ea36d92b46589647381e6d3d7d6f\";s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";O:17:\"DateTimeImmutable\":3:{s:4:\"date\";s:26:\"2020-04-04 21:05:21.682000\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:1:{s:11:\"foreignKeys\";O:42:\"Shopware\\Core\\Framework\\Struct\\ArrayEntity\":7:{s:7:\"\0*\0data\";a:0:{}s:20:\"\0*\0_uniqueIdentifier\";N;s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";N;s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:0:{}}}s:5:\"\0*\0id\";s:32:\"ff64ea36d92b46589647381e6d3d7d6f\";}}s:13:\"\0*\0extensions\";a:0:{}}',0,'2020-04-04 21:05:17.508','2020-04-04 21:05:17.272','2020-04-04 21:05:21.683'),('Úæ&å¢G°½»h\"VÇ®',NULL,'ŒTŠÖD è3nrl#','image/png','png',4840,'{\"width\":237,\"height\":35,\"type\":3}','demostore-logo','O:47:\"Shopware\\Core\\Content\\Media\\MediaType\\ImageType\":3:{s:7:\"\0*\0name\";s:5:\"IMAGE\";s:8:\"\0*\0flags\";a:1:{i:0;s:11:\"transparent\";}s:13:\"\0*\0extensions\";a:0:{}}','O:77:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnail\\MediaThumbnailCollection\":2:{s:11:\"\0*\0elements\";a:0:{}s:13:\"\0*\0extensions\";a:0:{}}',0,'2020-04-05 17:38:29.838','2020-04-05 17:38:29.791','2020-04-05 17:38:29.839'),('ŞK}¾•CP’Ë…Îlí(','+BĞ[Bl½Ø5ºà|:Í','¸\r\n³qIğ ñ–‡ÍÆ','image/jpeg','jpg',178768,'{\"width\":1280,\"height\":528,\"type\":2}','hq_1280x1280','O:47:\"Shopware\\Core\\Content\\Media\\MediaType\\ImageType\":3:{s:7:\"\0*\0name\";s:5:\"IMAGE\";s:8:\"\0*\0flags\";a:0:{}s:13:\"\0*\0extensions\";a:0:{}}','O:77:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnail\\MediaThumbnailCollection\":2:{s:11:\"\0*\0elements\";a:3:{s:32:\"0253b5c0c138449086b63bce222dddf8\";O:73:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnail\\MediaThumbnailEntity\":13:{s:8:\"\0*\0width\";i:1920;s:9:\"\0*\0height\";i:1920;s:6:\"\0*\0url\";s:57:\"/thumbnail/a8/56/1c/1586034317/hq_1280x1280_1920x1920.jpg\";s:10:\"\0*\0mediaId\";s:32:\"de4b7dbe9d95435092cb85ce146ced28\";s:8:\"\0*\0media\";N;s:15:\"\0*\0customFields\";N;s:20:\"\0*\0_uniqueIdentifier\";s:32:\"0253b5c0c138449086b63bce222dddf8\";s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";O:17:\"DateTimeImmutable\":3:{s:4:\"date\";s:26:\"2020-04-04 21:05:21.875000\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:1:{s:11:\"foreignKeys\";O:42:\"Shopware\\Core\\Framework\\Struct\\ArrayEntity\":7:{s:7:\"\0*\0data\";a:0:{}s:20:\"\0*\0_uniqueIdentifier\";N;s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";N;s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:0:{}}}s:5:\"\0*\0id\";s:32:\"0253b5c0c138449086b63bce222dddf8\";}s:32:\"2f4a39e3c06147f7847490cf1573b787\";O:73:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnail\\MediaThumbnailEntity\":13:{s:8:\"\0*\0width\";i:800;s:9:\"\0*\0height\";i:800;s:6:\"\0*\0url\";s:55:\"/thumbnail/a8/56/1c/1586034317/hq_1280x1280_800x800.jpg\";s:10:\"\0*\0mediaId\";s:32:\"de4b7dbe9d95435092cb85ce146ced28\";s:8:\"\0*\0media\";N;s:15:\"\0*\0customFields\";N;s:20:\"\0*\0_uniqueIdentifier\";s:32:\"2f4a39e3c06147f7847490cf1573b787\";s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";O:17:\"DateTimeImmutable\":3:{s:4:\"date\";s:26:\"2020-04-04 21:05:21.876000\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:1:{s:11:\"foreignKeys\";O:42:\"Shopware\\Core\\Framework\\Struct\\ArrayEntity\":7:{s:7:\"\0*\0data\";a:0:{}s:20:\"\0*\0_uniqueIdentifier\";N;s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";N;s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:0:{}}}s:5:\"\0*\0id\";s:32:\"2f4a39e3c06147f7847490cf1573b787\";}s:32:\"fc4bf9c8025b43f99956f45ee3a3b553\";O:73:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnail\\MediaThumbnailEntity\":13:{s:8:\"\0*\0width\";i:400;s:9:\"\0*\0height\";i:400;s:6:\"\0*\0url\";s:55:\"/thumbnail/a8/56/1c/1586034317/hq_1280x1280_400x400.jpg\";s:10:\"\0*\0mediaId\";s:32:\"de4b7dbe9d95435092cb85ce146ced28\";s:8:\"\0*\0media\";N;s:15:\"\0*\0customFields\";N;s:20:\"\0*\0_uniqueIdentifier\";s:32:\"fc4bf9c8025b43f99956f45ee3a3b553\";s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";O:17:\"DateTimeImmutable\":3:{s:4:\"date\";s:26:\"2020-04-04 21:05:21.875000\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:1:{s:11:\"foreignKeys\";O:42:\"Shopware\\Core\\Framework\\Struct\\ArrayEntity\":7:{s:7:\"\0*\0data\";a:0:{}s:20:\"\0*\0_uniqueIdentifier\";N;s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";N;s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:0:{}}}s:5:\"\0*\0id\";s:32:\"fc4bf9c8025b43f99956f45ee3a3b553\";}}s:13:\"\0*\0extensions\";a:0:{}}',0,'2020-04-04 21:05:17.533','2020-04-04 21:05:17.297','2020-04-04 21:05:21.876'),('öš¸®BĞN²ºµì/ğ©<','+BĞ[Bl½Ø5ºà|:Í','¤‘wÃîC\'´™·œ.','image/jpeg','jpg',21914,'{\"width\":600,\"height\":600,\"type\":2}','shirt_red_600x600','O:47:\"Shopware\\Core\\Content\\Media\\MediaType\\ImageType\":3:{s:7:\"\0*\0name\";s:5:\"IMAGE\";s:8:\"\0*\0flags\";a:0:{}s:13:\"\0*\0extensions\";a:0:{}}','O:77:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnail\\MediaThumbnailCollection\":2:{s:11:\"\0*\0elements\";a:3:{s:32:\"51507f5d95f5489ba3eef505a3e3e36c\";O:73:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnail\\MediaThumbnailEntity\":13:{s:8:\"\0*\0width\";i:800;s:9:\"\0*\0height\";i:800;s:6:\"\0*\0url\";s:60:\"/thumbnail/05/23/ee/1586034317/shirt_red_600x600_800x800.jpg\";s:10:\"\0*\0mediaId\";s:32:\"f69ab8ae42d04e17b2bab5ec2ff0a93c\";s:8:\"\0*\0media\";N;s:15:\"\0*\0customFields\";N;s:20:\"\0*\0_uniqueIdentifier\";s:32:\"51507f5d95f5489ba3eef505a3e3e36c\";s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";O:17:\"DateTimeImmutable\":3:{s:4:\"date\";s:26:\"2020-04-04 21:05:22.195000\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:1:{s:11:\"foreignKeys\";O:42:\"Shopware\\Core\\Framework\\Struct\\ArrayEntity\":7:{s:7:\"\0*\0data\";a:0:{}s:20:\"\0*\0_uniqueIdentifier\";N;s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";N;s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:0:{}}}s:5:\"\0*\0id\";s:32:\"51507f5d95f5489ba3eef505a3e3e36c\";}s:32:\"a4504ea74ae84d9c91535feffdf42951\";O:73:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnail\\MediaThumbnailEntity\":13:{s:8:\"\0*\0width\";i:400;s:9:\"\0*\0height\";i:400;s:6:\"\0*\0url\";s:60:\"/thumbnail/05/23/ee/1586034317/shirt_red_600x600_400x400.jpg\";s:10:\"\0*\0mediaId\";s:32:\"f69ab8ae42d04e17b2bab5ec2ff0a93c\";s:8:\"\0*\0media\";N;s:15:\"\0*\0customFields\";N;s:20:\"\0*\0_uniqueIdentifier\";s:32:\"a4504ea74ae84d9c91535feffdf42951\";s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";O:17:\"DateTimeImmutable\":3:{s:4:\"date\";s:26:\"2020-04-04 21:05:22.195000\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:1:{s:11:\"foreignKeys\";O:42:\"Shopware\\Core\\Framework\\Struct\\ArrayEntity\":7:{s:7:\"\0*\0data\";a:0:{}s:20:\"\0*\0_uniqueIdentifier\";N;s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";N;s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:0:{}}}s:5:\"\0*\0id\";s:32:\"a4504ea74ae84d9c91535feffdf42951\";}s:32:\"fca01babc0b4406b9df34cbf1d4d8af5\";O:73:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnail\\MediaThumbnailEntity\":13:{s:8:\"\0*\0width\";i:1920;s:9:\"\0*\0height\";i:1920;s:6:\"\0*\0url\";s:62:\"/thumbnail/05/23/ee/1586034317/shirt_red_600x600_1920x1920.jpg\";s:10:\"\0*\0mediaId\";s:32:\"f69ab8ae42d04e17b2bab5ec2ff0a93c\";s:8:\"\0*\0media\";N;s:15:\"\0*\0customFields\";N;s:20:\"\0*\0_uniqueIdentifier\";s:32:\"fca01babc0b4406b9df34cbf1d4d8af5\";s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";O:17:\"DateTimeImmutable\":3:{s:4:\"date\";s:26:\"2020-04-04 21:05:22.195000\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:1:{s:11:\"foreignKeys\";O:42:\"Shopware\\Core\\Framework\\Struct\\ArrayEntity\":7:{s:7:\"\0*\0data\";a:0:{}s:20:\"\0*\0_uniqueIdentifier\";N;s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";N;s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:0:{}}}s:5:\"\0*\0id\";s:32:\"fca01babc0b4406b9df34cbf1d4d8af5\";}}s:13:\"\0*\0extensions\";a:0:{}}',0,'2020-04-04 21:05:17.563','2020-04-04 21:05:17.284','2020-04-04 21:05:22.196');
-/*!40000 ALTER TABLE `media` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `media_default_folder`
---
-
-DROP TABLE IF EXISTS `media_default_folder`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `media_default_folder` (
-  `id` binary(16) NOT NULL,
-  `association_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `entity` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uniq.media_default_folder.entity` (`entity`),
-  CONSTRAINT `json.media_default_folder.custom_fields` CHECK (json_valid(`custom_fields`)),
-  CONSTRAINT `json.media_default_folder.association_fields` CHECK (json_valid(`association_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `media_default_folder`
---
-
-LOCK TABLES `media_default_folder` WRITE;
-/*!40000 ALTER TABLE `media_default_folder` DISABLE KEYS */;
-INSERT INTO `media_default_folder` VALUES ('7qÜàŞF;‡K\Z¸xşT','[\"documents\"]','document',NULL,'2020-04-04 21:03:14.400',NULL),('^Éœ½‹\"G*˜CÒK´ƒ-','[\"avatarUser\"]','user',NULL,'2020-04-04 21:03:14.400',NULL),('wK7æ…ŞBà¸şb¾ÉÇ[','[\"productManufacturers\"]','product_manufacturer',NULL,'2020-04-04 21:03:14.400',NULL),('•]Ô`ğN&¤ıè(`â','[\"categories\"]','category',NULL,'2020-04-04 21:03:14.400',NULL),('¨Àİà`&L›·¤+Vß\Z‡','[]','cms_page',NULL,'2020-04-04 21:03:14.400',NULL),('¿¥:òßûNZ´1äWâ”’U','[\"mailTemplateMedia\"]','mail_template',NULL,'2020-04-04 21:03:14.400',NULL),('Ö\\È¦º@*<¦hÒ2o‹','[\"productMedia\"]','product',NULL,'2020-04-04 21:03:14.400',NULL),('û;K<B¸5\'$é-!º','[\"media\"]','theme',NULL,'2020-04-04 00:00:00.000',NULL);
-/*!40000 ALTER TABLE `media_default_folder` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `media_folder`
---
-
-DROP TABLE IF EXISTS `media_folder`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `media_folder` (
-  `id` binary(16) NOT NULL,
-  `parent_id` binary(16) DEFAULT NULL,
-  `default_folder_id` binary(16) DEFAULT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `child_count` int(11) unsigned NOT NULL DEFAULT 0,
-  `media_folder_configuration_id` binary(16) DEFAULT NULL,
-  `use_parent_configuration` tinyint(1) DEFAULT 1,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uniq.media_folder.default_folder_id` (`default_folder_id`),
-  KEY `fk.media_folder.parent_id` (`parent_id`),
-  CONSTRAINT `fk.media_folder.default_folder_id` FOREIGN KEY (`default_folder_id`) REFERENCES `media_default_folder` (`id`) ON DELETE SET NULL,
-  CONSTRAINT `fk.media_folder.parent_id` FOREIGN KEY (`parent_id`) REFERENCES `media_folder` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `json.media_folder.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `media_folder`
---
-
-LOCK TABLES `media_folder` WRITE;
-/*!40000 ALTER TABLE `media_folder` DISABLE KEYS */;
-INSERT INTO `media_folder` VALUES ('qÌåı@÷‘!ùg',NULL,'•]Ô`ğN&¤ıè(`â','Category Media',0,'WÚ«†nF¸†mşá',0,NULL,'2020-04-04 21:03:14.402',NULL),('ŒTŠÖD è3nrl#',NULL,'û;K<B¸5\'$é-!º','Theme Media',0,'QX¿ÛøGØ£_ä¦xw',1,NULL,'2020-04-04 00:00:00.000',NULL),('HUN½O‘Dª•’˜',NULL,'7qÜàŞF;‡K\Z¸xşT','Document Media',0,'>”hÚ€pDóô3Ÿö×',0,NULL,'2020-04-04 21:03:14.403',NULL),('¤‘wÃîC\'´™·œ.',NULL,'Ö\\È¦º@*<¦hÒ2o‹','Product Media',0,'†˜¬ù•J&‘cm=Bñ3',0,NULL,'2020-04-04 21:03:14.403',NULL),('°ºé:ñYM%‡-ˆ ,îm',NULL,'¿¥:òßûNZ´1äWâ”’U','Mail Template Media',0,'”KµXO„ŸÙFL?ä¹ß',0,NULL,'2020-04-04 21:03:14.403',NULL),('¸\r\n³qIğ ñ–‡ÍÆ',NULL,'¨Àİà`&L›·¤+Vß\Z‡','Cms Page Media',0,'ïBu]‘A¦ˆğÿ»ô\0´',0,NULL,'2020-04-04 21:03:14.402',NULL),('ê+àüŸKúT´„ÈtÅ',NULL,'^Éœ½‹\"G*˜CÒK´ƒ-','User Media',0,'ƒoÌáÍEx­Ê‡ñqŠ',0,NULL,'2020-04-04 21:03:14.404',NULL),('ÿV‚|üG}‹ˆ½¾fíH',NULL,'wK7æ…ŞBà¸şb¾ÉÇ[','Product Manufacturer Media',0,'½…%z@HGâ‡K|)MôÒV',0,NULL,'2020-04-04 21:03:14.404',NULL);
-/*!40000 ALTER TABLE `media_folder` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `media_folder_configuration`
---
-
-DROP TABLE IF EXISTS `media_folder_configuration`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `media_folder_configuration` (
-  `id` binary(16) NOT NULL,
-  `create_thumbnails` tinyint(1) DEFAULT 1,
-  `thumbnail_quality` int(11) DEFAULT 80,
-  `media_thumbnail_sizes_ro` longblob DEFAULT NULL,
-  `keep_aspect_ratio` tinyint(1) DEFAULT 1,
-  `private` tinyint(1) DEFAULT 0,
-  `no_association` tinyint(1) DEFAULT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  CONSTRAINT `json.media_folder_configuration.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `media_folder_configuration`
---
-
-LOCK TABLES `media_folder_configuration` WRITE;
-/*!40000 ALTER TABLE `media_folder_configuration` DISABLE KEYS */;
-INSERT INTO `media_folder_configuration` VALUES ('QX¿ÛøGØ£_ä¦xw',1,80,'O:85:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnailSize\\MediaThumbnailSizeCollection\":2:{s:11:\"\0*\0elements\";a:0:{}s:13:\"\0*\0extensions\";a:0:{}}',1,0,1,NULL,'2020-04-04 00:00:00.000',NULL),('ïBu]‘A¦ˆğÿ»ô\0´',1,80,'O:85:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnailSize\\MediaThumbnailSizeCollection\":2:{s:11:\"\0*\0elements\";a:3:{s:32:\"ac9d023367d84f89a5e4e92885b6859b\";O:81:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnailSize\\MediaThumbnailSizeEntity\":11:{s:8:\"\0*\0width\";i:400;s:9:\"\0*\0height\";i:400;s:28:\"\0*\0mediaFolderConfigurations\";N;s:15:\"\0*\0customFields\";N;s:20:\"\0*\0_uniqueIdentifier\";s:32:\"ac9d023367d84f89a5e4e92885b6859b\";s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";O:17:\"DateTimeImmutable\":3:{s:4:\"date\";s:26:\"2020-04-04 21:03:16.768000\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:1:{s:11:\"foreignKeys\";O:42:\"Shopware\\Core\\Framework\\Struct\\ArrayEntity\":7:{s:7:\"\0*\0data\";a:0:{}s:20:\"\0*\0_uniqueIdentifier\";N;s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";N;s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:0:{}}}s:5:\"\0*\0id\";s:32:\"ac9d023367d84f89a5e4e92885b6859b\";}s:32:\"bbfd89c79b39483eafc90896f379bdca\";O:81:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnailSize\\MediaThumbnailSizeEntity\":11:{s:8:\"\0*\0width\";i:1920;s:9:\"\0*\0height\";i:1920;s:28:\"\0*\0mediaFolderConfigurations\";N;s:15:\"\0*\0customFields\";N;s:20:\"\0*\0_uniqueIdentifier\";s:32:\"bbfd89c79b39483eafc90896f379bdca\";s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";O:17:\"DateTimeImmutable\":3:{s:4:\"date\";s:26:\"2020-04-04 21:03:16.771000\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:1:{s:11:\"foreignKeys\";O:42:\"Shopware\\Core\\Framework\\Struct\\ArrayEntity\":7:{s:7:\"\0*\0data\";a:0:{}s:20:\"\0*\0_uniqueIdentifier\";N;s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";N;s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:0:{}}}s:5:\"\0*\0id\";s:32:\"bbfd89c79b39483eafc90896f379bdca\";}s:32:\"cd09c2fb9b91429eb5c0305ef4a4d921\";O:81:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnailSize\\MediaThumbnailSizeEntity\":11:{s:8:\"\0*\0width\";i:800;s:9:\"\0*\0height\";i:800;s:28:\"\0*\0mediaFolderConfigurations\";N;s:15:\"\0*\0customFields\";N;s:20:\"\0*\0_uniqueIdentifier\";s:32:\"cd09c2fb9b91429eb5c0305ef4a4d921\";s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";O:17:\"DateTimeImmutable\":3:{s:4:\"date\";s:26:\"2020-04-04 21:03:16.769000\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:1:{s:11:\"foreignKeys\";O:42:\"Shopware\\Core\\Framework\\Struct\\ArrayEntity\":7:{s:7:\"\0*\0data\";a:0:{}s:20:\"\0*\0_uniqueIdentifier\";N;s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";N;s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:0:{}}}s:5:\"\0*\0id\";s:32:\"cd09c2fb9b91429eb5c0305ef4a4d921\";}}s:13:\"\0*\0extensions\";a:0:{}}',1,0,NULL,NULL,'2020-04-04 21:03:14.402',NULL),('”KµXO„ŸÙFL?ä¹ß',1,80,'O:85:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnailSize\\MediaThumbnailSizeCollection\":2:{s:11:\"\0*\0elements\";a:0:{}s:13:\"\0*\0extensions\";a:0:{}}',1,0,NULL,NULL,'2020-04-04 21:03:14.403',NULL),('>”hÚ€pDóô3Ÿö×',1,80,'O:85:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnailSize\\MediaThumbnailSizeCollection\":2:{s:11:\"\0*\0elements\";a:0:{}s:13:\"\0*\0extensions\";a:0:{}}',1,1,NULL,NULL,'2020-04-04 21:03:14.403',NULL),('WÚ«†nF¸†mşá',1,80,'O:85:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnailSize\\MediaThumbnailSizeCollection\":2:{s:11:\"\0*\0elements\";a:3:{s:32:\"ac9d023367d84f89a5e4e92885b6859b\";O:81:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnailSize\\MediaThumbnailSizeEntity\":11:{s:8:\"\0*\0width\";i:400;s:9:\"\0*\0height\";i:400;s:28:\"\0*\0mediaFolderConfigurations\";N;s:15:\"\0*\0customFields\";N;s:20:\"\0*\0_uniqueIdentifier\";s:32:\"ac9d023367d84f89a5e4e92885b6859b\";s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";O:17:\"DateTimeImmutable\":3:{s:4:\"date\";s:26:\"2020-04-04 21:03:16.768000\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:1:{s:11:\"foreignKeys\";O:42:\"Shopware\\Core\\Framework\\Struct\\ArrayEntity\":7:{s:7:\"\0*\0data\";a:0:{}s:20:\"\0*\0_uniqueIdentifier\";N;s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";N;s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:0:{}}}s:5:\"\0*\0id\";s:32:\"ac9d023367d84f89a5e4e92885b6859b\";}s:32:\"bbfd89c79b39483eafc90896f379bdca\";O:81:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnailSize\\MediaThumbnailSizeEntity\":11:{s:8:\"\0*\0width\";i:1920;s:9:\"\0*\0height\";i:1920;s:28:\"\0*\0mediaFolderConfigurations\";N;s:15:\"\0*\0customFields\";N;s:20:\"\0*\0_uniqueIdentifier\";s:32:\"bbfd89c79b39483eafc90896f379bdca\";s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";O:17:\"DateTimeImmutable\":3:{s:4:\"date\";s:26:\"2020-04-04 21:03:16.771000\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:1:{s:11:\"foreignKeys\";O:42:\"Shopware\\Core\\Framework\\Struct\\ArrayEntity\":7:{s:7:\"\0*\0data\";a:0:{}s:20:\"\0*\0_uniqueIdentifier\";N;s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";N;s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:0:{}}}s:5:\"\0*\0id\";s:32:\"bbfd89c79b39483eafc90896f379bdca\";}s:32:\"cd09c2fb9b91429eb5c0305ef4a4d921\";O:81:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnailSize\\MediaThumbnailSizeEntity\":11:{s:8:\"\0*\0width\";i:800;s:9:\"\0*\0height\";i:800;s:28:\"\0*\0mediaFolderConfigurations\";N;s:15:\"\0*\0customFields\";N;s:20:\"\0*\0_uniqueIdentifier\";s:32:\"cd09c2fb9b91429eb5c0305ef4a4d921\";s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";O:17:\"DateTimeImmutable\":3:{s:4:\"date\";s:26:\"2020-04-04 21:03:16.769000\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:1:{s:11:\"foreignKeys\";O:42:\"Shopware\\Core\\Framework\\Struct\\ArrayEntity\":7:{s:7:\"\0*\0data\";a:0:{}s:20:\"\0*\0_uniqueIdentifier\";N;s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";N;s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:0:{}}}s:5:\"\0*\0id\";s:32:\"cd09c2fb9b91429eb5c0305ef4a4d921\";}}s:13:\"\0*\0extensions\";a:0:{}}',1,0,NULL,NULL,'2020-04-04 21:03:14.401',NULL),('ƒoÌáÍEx­Ê‡ñqŠ',1,80,'O:85:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnailSize\\MediaThumbnailSizeCollection\":2:{s:11:\"\0*\0elements\";a:0:{}s:13:\"\0*\0extensions\";a:0:{}}',1,0,NULL,NULL,'2020-04-04 21:03:14.404',NULL),('†˜¬ù•J&‘cm=Bñ3',1,80,'O:85:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnailSize\\MediaThumbnailSizeCollection\":2:{s:11:\"\0*\0elements\";a:3:{s:32:\"ac9d023367d84f89a5e4e92885b6859b\";O:81:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnailSize\\MediaThumbnailSizeEntity\":11:{s:8:\"\0*\0width\";i:400;s:9:\"\0*\0height\";i:400;s:28:\"\0*\0mediaFolderConfigurations\";N;s:15:\"\0*\0customFields\";N;s:20:\"\0*\0_uniqueIdentifier\";s:32:\"ac9d023367d84f89a5e4e92885b6859b\";s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";O:17:\"DateTimeImmutable\":3:{s:4:\"date\";s:26:\"2020-04-04 21:03:16.768000\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:1:{s:11:\"foreignKeys\";O:42:\"Shopware\\Core\\Framework\\Struct\\ArrayEntity\":7:{s:7:\"\0*\0data\";a:0:{}s:20:\"\0*\0_uniqueIdentifier\";N;s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";N;s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:0:{}}}s:5:\"\0*\0id\";s:32:\"ac9d023367d84f89a5e4e92885b6859b\";}s:32:\"bbfd89c79b39483eafc90896f379bdca\";O:81:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnailSize\\MediaThumbnailSizeEntity\":11:{s:8:\"\0*\0width\";i:1920;s:9:\"\0*\0height\";i:1920;s:28:\"\0*\0mediaFolderConfigurations\";N;s:15:\"\0*\0customFields\";N;s:20:\"\0*\0_uniqueIdentifier\";s:32:\"bbfd89c79b39483eafc90896f379bdca\";s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";O:17:\"DateTimeImmutable\":3:{s:4:\"date\";s:26:\"2020-04-04 21:03:16.771000\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:1:{s:11:\"foreignKeys\";O:42:\"Shopware\\Core\\Framework\\Struct\\ArrayEntity\":7:{s:7:\"\0*\0data\";a:0:{}s:20:\"\0*\0_uniqueIdentifier\";N;s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";N;s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:0:{}}}s:5:\"\0*\0id\";s:32:\"bbfd89c79b39483eafc90896f379bdca\";}s:32:\"cd09c2fb9b91429eb5c0305ef4a4d921\";O:81:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnailSize\\MediaThumbnailSizeEntity\":11:{s:8:\"\0*\0width\";i:800;s:9:\"\0*\0height\";i:800;s:28:\"\0*\0mediaFolderConfigurations\";N;s:15:\"\0*\0customFields\";N;s:20:\"\0*\0_uniqueIdentifier\";s:32:\"cd09c2fb9b91429eb5c0305ef4a4d921\";s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";O:17:\"DateTimeImmutable\":3:{s:4:\"date\";s:26:\"2020-04-04 21:03:16.769000\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:1:{s:11:\"foreignKeys\";O:42:\"Shopware\\Core\\Framework\\Struct\\ArrayEntity\":7:{s:7:\"\0*\0data\";a:0:{}s:20:\"\0*\0_uniqueIdentifier\";N;s:12:\"\0*\0versionId\";N;s:13:\"\0*\0translated\";a:0:{}s:12:\"\0*\0createdAt\";N;s:12:\"\0*\0updatedAt\";N;s:13:\"\0*\0extensions\";a:0:{}}}s:5:\"\0*\0id\";s:32:\"cd09c2fb9b91429eb5c0305ef4a4d921\";}}s:13:\"\0*\0extensions\";a:0:{}}',1,0,NULL,NULL,'2020-04-04 21:03:14.403',NULL),('½…%z@HGâ‡K|)MôÒV',1,80,'O:85:\"Shopware\\Core\\Content\\Media\\Aggregate\\MediaThumbnailSize\\MediaThumbnailSizeCollection\":2:{s:11:\"\0*\0elements\";a:0:{}s:13:\"\0*\0extensions\";a:0:{}}',1,0,NULL,NULL,'2020-04-04 21:03:14.404',NULL);
-/*!40000 ALTER TABLE `media_folder_configuration` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `media_folder_configuration_media_thumbnail_size`
---
-
-DROP TABLE IF EXISTS `media_folder_configuration_media_thumbnail_size`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `media_folder_configuration_media_thumbnail_size` (
-  `media_folder_configuration_id` binary(16) NOT NULL,
-  `media_thumbnail_size_id` binary(16) NOT NULL,
-  PRIMARY KEY (`media_folder_configuration_id`,`media_thumbnail_size_id`),
-  KEY `fk.media_folder_configuration_media_thumbnail_size.size_id` (`media_thumbnail_size_id`),
-  CONSTRAINT `fk.media_folder_configuration_media_thumbnail_size.conf_id` FOREIGN KEY (`media_folder_configuration_id`) REFERENCES `media_folder_configuration` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `fk.media_folder_configuration_media_thumbnail_size.size_id` FOREIGN KEY (`media_thumbnail_size_id`) REFERENCES `media_thumbnail_size` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `media_folder_configuration_media_thumbnail_size`
---
-
-LOCK TABLES `media_folder_configuration_media_thumbnail_size` WRITE;
-/*!40000 ALTER TABLE `media_folder_configuration_media_thumbnail_size` DISABLE KEYS */;
-INSERT INTO `media_folder_configuration_media_thumbnail_size` VALUES ('ïBu]‘A¦ˆğÿ»ô\0´','¬3gØO‰¥äé(…¶…›'),('ïBu]‘A¦ˆğÿ»ô\0´','»ı‰Ç›9H>¯É–óy½Ê'),('ïBu]‘A¦ˆğÿ»ô\0´','Í	Âû›‘BµÀ0^ô¤Ù!'),('WÚ«†nF¸†mşá','¬3gØO‰¥äé(…¶…›'),('WÚ«†nF¸†mşá','»ı‰Ç›9H>¯É–óy½Ê'),('WÚ«†nF¸†mşá','Í	Âû›‘BµÀ0^ô¤Ù!'),('†˜¬ù•J&‘cm=Bñ3','¬3gØO‰¥äé(…¶…›'),('†˜¬ù•J&‘cm=Bñ3','»ı‰Ç›9H>¯É–óy½Ê'),('†˜¬ù•J&‘cm=Bñ3','Í	Âû›‘BµÀ0^ô¤Ù!');
-/*!40000 ALTER TABLE `media_folder_configuration_media_thumbnail_size` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `media_tag`
---
-
-DROP TABLE IF EXISTS `media_tag`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `media_tag` (
-  `media_id` binary(16) NOT NULL,
-  `tag_id` binary(16) NOT NULL,
-  PRIMARY KEY (`media_id`,`tag_id`),
-  KEY `fk.media_tag.tag_id` (`tag_id`),
-  CONSTRAINT `fk.media_tag.id` FOREIGN KEY (`media_id`) REFERENCES `media` (`id`),
-  CONSTRAINT `fk.media_tag.tag_id` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `media_tag`
---
-
-LOCK TABLES `media_tag` WRITE;
-/*!40000 ALTER TABLE `media_tag` DISABLE KEYS */;
-/*!40000 ALTER TABLE `media_tag` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `media_thumbnail`
---
-
-DROP TABLE IF EXISTS `media_thumbnail`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `media_thumbnail` (
-  `id` binary(16) NOT NULL,
-  `media_id` binary(16) NOT NULL,
-  `width` int(10) unsigned NOT NULL,
-  `height` int(10) unsigned NOT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk.media_thumbnail.media_id` (`media_id`),
-  CONSTRAINT `fk.media_thumbnail.media_id` FOREIGN KEY (`media_id`) REFERENCES `media` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `json.media_thumbnail.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `media_thumbnail`
---
-
-LOCK TABLES `media_thumbnail` WRITE;
-/*!40000 ALTER TABLE `media_thumbnail` DISABLE KEYS */;
-INSERT INTO `media_thumbnail` VALUES ('SµÀÁ8D†¶;Î\"-İø','ŞK}¾•CP’Ë…Îlí(',1920,1920,NULL,'2020-04-04 21:05:21.875',NULL),(':X@3KE®Ííßç;<','l»Ü´?B¾€µ÷RÕ¡Ä',800,800,NULL,'2020-04-04 21:05:21.017',NULL),('%LPºA$¯—ïUó!','pãR \\E	ÆZ[G	J*',1920,1920,NULL,'2020-04-04 21:05:21.363',NULL),('/J9ãÀaG÷„tÏs·‡','ŞK}¾•CP’Ë…Îlí(',800,800,NULL,'2020-04-04 21:05:21.876',NULL),('?\ZÑŸ¨¢N|¨Kútz¦','ih­dˆˆDg™Æ8äIÿÅ',800,800,NULL,'2020-04-04 21:05:19.656',NULL),('@nØ|ñ×Ny˜TÀ\n©fC','l»Ü´?B¾€µ÷RÕ¡Ä',400,400,NULL,'2020-04-04 21:05:21.016',NULL),('N’EVõAØTÁûÿ','„5jq#=K>ŸA}ÌˆPÈ/',400,400,NULL,'2020-04-04 21:05:21.682',NULL),('QP]•õH›£îõ£ããl','öš¸®BĞN²ºµì/ğ©<',800,800,NULL,'2020-04-04 21:05:22.195',NULL),('\\Jæ`•Ge‚àÈÔ]{‡µ','ih­dˆˆDg™Æ8äIÿÅ',400,400,NULL,'2020-04-04 21:05:19.655',NULL),(']$ÿšñeBŒ>Ñ )ü¦','-à)‘ÍH¤¬lÃ\\±s ',400,400,NULL,'2020-04-04 21:05:18.826',NULL),('`£ìrsI[’ğ©féò','XÑ””AT•Ùx-Ü’®',1920,1920,NULL,'2020-04-04 21:05:19.281',NULL),('aÙ\r¹KĞOU–bğ 7-^Ã','*Æ+¢sG¦ˆ\nÁy\r·',1920,1920,NULL,'2020-04-04 21:05:18.427',NULL),('yûÍUşæM¶¾@¯ÂO!','-à)‘ÍH¤¬lÃ\\±s ',1920,1920,NULL,'2020-04-04 21:05:18.826',NULL),('{\Z—«™6IØ’¢÷”bjÇ','pãR \\E	ÆZ[G	J*',400,400,NULL,'2020-04-04 21:05:21.363',NULL),('ŠTªÓ_áN¢ñUçEÃtS','*Æ+¢sG¦ˆ\nÁy\r·',800,800,NULL,'2020-04-04 21:05:18.427',NULL),('Œ)àMÌˆI‰*âNiJ?]','pãR \\E	ÆZ[G	J*',800,800,NULL,'2020-04-04 21:05:21.364',NULL),('‘É*+¸@\"•…Gç°x»ú','ih­dˆˆDg™Æ8äIÿÅ',1920,1920,NULL,'2020-04-04 21:05:19.655',NULL),('dv·Z‘F¥—à=\0ÿ2','XÑ””AT•Ùx-Ü’®',400,400,NULL,'2020-04-04 21:05:19.280',NULL),('¤PN§JèMœ‘S_ïıô)Q','öš¸®BĞN²ºµì/ğ©<',400,400,NULL,'2020-04-04 21:05:22.195',NULL),('¬\nè¼ M‹˜IÙ%–xØ','*Æ+¢sG¦ˆ\nÁy\r·',400,400,NULL,'2020-04-04 21:05:18.426',NULL),('â„:\nn·L…Ïˆİ#î','-à)‘ÍH¤¬lÃ\\±s ',800,800,NULL,'2020-04-04 21:05:18.827',NULL),('ãwì“âKŒ±,êŒ¢°','XÑ””AT•Ùx-Ü’®',800,800,NULL,'2020-04-04 21:05:19.281',NULL),('åeQŞŒIFŸª$ #\\?.¶','l»Ü´?B¾€µ÷RÕ¡Ä',1920,1920,NULL,'2020-04-04 21:05:21.017',NULL),('ø´_×\0E¬˜\0üÛÉ ÆÈ','„5jq#=K>ŸA}ÌˆPÈ/',1920,1920,NULL,'2020-04-04 21:05:21.682',NULL),('üKùÈ[Cù™Vô^ã£µS','ŞK}¾•CP’Ë…Îlí(',400,400,NULL,'2020-04-04 21:05:21.875',NULL),('ü «À´@kóL¿MŠõ','öš¸®BĞN²ºµì/ğ©<',1920,1920,NULL,'2020-04-04 21:05:22.195',NULL),('ÿdê6Ù+FX–G8m=}o','„5jq#=K>ŸA}ÌˆPÈ/',800,800,NULL,'2020-04-04 21:05:21.682',NULL);
-/*!40000 ALTER TABLE `media_thumbnail` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `media_thumbnail_size`
---
-
-DROP TABLE IF EXISTS `media_thumbnail_size`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `media_thumbnail_size` (
-  `id` binary(16) NOT NULL,
-  `width` int(11) NOT NULL,
-  `height` int(11) NOT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uniq.width` (`width`,`height`),
-  CONSTRAINT `json.media_thumbnail_size.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `media_thumbnail_size`
---
-
-LOCK TABLES `media_thumbnail_size` WRITE;
-/*!40000 ALTER TABLE `media_thumbnail_size` DISABLE KEYS */;
-INSERT INTO `media_thumbnail_size` VALUES ('¬3gØO‰¥äé(…¶…›',400,400,NULL,'2020-04-04 21:03:16.768',NULL),('»ı‰Ç›9H>¯É–óy½Ê',1920,1920,NULL,'2020-04-04 21:03:16.771',NULL),('Í	Âû›‘BµÀ0^ô¤Ù!',800,800,NULL,'2020-04-04 21:03:16.769',NULL);
-/*!40000 ALTER TABLE `media_thumbnail_size` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `media_translation`
---
-
-DROP TABLE IF EXISTS `media_translation`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `media_translation` (
-  `media_id` binary(16) NOT NULL,
-  `language_id` binary(16) NOT NULL,
-  `alt` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`media_id`,`language_id`),
-  KEY `fk.media_translation.language_id` (`language_id`),
-  CONSTRAINT `fk.media_translation.language_id` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.media_translation.media_id` FOREIGN KEY (`media_id`) REFERENCES `media` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `json.media_translation.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `media_translation`
---
-
-LOCK TABLES `media_translation` WRITE;
-/*!40000 ALTER TABLE `media_translation` DISABLE KEYS */;
-INSERT INTO `media_translation` VALUES ('*Æ+¢sG¦ˆ\nÁy\r·','/»_ââšMpªXTÎ|ãâ',NULL,NULL,NULL,'2020-04-04 21:05:17.184',NULL),('÷TØLĞ¥š]4›L›Z','/»_ââšMpªXTÎ|ãâ',NULL,NULL,NULL,'2020-04-05 17:38:29.790',NULL),('P<ÁÃE{±¯•÷J\n‡I','/»_ââšMpªXTÎ|ãâ',NULL,NULL,NULL,'2020-04-05 17:38:29.792',NULL),('-à)‘ÍH¤¬lÃ\\±s ','/»_ââšMpªXTÎ|ãâ',NULL,NULL,NULL,'2020-04-04 21:05:17.210',NULL),('XÑ””AT•Ùx-Ü’®','/»_ââšMpªXTÎ|ãâ',NULL,NULL,NULL,'2020-04-04 21:05:17.222',NULL),('ih­dˆˆDg™Æ8äIÿÅ','/»_ââšMpªXTÎ|ãâ',NULL,NULL,NULL,'2020-04-04 21:05:17.233',NULL),('l»Ü´?B¾€µ÷RÕ¡Ä','/»_ââšMpªXTÎ|ãâ',NULL,NULL,NULL,'2020-04-04 21:05:17.246',NULL),('pãR \\E	ÆZ[G	J*','/»_ââšMpªXTÎ|ãâ',NULL,NULL,NULL,'2020-04-04 21:05:17.260',NULL),('„5jq#=K>ŸA}ÌˆPÈ/','/»_ââšMpªXTÎ|ãâ',NULL,NULL,NULL,'2020-04-04 21:05:17.272',NULL),('Úæ&å¢G°½»h\"VÇ®','/»_ââšMpªXTÎ|ãâ',NULL,NULL,NULL,'2020-04-05 17:38:29.791',NULL),('ŞK}¾•CP’Ë…Îlí(','/»_ââšMpªXTÎ|ãâ',NULL,NULL,NULL,'2020-04-04 21:05:17.297',NULL),('öš¸®BĞN²ºµì/ğ©<','/»_ââšMpªXTÎ|ãâ',NULL,NULL,NULL,'2020-04-04 21:05:17.284',NULL);
-/*!40000 ALTER TABLE `media_translation` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `message_queue_stats`
---
-
-DROP TABLE IF EXISTS `message_queue_stats`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `message_queue_stats` (
-  `id` binary(16) NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `size` int(11) NOT NULL DEFAULT 0,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uniq.message_queue_stats.name` (`name`),
-  CONSTRAINT `check.message_queue_stats.size` CHECK (`size` >= 0)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `message_queue_stats`
---
-
-LOCK TABLES `message_queue_stats` WRITE;
-/*!40000 ALTER TABLE `message_queue_stats` DISABLE KEYS */;
-INSERT INTO `message_queue_stats` VALUES ('«‰}\ZIøƒĞ§|©ÄàÃ','Shopware\\Core\\Framework\\DataAbstractionLayer\\Indexing\\MessageQueue\\IndexerMessage',0,'2020-04-04 21:03:25.363','2020-04-04 21:05:55.672'),('>;º_FŒ–UÇR£»T','Shopware\\Core\\Content\\Sitemap\\ScheduledTask\\SitemapGenerateTask',0,'2020-04-04 21:05:53.188',NULL),('9Á6¾@<±÷İ‹®‚5','Shopware\\Core\\Content\\ProductExport\\ScheduledTask\\ProductExportGenerateTask',0,'2020-04-04 21:05:53.188',NULL),('SÖßzn1Hˆsuˆc¢','Shopware\\Core\\Content\\Sitemap\\ScheduledTask\\SitemapMessage',0,'2020-04-04 21:05:53.783','2020-04-04 21:05:53.982'),('„œg qNkˆÊ‘Nh…','Shopware\\Elasticsearch\\Framework\\Indexing\\CreateAliasTask',0,'2020-04-04 21:05:53.189',NULL),('¨r¸1”LÎ²x6<lQh','Shopware\\Core\\Framework\\MessageQueue\\ScheduledTask\\RequeueDeadMessagesTask',0,'2020-04-04 21:05:53.187',NULL),(' ­Á´#EÍ8£Ó°+$','Shopware\\Core\\Content\\Media\\Message\\GenerateThumbnailsMessage',3,'2020-04-04 21:03:25.220','2020-04-05 17:38:29.870'),('±HláÈMğ“>7“n÷–','Shopware\\Core\\Content\\Media\\Message\\DeleteFileMessage',1,'2020-04-04 21:05:54.771','2020-04-05 17:38:29.734'),('Ä¢¾X×IAê£‚\0UlHĞÏ','Shopware\\Core\\Content\\Newsletter\\ScheduledTask\\NewsletterRecipientTask',0,'2020-04-04 21:05:53.181',NULL);
-/*!40000 ALTER TABLE `message_queue_stats` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `migration`
---
-
-DROP TABLE IF EXISTS `migration`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `migration` (
-  `class` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `creation_timestamp` int(8) NOT NULL,
-  `update` timestamp(6) NULL DEFAULT NULL,
-  `update_destructive` timestamp(6) NULL DEFAULT NULL,
-  `message` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`class`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `migration`
---
-
-LOCK TABLES `migration` WRITE;
-/*!40000 ALTER TABLE `migration` DISABLE KEYS */;
-INSERT INTO `migration` VALUES ('Shopware\\Core\\Migration\\Migration1536232600Language',1536232600,'2020-04-04 21:03:07.001855','2020-04-04 21:03:23.441924',NULL),('Shopware\\Core\\Migration\\Migration1536232610Locale',1536232610,'2020-04-04 21:03:07.267582','2020-04-04 21:03:23.442320',NULL),('Shopware\\Core\\Migration\\Migration1536232620SalesChannelType',1536232620,'2020-04-04 21:03:07.322874','2020-04-04 21:03:23.442731',NULL),('Shopware\\Core\\Migration\\Migration1536232630PropertyGroup',1536232630,'2020-04-04 21:03:07.375469','2020-04-04 21:03:23.443135',NULL),('Shopware\\Core\\Migration\\Migration1536232640Currency',1536232640,'2020-04-04 21:03:07.430124','2020-04-04 21:03:23.443497',NULL),('Shopware\\Core\\Migration\\Migration1536232650CustomerGroup',1536232650,'2020-04-04 21:03:07.483164','2020-04-04 21:03:23.443911',NULL),('Shopware\\Core\\Migration\\Migration1536232660Tax',1536232660,'2020-04-04 21:03:07.515952','2020-04-04 21:03:23.444479',NULL),('Shopware\\Core\\Migration\\Migration1536232670Unit',1536232670,'2020-04-04 21:03:07.642944','2020-04-04 21:03:23.445052',NULL),('Shopware\\Core\\Migration\\Migration1536232680Rule',1536232680,'2020-04-04 21:03:07.689597','2020-04-04 21:03:23.445528',NULL),('Shopware\\Core\\Migration\\Migration1536232690Version',1536232690,'2020-04-04 21:03:07.753812','2020-04-04 21:03:23.445970',NULL),('Shopware\\Core\\Migration\\Migration1536232700VersionCommit',1536232700,'2020-04-04 21:03:07.786252','2020-04-04 21:03:23.446425',NULL),('Shopware\\Core\\Migration\\Migration1536232710Integration',1536232710,'2020-04-04 21:03:07.816741','2020-04-04 21:03:23.446816',NULL),('Shopware\\Core\\Migration\\Migration1536232720Country',1536232720,'2020-04-04 21:03:07.871027','2020-04-04 21:03:23.452721',NULL),('Shopware\\Core\\Migration\\Migration1536232730CountryState',1536232730,'2020-04-04 21:03:07.932207','2020-04-04 21:03:23.453301',NULL),('Shopware\\Core\\Migration\\Migration1536232740SnippetSet',1536232740,'2020-04-04 21:03:07.957569','2020-04-04 21:03:23.453756',NULL),('Shopware\\Core\\Migration\\Migration1536232750Snippet',1536232750,'2020-04-04 21:03:07.991569','2020-04-04 21:03:23.454180',NULL),('Shopware\\Core\\Migration\\Migration1536232760StateMachine',1536232760,'2020-04-04 21:03:08.863885','2020-04-04 21:03:23.454579',NULL),('Shopware\\Core\\Migration\\Migration1536232770VersionCommitData',1536232770,'2020-04-04 21:03:08.925188','2020-04-04 21:03:23.454975',NULL),('Shopware\\Core\\Migration\\Migration1536232790MailHeaderFooter',1536232790,'2020-04-04 21:03:09.029532','2020-04-04 21:03:23.455361',NULL),('Shopware\\Core\\Migration\\Migration1536232800DeliveryTime',1536232800,'2020-04-04 21:03:09.128837','2020-04-04 21:03:23.455711',NULL),('Shopware\\Core\\Migration\\Migration1536232810User',1536232810,'2020-04-04 21:03:09.219155','2020-04-04 21:03:23.455996',NULL),('Shopware\\Core\\Migration\\Migration1536232820UserAccessKey',1536232820,'2020-04-04 21:03:09.306158','2020-04-04 21:03:23.456247',NULL),('Shopware\\Core\\Migration\\Migration1536232830MediaDefaultFolder',1536232830,'2020-04-04 21:03:09.370334','2020-04-04 21:03:23.476393',NULL),('Shopware\\Core\\Migration\\Migration1536232840MediaFolder',1536232840,'2020-04-04 21:03:09.450630','2020-04-04 21:03:23.477587',NULL),('Shopware\\Core\\Migration\\Migration1536232850Media',1536232850,'2020-04-04 21:03:09.760585','2020-04-04 21:03:23.478809',NULL),('Shopware\\Core\\Migration\\Migration1536232860ShippingMethod',1536232860,'2020-04-04 21:03:09.833408','2020-04-04 21:03:23.480128',NULL),('Shopware\\Core\\Migration\\Migration1536232870ShippingMethodPrice',1536232870,'2020-04-04 21:03:09.882921','2020-04-04 21:03:23.481295',NULL),('Shopware\\Core\\Migration\\Migration1536232880Category',1536232880,'2020-04-04 21:03:09.970518','2020-04-04 21:03:23.487936',NULL),('Shopware\\Core\\Migration\\Migration1536232890CmsPage',1536232890,'2020-04-04 21:03:10.037394','2020-04-04 21:03:23.489245',NULL),('Shopware\\Core\\Migration\\Migration1536232900CmsBlock',1536232900,'2020-04-04 21:03:10.074698','2020-04-04 21:03:23.490257',NULL),('Shopware\\Core\\Migration\\Migration1536232910CmsSlot',1536232910,'2020-04-04 21:03:10.136406','2020-04-04 21:03:23.491277',NULL),('Shopware\\Core\\Migration\\Migration1536232920PaymentMethod',1536232920,'2020-04-04 21:03:10.211305','2020-04-04 21:03:23.492238',NULL),('Shopware\\Core\\Migration\\Migration1536232930Navigation',1536232930,'2020-04-04 21:03:10.310553','2020-04-04 21:03:23.493397',NULL),('Shopware\\Core\\Migration\\Migration1536232940SalesChannel',1536232940,'2020-04-04 21:03:10.625443','2020-04-04 21:03:23.499290',NULL),('Shopware\\Core\\Migration\\Migration1536232950Salutation',1536232950,'2020-04-04 21:03:10.687470','2020-04-04 21:03:23.500476',NULL),('Shopware\\Core\\Migration\\Migration1536232960Customer',1536232960,'2020-04-04 21:03:10.777400','2020-04-04 21:03:23.501490',NULL),('Shopware\\Core\\Migration\\Migration1536232970CustomerAddress',1536232970,'2020-04-04 21:03:10.836888','2020-04-04 21:03:23.502555',NULL),('Shopware\\Core\\Migration\\Migration1536232980Cart',1536232980,'2020-04-04 21:03:10.900108','2020-04-04 21:03:23.503631',NULL),('Shopware\\Core\\Migration\\Migration1536232990Order',1536232990,'2020-04-04 21:03:10.957500','2020-04-04 21:03:23.504614',NULL),('Shopware\\Core\\Migration\\Migration1536233000OrderCustomer',1536233000,'2020-04-04 21:03:11.061664','2020-04-04 21:03:23.506624',NULL),('Shopware\\Core\\Migration\\Migration1536233010OrderAddress',1536233010,'2020-04-04 21:03:11.113431','2020-04-04 21:03:23.507621',NULL),('Shopware\\Core\\Migration\\Migration1536233020OrderDelivery',1536233020,'2020-04-04 21:03:11.167825','2020-04-04 21:03:23.508592',NULL),('Shopware\\Core\\Migration\\Migration1536233030OrderLineItem',1536233030,'2020-04-04 21:03:11.212975','2020-04-04 21:03:23.509619',NULL),('Shopware\\Core\\Migration\\Migration1536233040OrderDeliveryPosition',1536233040,'2020-04-04 21:03:11.251454','2020-04-04 21:03:23.510636',NULL),('Shopware\\Core\\Migration\\Migration1536233050OrderTransaction',1536233050,'2020-04-04 21:03:11.295963','2020-04-04 21:03:23.511620',NULL),('Shopware\\Core\\Migration\\Migration1536233060MediaFolderConfiguration',1536233060,'2020-04-04 21:03:11.321136','2020-04-04 21:03:23.512607',NULL),('Shopware\\Core\\Migration\\Migration1536233070MediaThumbnailSize',1536233070,'2020-04-04 21:03:11.352589','2020-04-04 21:03:23.513682',NULL),('Shopware\\Core\\Migration\\Migration1536233080MediaFolderConfigurationMediaThumbnailSize',1536233080,'2020-04-04 21:03:11.384482','2020-04-04 21:03:23.514662',NULL),('Shopware\\Core\\Migration\\Migration1536233090MediaThumbnail',1536233090,'2020-04-04 21:03:11.415834','2020-04-04 21:03:23.515577',NULL),('Shopware\\Core\\Migration\\Migration1536233100PropertyGroupOption',1536233100,'2020-04-04 21:03:11.492890','2020-04-04 21:03:23.516485',NULL),('Shopware\\Core\\Migration\\Migration1536233110ProductManufacturer',1536233110,'2020-04-04 21:03:11.562804','2020-04-04 21:03:23.517502',NULL),('Shopware\\Core\\Migration\\Migration1536233120Product',1536233120,'2020-04-04 21:03:11.659356','2020-04-04 21:03:23.518507',NULL),('Shopware\\Core\\Migration\\Migration1536233130ProductMedia',1536233130,'2020-04-04 21:03:11.832333','2020-04-04 21:03:23.519489',NULL),('Shopware\\Core\\Migration\\Migration1536233140ProductProperty',1536233140,'2020-04-04 21:03:11.863770','2020-04-04 21:03:23.520365',NULL),('Shopware\\Core\\Migration\\Migration1536233150ProductOption',1536233150,'2020-04-04 21:03:11.895280','2020-04-04 21:03:23.521384',NULL),('Shopware\\Core\\Migration\\Migration1536233160ProductConfigurator',1536233160,'2020-04-04 21:03:11.938696','2020-04-04 21:03:23.522284',NULL),('Shopware\\Core\\Migration\\Migration1536233170ProductCategoryTree',1536233170,'2020-04-04 21:03:11.970428','2020-04-04 21:03:23.523018',NULL),('Shopware\\Core\\Migration\\Migration1536233180ProductCategory',1536233180,'2020-04-04 21:03:12.002566','2020-04-04 21:03:23.523825',NULL),('Shopware\\Core\\Migration\\Migration1536233190ProductPriceRule',1536233190,'2020-04-04 21:03:12.046332','2020-04-04 21:03:23.524599',NULL),('Shopware\\Core\\Migration\\Migration1536233200RuleCondition',1536233200,'2020-04-04 21:03:12.083576','2020-04-04 21:03:23.525391',NULL),('Shopware\\Core\\Migration\\Migration1536233210SalesChannelDomain',1536233210,'2020-04-04 21:03:12.132166','2020-04-04 21:03:23.526152',NULL),('Shopware\\Core\\Migration\\Migration1536233220PluginTranslation',1536233220,'2020-04-04 21:03:12.163829','2020-04-04 21:03:23.526949',NULL),('Shopware\\Core\\Migration\\Migration1536233230ProductStream',1536233230,'2020-04-04 21:03:12.219291','2020-04-04 21:03:23.527809',NULL),('Shopware\\Core\\Migration\\Migration1536233240ProductStreamFilter',1536233240,'2020-04-04 21:03:12.257477','2020-04-04 21:03:23.528681',NULL),('Shopware\\Core\\Migration\\Migration1536233250MessageQueueStats',1536233250,'2020-04-04 21:03:12.288203','2020-04-04 21:03:23.529498',NULL),('Shopware\\Core\\Migration\\Migration1536233260StateMachineHistory',1536233260,'2020-04-04 21:03:12.336935','2020-04-04 21:03:23.530357',NULL),('Shopware\\Core\\Migration\\Migration1536233270SystemConfig',1536233270,'2020-04-04 21:03:12.367914','2020-04-04 21:03:23.531279',NULL),('Shopware\\Core\\Migration\\Migration1536233280CustomFieldSet',1536233280,'2020-04-04 21:03:12.395187','2020-04-04 21:03:23.532228',NULL),('Shopware\\Core\\Migration\\Migration1536233290CustomFieldSetRelation',1536233290,'2020-04-04 21:03:12.426005','2020-04-04 21:03:23.533008',NULL),('Shopware\\Core\\Migration\\Migration1536233300CustomField',1536233300,'2020-04-04 21:03:12.462126','2020-04-04 21:03:23.534015',NULL),('Shopware\\Core\\Migration\\Migration1536233310ScheduledTask',1536233310,'2020-04-04 21:03:12.492842','2020-04-04 21:03:23.534961',NULL),('Shopware\\Core\\Migration\\Migration1536233320DeadMessage',1536233320,'2020-04-04 21:03:12.524836','2020-04-04 21:03:23.535835',NULL),('Shopware\\Core\\Migration\\Migration1536233330MailTemplate',1536233330,'2020-04-04 21:03:12.700983','2020-04-04 21:03:23.536659',NULL),('Shopware\\Core\\Migration\\Migration1536233340NumberRange',1536233340,'2020-04-04 21:03:12.898874','2020-04-04 21:03:23.537459',NULL),('Shopware\\Core\\Migration\\Migration1536233350ProductVisibility',1536233350,'2020-04-04 21:03:12.936595','2020-04-04 21:03:23.538342',NULL),('Shopware\\Core\\Migration\\Migration1536233360Document',1536233360,'2020-04-04 21:03:13.047295','2020-04-04 21:03:23.539059',NULL),('Shopware\\Core\\Migration\\Migration1536233370EventAction',1536233370,'2020-04-04 21:03:13.083718','2020-04-04 21:03:23.539738',NULL),('Shopware\\Core\\Migration\\Migration1536233380UserRecovery',1536233380,'2020-04-04 21:03:13.109333','2020-04-04 21:03:23.540402',NULL),('Shopware\\Core\\Migration\\Migration1536233390Promotion',1536233390,'2020-04-04 21:03:13.177253','2020-04-04 21:03:23.541057',NULL),('Shopware\\Core\\Migration\\Migration1536233400MailTemplateMedia',1536233400,'2020-04-04 21:03:13.215407','2020-04-04 21:03:23.541786',NULL),('Shopware\\Core\\Migration\\Migration1536233410PromotionSalesChannel',1536233410,'2020-04-04 21:03:13.256070','2020-04-04 21:03:23.542464',NULL),('Shopware\\Core\\Migration\\Migration1536233420PromotionDiscount',1536233420,'2020-04-04 21:03:13.288880','2020-04-04 21:03:23.543097',NULL),('Shopware\\Core\\Migration\\Migration1536233430NewsletterRecipient',1536233430,'2020-04-04 21:03:13.339165','2020-04-04 21:03:23.543640',NULL),('Shopware\\Core\\Migration\\Migration1536233440PromotionPersonaCustomer',1536233440,'2020-04-04 21:03:13.371729','2020-04-04 21:03:23.544066',NULL),('Shopware\\Core\\Migration\\Migration1536233450PromotionPersonaRules',1536233450,'2020-04-04 21:03:13.405242','2020-04-04 21:03:23.545128',NULL),('Shopware\\Core\\Migration\\Migration1536233460NumberRangeTranslationAndConfiguration',1536233460,'2020-04-04 21:03:13.406419','2020-04-04 21:03:23.545654',NULL),('Shopware\\Core\\Migration\\Migration1536233470PromotionOrderRule',1536233470,'2020-04-04 21:03:13.439188','2020-04-04 21:03:23.546254',NULL),('Shopware\\Core\\Migration\\Migration1536233480SalesChannelApiContext',1536233480,'2020-04-04 21:03:13.465042','2020-04-04 21:03:23.546785',NULL),('Shopware\\Core\\Migration\\Migration1536233500PromotionDiscountRule',1536233500,'2020-04-04 21:03:13.496726','2020-04-04 21:03:23.547250',NULL),('Shopware\\Core\\Migration\\Migration1536233510DocumentConfiguration',1536233510,'2020-04-04 21:03:13.589468','2020-04-04 21:03:23.547703',NULL),('Shopware\\Core\\Migration\\Migration1536233520PromotionCartRule',1536233520,'2020-04-04 21:03:13.621819','2020-04-04 21:03:23.548145',NULL),('Shopware\\Core\\Migration\\Migration1536233530SalesChannelCategoryId',1536233530,'2020-04-04 21:03:13.829590','2020-04-04 21:03:23.854938',NULL),('Shopware\\Core\\Migration\\Migration1536233540ProductSearchKeyword',1536233540,'2020-04-04 21:03:13.906273','2020-04-04 21:03:23.855220',NULL),('Shopware\\Core\\Migration\\Migration1536233550Tag',1536233550,'2020-04-04 21:03:14.154062','2020-04-04 21:03:23.855445',NULL),('Shopware\\Core\\Migration\\Migration1536233560BasicData',1536233560,'2020-04-04 21:03:14.489538','2020-04-04 21:03:23.855693',NULL),('Shopware\\Core\\Migration\\Migration1552360944MediaFolderConfigurationNoAssoc',1552360944,'2020-04-04 21:03:14.595787','2020-04-04 21:03:23.856176',NULL),('Shopware\\Core\\Migration\\Migration1554199340AddImportExportProfile',1554199340,'2020-04-04 21:03:14.722772','2020-04-04 21:03:23.856608',NULL),('Shopware\\Core\\Migration\\Migration1554200141ImportExportFile',1554200141,'2020-04-04 21:03:14.748227','2020-04-04 21:03:23.856798',NULL),('Shopware\\Core\\Migration\\Migration1554203706AddImportExportLog',1554203706,'2020-04-04 21:03:14.791197','2020-04-04 21:03:23.856983',NULL),('Shopware\\Core\\Migration\\Migration1554900301AddReviewTable',1554900301,'2020-04-04 21:03:14.840998','2020-04-04 21:03:23.857192',NULL),('Shopware\\Core\\Migration\\Migration1556809270AddAverageRatingToProduct',1556809270,'2020-04-04 21:03:14.966921','2020-04-04 21:03:23.857610',NULL),('Shopware\\Core\\Migration\\Migration1558082916AddBreadcrumb',1558082916,'2020-04-04 21:03:15.046651','2020-04-04 21:03:23.857840',NULL),('Shopware\\Core\\Migration\\Migration1558105657CurrencyPrices',1558105657,'2020-04-04 21:03:15.124678','2020-04-04 21:03:23.858333',NULL),('Shopware\\Core\\Migration\\Migration1558443337PromotionSalesChannel',1558443337,'2020-04-04 21:03:15.322026','2020-04-04 21:03:23.858570',NULL),('Shopware\\Core\\Migration\\Migration1558505525Logging',1558505525,'2020-04-04 21:03:15.349870','2020-04-04 21:03:23.858764',NULL),('Shopware\\Core\\Migration\\Migration1558594334PromotionDiscountPrice',1558594334,'2020-04-04 21:03:15.387633','2020-04-04 21:03:23.858953',NULL),('Shopware\\Core\\Migration\\Migration1558938938ChangeGroupSortingColumn',1558938938,'2020-04-04 21:03:15.669868','2020-04-04 21:03:23.859144',NULL),('Shopware\\Core\\Migration\\Migration1559050088Promotion',1559050088,'2020-04-04 21:03:15.720189','2020-04-04 21:03:23.859334',NULL),('Shopware\\Core\\Migration\\Migration1559050903PromotionExclusion',1559050903,'2020-04-04 21:03:15.766740','2020-04-04 21:03:23.859566',NULL),('Shopware\\Core\\Migration\\Migration1559134989Promotion',1559134989,'2020-04-04 21:03:15.879866','2020-04-04 21:03:23.859780',NULL),('Shopware\\Core\\Migration\\Migration1559306391PromotionIndividualCode',1559306391,'2020-04-04 21:03:15.916906','2020-04-04 21:03:23.860004',NULL),('Shopware\\Core\\Migration\\Migration1561370284AddImportExportProductProfile',1561370284,'2020-04-04 21:03:15.919651','2020-04-04 21:03:23.860233',NULL),('Shopware\\Core\\Migration\\Migration1561377793AddAvailableAsShippingCountry',1561377793,'2020-04-04 21:03:15.986860','2020-04-04 21:03:23.860420',NULL),('Shopware\\Core\\Migration\\Migration1561442979ElasticsearchIndexTask',1561442979,'2020-04-04 21:03:16.011928','2020-04-04 21:03:23.860610',NULL),('Shopware\\Core\\Migration\\Migration1561452005Update',1561452005,'2020-04-04 21:03:16.015488','2020-04-04 21:03:23.860782',NULL),('Shopware\\Core\\Migration\\Migration1561712450NewSystemConfigsAndDefaultValues',1561712450,'2020-04-04 21:03:16.020481','2020-04-04 21:03:23.860958',NULL),('Shopware\\Core\\Migration\\Migration1562228335SetConfigDefaults',1562228335,'2020-04-04 21:03:16.023084','2020-04-04 21:03:23.861142',NULL),('Shopware\\Core\\Migration\\Migration1562240231UserPasswordRecovery',1562240231,'2020-04-04 21:03:16.032932','2020-04-04 21:03:23.861321',NULL),('Shopware\\Core\\Migration\\Migration1562306893MakeCustomerFirstLoginDateTime',1562306893,'2020-04-04 21:03:16.167083','2020-04-04 21:03:23.861497',NULL),('Shopware\\Core\\Migration\\Migration1562324772AddOrderDateToOrder',1562324772,'2020-04-04 21:03:16.282382','2020-04-04 21:03:23.861733',NULL),('Shopware\\Core\\Migration\\Migration1562579120ProductAvailableFields',1562579120,'2020-04-04 21:03:16.559089','2020-04-04 21:03:23.861956',NULL),('Shopware\\Core\\Migration\\Migration1562683944ImportExportProfileIdentifierFields',1562683944,'2020-04-04 21:03:16.564176','2020-04-04 21:03:23.862174',NULL),('Shopware\\Core\\Migration\\Migration1562684474AddDeliveryTime',1562684474,'2020-04-04 21:03:16.664419','2020-04-04 21:03:23.862366',NULL),('Shopware\\Core\\Migration\\Migration1562841035AddProductChildCount',1562841035,'2020-04-04 21:03:16.757235','2020-04-04 21:03:23.862541',NULL),('Shopware\\Core\\Migration\\Migration1562933907ContactForm',1562933907,'2020-04-04 21:03:16.764441','2020-04-04 21:03:23.862716',NULL),('Shopware\\Core\\Migration\\Migration1563180880AddDefaultThumbnailSizes',1563180880,'2020-04-04 21:03:16.782602','2020-04-04 21:03:23.862890',NULL),('Shopware\\Core\\Migration\\Migration1563288227MarkAsNewConfig',1563288227,'2020-04-04 21:03:16.784334','2020-04-04 21:03:23.863065',NULL),('Shopware\\Core\\Migration\\Migration1563518181PromotionDiscount',1563518181,'2020-04-04 21:03:16.844447','2020-04-04 21:03:23.863235',NULL),('Shopware\\Core\\Migration\\Migration1563805586AddLanguageToOrder',1563805586,'2020-04-04 21:03:17.217499','2020-04-04 21:03:23.863582',NULL),('Shopware\\Core\\Migration\\Migration1563949275AddCompanyToOrderCustomer',1563949275,'2020-04-04 21:03:17.286971','2020-04-04 21:03:23.863765',NULL),('Shopware\\Core\\Migration\\Migration1564475053RemoveSaveDocumentsConfig',1564475053,'2020-04-04 21:03:17.380034','2020-04-04 21:03:23.864291',NULL),('Shopware\\Core\\Migration\\Migration1565007156RemoveAutoIncrement',1565007156,'2020-04-04 21:03:17.380999','2020-04-04 21:03:24.086471',NULL),('Shopware\\Core\\Migration\\Migration1565079228AddAclStructure',1565079228,'2020-04-04 21:03:17.553358','2020-04-04 21:03:24.087525',NULL),('Shopware\\Core\\Migration\\Migration1565270155PromotionSetGroup',1565270155,'2020-04-04 21:03:17.586057','2020-04-04 21:03:24.088498',NULL),('Shopware\\Core\\Migration\\Migration1565270366PromotionSetGroupRule',1565270366,'2020-04-04 21:03:17.627372','2020-04-04 21:03:24.089482',NULL),('Shopware\\Core\\Migration\\Migration1565346846Promotion',1565346846,'2020-04-04 21:03:17.691656','2020-04-04 21:03:24.090381',NULL),('Shopware\\Core\\Migration\\Migration1565705280ProductExport',1565705280,'2020-04-04 21:03:17.769571','2020-04-04 21:03:24.092768',NULL),('Shopware\\Core\\Migration\\Migration1566293076AddAutoIncrement',1566293076,'2020-04-04 21:03:17.770517','2020-04-04 21:03:24.322235',NULL),('Shopware\\Core\\Migration\\Migration1566460168UpdateTexts',1566460168,'2020-04-04 21:03:17.771614','2020-04-04 21:03:24.324886',NULL),('Shopware\\Core\\Migration\\Migration1566817701AddDisplayGroup',1566817701,'2020-04-04 21:03:17.866563','2020-04-04 21:03:24.414740',NULL),('Shopware\\Core\\Migration\\Migration1567431050ContactFormTemplate',1567431050,'2020-04-04 21:03:17.872508','2020-04-04 21:03:24.415784',NULL),('Shopware\\Core\\Migration\\Migration1568120239CmsSection',1568120239,'2020-04-04 21:03:17.909166','2020-04-04 21:03:24.416743',NULL),('Shopware\\Core\\Migration\\Migration1568120302CmsBlockUpdate',1568120302,'2020-04-04 21:03:18.198162','2020-04-04 21:03:24.523002',NULL),('Shopware\\Core\\Migration\\Migration1568645037AddEnqueueDbal',1568645037,'2020-04-04 21:03:18.242341','2020-04-04 21:03:24.523853',NULL),('Shopware\\Core\\Migration\\Migration1568901713PromotionDiscount',1568901713,'2020-04-04 21:03:18.505590','2020-04-04 21:03:24.525408',NULL),('Shopware\\Core\\Migration\\Migration1569403146ProductVisibilityUnique',1569403146,'2020-04-04 21:03:18.521290','2020-04-04 21:03:24.526123',NULL),('Shopware\\Core\\Migration\\Migration1570187167AddedAppConfig',1570187167,'2020-04-04 21:03:18.707933','2020-04-04 21:03:24.663047',NULL),('Shopware\\Core\\Migration\\Migration1570459127AddCmsSidebarLayout',1570459127,'2020-04-04 21:03:18.737586','2020-04-04 21:03:24.663859',NULL),('Shopware\\Core\\Migration\\Migration1570621541UpdateDefaultMailTemplates',1570621541,'2020-04-04 21:03:18.761630','2020-04-04 21:03:24.664647',NULL),('Shopware\\Core\\Migration\\Migration1570622696CustomerPasswordRecovery',1570622696,'2020-04-04 21:03:18.798064','2020-04-04 21:03:24.665472',NULL),('Shopware\\Core\\Migration\\Migration1570629862ClearCategoryBreadcrumbs',1570629862,'2020-04-04 21:03:18.799441','2020-04-04 21:03:24.666332',NULL),('Shopware\\Core\\Migration\\Migration1570684913ScheduleIndexer',1570684913,'2020-04-04 21:03:18.837616','2020-04-04 21:03:24.667317',NULL),('Shopware\\Core\\Migration\\Migration1571059598ChangeGreatBritainToUnitedKingdom',1571059598,'2020-04-04 21:03:18.840730','2020-04-04 21:03:24.668221',NULL),('Shopware\\Core\\Migration\\Migration1571210820AddPaymentMethodIdsToSalesChannel',1571210820,'2020-04-04 21:03:18.997093','2020-04-04 21:03:24.669183',NULL),('Shopware\\Core\\Migration\\Migration1571660203FixOrderDeliveryStateNames',1571660203,'2020-04-04 21:03:19.015595','2020-04-04 21:03:24.670338',NULL),('Shopware\\Core\\Migration\\Migration1571724915MultipleTrackingCodesInOrderDelivery',1571724915,'2020-04-04 21:03:19.194701','2020-04-04 21:03:24.830019',NULL),('Shopware\\Core\\Migration\\Migration1571981437AddSeoColumns',1571981437,'2020-04-04 21:03:19.490596','2020-04-04 21:03:24.911359',NULL),('Shopware\\Core\\Migration\\Migration1571990395UpdateDefaultStatusMailTemplates',1571990395,'2020-04-04 21:03:19.634993','2020-04-04 21:03:24.912100',NULL),('Shopware\\Core\\Migration\\Migration1572193798TaxRule',1572193798,'2020-04-04 21:03:19.752087','2020-04-04 21:03:24.912331',NULL),('Shopware\\Core\\Migration\\Migration1572264837AddCacheId',1572264837,'2020-04-04 21:03:19.804937','2020-04-04 21:03:24.912529',NULL),('Shopware\\Core\\Migration\\Migration1572273565AddUniqueConstraintToTechnicalNameOfDocumentType',1572273565,'2020-04-04 21:03:19.840503','2020-04-04 21:03:24.912733',NULL),('Shopware\\Core\\Migration\\Migration1572421282AddDoubleOptInRegistration',1572421282,'2020-04-04 21:03:19.954129','2020-04-04 21:03:24.912907',NULL),('Shopware\\Core\\Migration\\Migration1572425108AddDoubleOptInRegistrationMailTemplate',1572425108,'2020-04-04 21:03:19.965956','2020-04-04 21:03:24.913070',NULL),('Shopware\\Core\\Migration\\Migration1572957455AddAffiliateTrackingColumns',1572957455,'2020-04-04 21:03:20.168055','2020-04-04 21:03:24.913405',NULL),('Shopware\\Core\\Migration\\Migration1573049297AddReopenTransitionToDeliveryStates',1573049297,'2020-04-04 21:03:20.171609','2020-04-04 21:03:24.913551',NULL),('Shopware\\Core\\Migration\\Migration1573569685DoubleOptInGuestMailTemplate',1573569685,'2020-04-04 21:03:20.188041','2020-04-04 21:03:24.913699',NULL),('Shopware\\Core\\Migration\\Migration1573729158AddSitemapConfig',1573729158,'2020-04-04 21:03:20.190730','2020-04-04 21:03:24.913847',NULL),('Shopware\\Core\\Migration\\Migration1574063550AddCurrencyToProductExport',1574063550,'2020-04-04 21:03:20.263575','2020-04-04 21:03:24.913992',NULL),('Shopware\\Core\\Migration\\Migration1574082635AddOrderLineItemProductId',1574082635,'2020-04-04 21:03:20.467595','2020-04-04 21:03:24.914137',NULL),('Shopware\\Core\\Migration\\Migration1574258787ProductSearchLanguageKey',1574258787,'2020-04-04 21:03:20.697289','2020-04-04 21:03:24.914432',NULL),('Shopware\\Core\\Migration\\Migration1574258788TaxRuleLanguageKey',1574258788,'2020-04-04 21:03:20.787011','2020-04-04 21:03:24.914591',NULL),('Shopware\\Core\\Migration\\Migration1574258789ProductReviewLanguageKey',1574258789,'2020-04-04 21:03:20.895482','2020-04-04 21:03:24.914737',NULL),('Shopware\\Core\\Migration\\Migration1574520220AddSalesChannelMaintenance',1574520220,'2020-04-04 21:03:21.344696','2020-04-04 21:03:24.914916',NULL),('Shopware\\Core\\Migration\\Migration1574672450RemoteAddressIntoCustomerAndOrderCustomerTable',1574672450,'2020-04-04 21:03:21.507478','2020-04-04 21:03:24.915099',NULL),('Shopware\\Core\\Migration\\Migration1574695657ProductCrossSelling',1574695657,'2020-04-04 21:03:21.654537','2020-04-04 21:03:24.915375',NULL),('Shopware\\Core\\Migration\\Migration1574925962FixTaxConstraint',1574925962,'2020-04-04 21:03:21.750414','2020-04-04 21:03:24.915529',NULL),('Shopware\\Core\\Migration\\Migration1575010262AddCmsFormLayouts',1575010262,'2020-04-04 21:03:21.766844','2020-04-04 21:03:24.915676',NULL),('Shopware\\Core\\Migration\\Migration1575021466AddCurrencies',1575021466,'2020-04-04 21:03:21.818437','2020-04-04 21:03:24.915840',NULL),('Shopware\\Core\\Migration\\Migration1575034234FixOrderDeliveryAddressConstraint',1575034234,'2020-04-04 21:03:21.923992','2020-04-04 21:03:24.915992',NULL),('Shopware\\Core\\Migration\\Migration1575036586FixProductConfiguratorSettingsConstraint',1575036586,'2020-04-04 21:03:22.026743','2020-04-04 21:03:24.916146',NULL),('Shopware\\Core\\Migration\\Migration1575039284FixProductReviewConstraint',1575039284,'2020-04-04 21:03:22.236875','2020-04-04 21:03:24.916418',NULL),('Shopware\\Core\\Migration\\Migration1575197543MailTemplateCustomFields',1575197543,'2020-04-04 21:03:22.498551','2020-04-04 21:03:24.920066',NULL),('Shopware\\Core\\Migration\\Migration1575274700FixSalesChannelMailHeaderFooterConstraint',1575274700,'2020-04-04 21:03:22.664874','2020-04-04 21:03:24.920323',NULL),('Shopware\\Core\\Migration\\Migration1575293069OrderMailTemplates',1575293069,'2020-04-04 21:03:22.675081','2020-04-04 21:03:24.920564',NULL),('Shopware\\Core\\Migration\\Migration1575451283AddLimitToCrossSelling',1575451283,'2020-04-04 21:03:22.740382','2020-04-04 21:03:24.920791',NULL),('Shopware\\Core\\Migration\\Migration1575626180RemoveSearchKeywordInheritance',1575626180,'2020-04-04 21:03:22.741519','2020-04-04 21:03:25.024340',NULL),('Shopware\\Core\\Migration\\Migration1575883959ResetListingPrices',1575883959,'2020-04-04 21:03:22.748238','2020-04-04 21:03:25.024687',NULL),('Shopware\\Core\\Migration\\Migration1576488398AddOrderLineItemPosition',1576488398,'2020-04-04 21:03:22.821367','2020-04-04 21:03:25.024970',NULL),('Shopware\\Core\\Migration\\Migration1576590301FixSalesChannelDomainLanguageFk',1576590301,'2020-04-04 21:03:23.040865','2020-04-04 21:03:25.025212',NULL),('Shopware\\Core\\Migration\\Migration1578042218DefaultPages',1578042218,'2020-04-04 21:03:23.093298','2020-04-04 21:03:25.025490',NULL),('Shopware\\Core\\Migration\\Migration1578044453AddedNavigationDepth',1578044453,'2020-04-04 21:03:23.333926','2020-04-04 21:03:25.025857',NULL),('Shopware\\Core\\Migration\\Migration1578470886FixPurchaseSteps',1578470886,'2020-04-04 21:03:23.337196','2020-04-04 21:03:25.026188',NULL),('Shopware\\Core\\Migration\\Migration1578475268FixSloveneLocale',1578475268,'2020-04-04 21:03:23.340523','2020-04-04 21:03:25.026505',NULL),('Shopware\\Core\\Migration\\Migration1578485775UseStableUpdateChannel',1578485775,'2020-04-04 21:03:23.351390','2020-04-04 21:03:25.026804',NULL),('Shopware\\Core\\Migration\\Migration1578648299ReindexSeoUrls',1578648299,'2020-04-04 21:03:23.354459','2020-04-04 21:03:25.027090',NULL),('Shopware\\Core\\Migration\\Migration1580743279UpdateDeliveryMailTemplates',1580743279,'2020-04-04 21:03:23.404003','2020-04-04 21:03:25.027402',NULL),('Shopware\\Core\\Migration\\Migration1580808849AddGermanContactFormTranslation',1580808849,'2020-04-04 21:03:23.408074','2020-04-04 21:03:25.027710',NULL),('Shopware\\Storefront\\Migration\\Migration1536232990SeoUrl',1536232990,'2020-04-04 21:03:11.016547','2020-04-04 21:03:23.505661',NULL),('Shopware\\Storefront\\Migration\\Migration1551969523SeoUrlTemplate',1551969523,'2020-04-04 21:03:14.527489','2020-04-04 21:03:23.855911',NULL),('Shopware\\Storefront\\Migration\\Migration1552899789Theme',1552899789,'2020-04-04 21:03:14.690000','2020-04-04 21:03:23.856412',NULL),('Shopware\\Storefront\\Migration\\Migration1555406153SalesChannelTheme',1555406153,'2020-04-04 21:03:14.871917','2020-04-04 21:03:23.857382',NULL),('Shopware\\Storefront\\Migration\\Migration1563785071AddThemeHelpText',1563785071,'2020-04-04 21:03:16.902966','2020-04-04 21:03:23.863408',NULL),('Shopware\\Storefront\\Migration\\Migration1564385954ThemeMedia',1564385954,'2020-04-04 21:03:17.318646','2020-04-04 21:03:23.863944',NULL),('Shopware\\Storefront\\Migration\\Migration1564385960ThemeAddActiveFlag',1564385960,'2020-04-04 21:03:17.378144','2020-04-04 21:03:23.864114',NULL),('Shopware\\Storefront\\Migration\\Migration1565640170ThemeMigrateMedia',1565640170,'2020-04-04 21:03:17.694471','2020-04-04 21:03:24.091178',NULL),('Shopware\\Storefront\\Migration\\Migration1565640175RemoveSalesChannelTheme',1565640175,'2020-04-04 21:03:17.709479','2020-04-04 21:03:24.091991',NULL),('Shopware\\Storefront\\Migration\\Migration1568787535AddSeoUrlConstraints',1568787535,'2020-04-04 21:03:18.343778','2020-04-04 21:03:24.524583',NULL),('Shopware\\Storefront\\Migration\\Migration1569482074AddProductMainCategory',1569482074,'2020-04-04 21:03:18.566129','2020-04-04 21:03:24.526821',NULL),('Shopware\\Storefront\\Migration\\Migration1569907970RemoveUnusedSeoColumns',1569907970,'2020-04-04 21:03:18.681827','2020-04-04 21:03:24.661999',NULL),('Shopware\\Storefront\\Migration\\Migration1572858066UpdateDefaultCategorySeoUrlTemplate',1572858066,'2020-04-04 21:03:19.967609','2020-04-04 21:03:24.913253',NULL),('Shopware\\Storefront\\Migration\\Migration1574258786SeoUrlLanguageKeyCascade',1574258786,'2020-04-04 21:03:20.590910','2020-04-04 21:03:24.914283',NULL);
-/*!40000 ALTER TABLE `migration` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `newsletter_recipient`
---
-
-DROP TABLE IF EXISTS `newsletter_recipient`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `newsletter_recipient` (
-  `id` binary(16) NOT NULL,
-  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `first_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `last_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `zip_code` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `city` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `street` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `hash` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `salutation_id` binary(16) DEFAULT NULL,
-  `language_id` binary(16) NOT NULL,
-  `sales_channel_id` binary(16) NOT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `confirmed_at` datetime(3) DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `hash` (`hash`),
-  KEY `fk.newsletter_recipient.salutation_id` (`salutation_id`),
-  KEY `fk.newsletter_recipient.language_id` (`language_id`),
-  KEY `fk.newsletter_recipient.sales_channel_id` (`sales_channel_id`),
-  CONSTRAINT `fk.newsletter_recipient.language_id` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`),
-  CONSTRAINT `fk.newsletter_recipient.sales_channel_id` FOREIGN KEY (`sales_channel_id`) REFERENCES `sales_channel` (`id`),
-  CONSTRAINT `fk.newsletter_recipient.salutation_id` FOREIGN KEY (`salutation_id`) REFERENCES `salutation` (`id`),
-  CONSTRAINT `json.newsletter_recipient.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `newsletter_recipient`
---
-
-LOCK TABLES `newsletter_recipient` WRITE;
-/*!40000 ALTER TABLE `newsletter_recipient` DISABLE KEYS */;
-/*!40000 ALTER TABLE `newsletter_recipient` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `newsletter_recipient_tag`
---
-
-DROP TABLE IF EXISTS `newsletter_recipient_tag`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `newsletter_recipient_tag` (
-  `newsletter_recipient_id` binary(16) NOT NULL,
-  `tag_id` binary(16) NOT NULL,
-  PRIMARY KEY (`newsletter_recipient_id`,`tag_id`),
-  KEY `fk.newsletter_recipient_tag.tag_id` (`tag_id`),
-  CONSTRAINT `fk.newsletter_recipient_tag.newsletter_recipient_id` FOREIGN KEY (`newsletter_recipient_id`) REFERENCES `newsletter_recipient` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.newsletter_recipient_tag.tag_id` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `newsletter_recipient_tag`
---
-
-LOCK TABLES `newsletter_recipient_tag` WRITE;
-/*!40000 ALTER TABLE `newsletter_recipient_tag` DISABLE KEYS */;
-/*!40000 ALTER TABLE `newsletter_recipient_tag` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `number_range`
---
-
-DROP TABLE IF EXISTS `number_range`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `number_range` (
-  `id` binary(16) NOT NULL,
-  `type_id` binary(16) NOT NULL,
-  `global` tinyint(1) NOT NULL,
-  `pattern` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `start` int(8) NOT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `number_range`
---
-
-LOCK TABLES `number_range` WRITE;
-/*!40000 ALTER TABLE `number_range` DISABLE KEYS */;
-INSERT INTO `number_range` VALUES ('*A|ËŒFıè9ö!0Xx','|-\\_À©@Õ¢ñ*Z<Sz',1,'{n}',10000,'2020-04-04 21:03:14.451',NULL),('/Şæy¬@ôŒ:‘	#eg_','ˆæKTkM²ƒSSM#',1,'{n}',1000,'2020-04-04 21:03:14.421',NULL),('T(½ı¼wKõ•ä\Z5umN','Š ƒàI9“ŒàåÃÊ`',1,'{n}',1000,'2020-04-04 21:03:14.421',NULL),('g[F;zJNãç¶$ºË€J','íÔFÛäxC±†Ÿæp*(',1,'SW{n}',10000,'2020-04-04 21:03:14.448',NULL),('hnµ’ºD·°üd6‚Åt','Ë­4‡Gê³öS¿¿\\',1,'{n}',1000,'2020-04-04 21:03:14.420',NULL),('²°Œ¶³–I*Ø\Zt§0','D“9EJâ±æ‹ÒNÔÆ',1,'{n}',1000,'2020-04-04 21:03:14.420',NULL),('â@Æ*ÙJ3“Ü·@æ^Z','Y‰n«@_¹ĞBfR\Zºö',1,'{n}',10000,'2020-04-04 21:03:14.449',NULL);
-/*!40000 ALTER TABLE `number_range` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `number_range_sales_channel`
---
-
-DROP TABLE IF EXISTS `number_range_sales_channel`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `number_range_sales_channel` (
-  `id` binary(16) NOT NULL,
-  `number_range_id` binary(16) NOT NULL,
-  `sales_channel_id` binary(16) DEFAULT NULL,
-  `number_range_type_id` binary(16) NOT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uniq.numer_range_id__sales_channel_id` (`number_range_id`,`sales_channel_id`),
-  KEY `fk.number_range_sales_channel.sales_channel_id` (`sales_channel_id`),
-  KEY `fk.number_range_sales_channel.number_range_type_id` (`number_range_type_id`),
-  CONSTRAINT `fk.number_range_sales_channel.number_range_id` FOREIGN KEY (`number_range_id`) REFERENCES `number_range` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.number_range_sales_channel.number_range_type_id` FOREIGN KEY (`number_range_type_id`) REFERENCES `number_range_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.number_range_sales_channel.sales_channel_id` FOREIGN KEY (`sales_channel_id`) REFERENCES `sales_channel` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `number_range_sales_channel`
---
-
-LOCK TABLES `number_range_sales_channel` WRITE;
-/*!40000 ALTER TABLE `number_range_sales_channel` DISABLE KEYS */;
-/*!40000 ALTER TABLE `number_range_sales_channel` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `number_range_state`
---
-
-DROP TABLE IF EXISTS `number_range_state`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `number_range_state` (
-  `id` binary(16) NOT NULL,
-  `number_range_id` binary(16) NOT NULL,
-  `last_value` int(8) NOT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`number_range_id`),
-  UNIQUE KEY `uniq.id` (`id`),
-  KEY `idx.number_range_id` (`number_range_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `number_range_state`
---
-
-LOCK TABLES `number_range_state` WRITE;
-/*!40000 ALTER TABLE `number_range_state` DISABLE KEYS */;
-/*!40000 ALTER TABLE `number_range_state` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `number_range_translation`
---
-
-DROP TABLE IF EXISTS `number_range_translation`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `number_range_translation` (
-  `number_range_id` binary(16) NOT NULL,
-  `name` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `language_id` binary(16) NOT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`number_range_id`,`language_id`),
-  KEY `fk.number_range_translation.language_id` (`language_id`),
-  CONSTRAINT `fk.number_range_translation.language_id` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.number_range_translation.number_range_id` FOREIGN KEY (`number_range_id`) REFERENCES `number_range` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `json.number_range_translation.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `number_range_translation`
---
-
-LOCK TABLES `number_range_translation` WRITE;
-/*!40000 ALTER TABLE `number_range_translation` DISABLE KEYS */;
-INSERT INTO `number_range_translation` VALUES ('*A|ËŒFıè9ö!0Xx','Customers',NULL,NULL,'/»_ââšMpªXTÎ|ãâ','2020-04-04 21:03:14.452',NULL),('*A|ËŒFıè9ö!0Xx','Kunden',NULL,NULL,'‹/pó¡L†…Mã4Ó8','2020-04-04 21:03:14.452',NULL),('/Şæy¬@ôŒ:‘	#eg_','Delivery notes',NULL,NULL,'/»_ââšMpªXTÎ|ãâ','2020-04-04 21:03:14.421',NULL),('/Şæy¬@ôŒ:‘	#eg_','Lieferscheine',NULL,NULL,'‹/pó¡L†…Mã4Ó8','2020-04-04 21:03:14.421',NULL),('T(½ı¼wKõ•ä\Z5umN','Credit notes',NULL,NULL,'/»_ââšMpªXTÎ|ãâ','2020-04-04 21:03:14.421',NULL),('T(½ı¼wKõ•ä\Z5umN','Gutschriften',NULL,NULL,'‹/pó¡L†…Mã4Ó8','2020-04-04 21:03:14.421',NULL),('g[F;zJNãç¶$ºË€J','Products',NULL,NULL,'/»_ââšMpªXTÎ|ãâ','2020-04-04 21:03:14.448',NULL),('g[F;zJNãç¶$ºË€J','Produkte',NULL,NULL,'‹/pó¡L†…Mã4Ó8','2020-04-04 21:03:14.449',NULL),('hnµ’ºD·°üd6‚Åt','Invoices',NULL,NULL,'/»_ââšMpªXTÎ|ãâ','2020-04-04 21:03:14.420',NULL),('hnµ’ºD·°üd6‚Åt','Rechnungen',NULL,NULL,'‹/pó¡L†…Mã4Ó8','2020-04-04 21:03:14.420',NULL),('²°Œ¶³–I*Ø\Zt§0','Cancellations',NULL,NULL,'/»_ââšMpªXTÎ|ãâ','2020-04-04 21:03:14.420',NULL),('²°Œ¶³–I*Ø\Zt§0','Stornos',NULL,NULL,'‹/pó¡L†…Mã4Ó8','2020-04-04 21:03:14.421',NULL),('â@Æ*ÙJ3“Ü·@æ^Z','Orders',NULL,NULL,'/»_ââšMpªXTÎ|ãâ','2020-04-04 21:03:14.450',NULL),('â@Æ*ÙJ3“Ü·@æ^Z','Bestellungen',NULL,NULL,'‹/pó¡L†…Mã4Ó8','2020-04-04 21:03:14.451',NULL);
-/*!40000 ALTER TABLE `number_range_translation` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `number_range_type`
---
-
-DROP TABLE IF EXISTS `number_range_type`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `number_range_type` (
-  `id` binary(16) NOT NULL,
-  `technical_name` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `global` tinyint(1) NOT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uniq.technical_name` (`technical_name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `number_range_type`
---
-
-LOCK TABLES `number_range_type` WRITE;
-/*!40000 ALTER TABLE `number_range_type` DISABLE KEYS */;
-INSERT INTO `number_range_type` VALUES ('D“9EJâ±æ‹ÒNÔÆ','document_storno',0,'2020-04-04 21:03:14.418',NULL),('Y‰n«@_¹ĞBfR\Zºö','order',0,'2020-04-04 21:03:14.444',NULL),('|-\\_À©@Õ¢ñ*Z<Sz','customer',0,'2020-04-04 21:03:14.446',NULL),('ˆæKTkM²ƒSSM#','document_delivery_note',0,'2020-04-04 21:03:14.419',NULL),('Š ƒàI9“ŒàåÃÊ`','document_credit_note',0,'2020-04-04 21:03:14.419',NULL),('Ë­4‡Gê³öS¿¿\\','document_invoice',0,'2020-04-04 21:03:14.418',NULL),('íÔFÛäxC±†Ÿæp*(','product',1,'2020-04-04 21:03:14.443',NULL);
-/*!40000 ALTER TABLE `number_range_type` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `number_range_type_translation`
---
-
-DROP TABLE IF EXISTS `number_range_type_translation`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `number_range_type_translation` (
-  `number_range_type_id` binary(16) NOT NULL,
-  `language_id` binary(16) NOT NULL,
-  `type_name` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`number_range_type_id`,`language_id`),
-  KEY `fk.number_range_type_translation.language_id` (`language_id`),
-  CONSTRAINT `fk.number_range_type_translation.language_id` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.number_range_type_translation.number_range_type_id` FOREIGN KEY (`number_range_type_id`) REFERENCES `number_range_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `json.number_range_type_translation.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `number_range_type_translation`
---
-
-LOCK TABLES `number_range_type_translation` WRITE;
-/*!40000 ALTER TABLE `number_range_type_translation` DISABLE KEYS */;
-INSERT INTO `number_range_type_translation` VALUES ('D“9EJâ±æ‹ÒNÔÆ','/»_ââšMpªXTÎ|ãâ','Cancellation',NULL,'2020-04-04 21:03:14.419',NULL),('D“9EJâ±æ‹ÒNÔÆ','‹/pó¡L†…Mã4Ó8','Storno',NULL,'2020-04-04 21:03:14.419',NULL),('Y‰n«@_¹ĞBfR\Zºö','/»_ââšMpªXTÎ|ãâ','Order',NULL,'2020-04-04 21:03:14.445',NULL),('Y‰n«@_¹ĞBfR\Zºö','‹/pó¡L†…Mã4Ó8','Bestellung',NULL,'2020-04-04 21:03:14.446',NULL),('|-\\_À©@Õ¢ñ*Z<Sz','/»_ââšMpªXTÎ|ãâ','Customer',NULL,'2020-04-04 21:03:14.447',NULL),('|-\\_À©@Õ¢ñ*Z<Sz','‹/pó¡L†…Mã4Ó8','Kunde',NULL,'2020-04-04 21:03:14.447',NULL),('ˆæKTkM²ƒSSM#','/»_ââšMpªXTÎ|ãâ','Delivery note',NULL,'2020-04-04 21:03:14.419',NULL),('ˆæKTkM²ƒSSM#','‹/pó¡L†…Mã4Ó8','Lieferschein',NULL,'2020-04-04 21:03:14.419',NULL),('Š ƒàI9“ŒàåÃÊ`','/»_ââšMpªXTÎ|ãâ','Credit note',NULL,'2020-04-04 21:03:14.419',NULL),('Š ƒàI9“ŒàåÃÊ`','‹/pó¡L†…Mã4Ó8','Gutschrift',NULL,'2020-04-04 21:03:14.420',NULL),('Ë­4‡Gê³öS¿¿\\','/»_ââšMpªXTÎ|ãâ','Invoice',NULL,'2020-04-04 21:03:14.418',NULL),('Ë­4‡Gê³öS¿¿\\','‹/pó¡L†…Mã4Ó8','Rechnung',NULL,'2020-04-04 21:03:14.418',NULL),('íÔFÛäxC±†Ÿæp*(','/»_ââšMpªXTÎ|ãâ','Product',NULL,'2020-04-04 21:03:14.443',NULL),('íÔFÛäxC±†Ÿæp*(','‹/pó¡L†…Mã4Ó8','Produkt',NULL,'2020-04-04 21:03:14.444',NULL);
-/*!40000 ALTER TABLE `number_range_type_translation` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `order`
---
-
-DROP TABLE IF EXISTS `order`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `order` (
-  `id` binary(16) NOT NULL,
-  `version_id` binary(16) NOT NULL,
-  `state_id` binary(16) NOT NULL,
-  `auto_increment` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `order_number` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `currency_id` binary(16) NOT NULL,
-  `language_id` binary(16) NOT NULL,
-  `currency_factor` double DEFAULT NULL,
-  `sales_channel_id` binary(16) NOT NULL,
-  `billing_address_id` binary(16) NOT NULL,
-  `billing_address_version_id` binary(16) NOT NULL,
-  `price` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `order_date_time` datetime(3) NOT NULL,
-  `order_date` date GENERATED ALWAYS AS (cast(`order_date_time` as date)) STORED,
-  `amount_total` double GENERATED ALWAYS AS (json_unquote(json_extract(`price`,'$.totalPrice'))) VIRTUAL,
-  `amount_net` double GENERATED ALWAYS AS (json_unquote(json_extract(`price`,'$.netPrice'))) VIRTUAL,
-  `position_price` double GENERATED ALWAYS AS (json_unquote(json_extract(`price`,'$.positionPrice'))) VIRTUAL,
-  `tax_status` varchar(255) GENERATED ALWAYS AS (json_unquote(json_extract(`price`,'$.taxStatus'))) VIRTUAL,
-  `shipping_costs` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `shipping_total` double GENERATED ALWAYS AS (json_unquote(json_extract(`shipping_costs`,'$.totalPrice'))) VIRTUAL,
-  `deep_link_code` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `affiliate_code` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `campaign_code` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`,`version_id`),
-  UNIQUE KEY `uniq.auto_increment` (`auto_increment`),
-  UNIQUE KEY `uniq.deep_link_code` (`deep_link_code`,`version_id`),
-  KEY `idx.state_index` (`state_id`),
-  KEY `fk.order.currency_id` (`currency_id`),
-  KEY `fk.order.sales_channel_id` (`sales_channel_id`),
-  KEY `fk.language_id` (`language_id`),
-  CONSTRAINT `fk.language_id` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `fk.order.currency_id` FOREIGN KEY (`currency_id`) REFERENCES `currency` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `fk.order.sales_channel_id` FOREIGN KEY (`sales_channel_id`) REFERENCES `sales_channel` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `char_length.order.deep_link_code` CHECK (char_length(`deep_link_code`) = 32),
-  CONSTRAINT `json.order.price` CHECK (json_valid(`price`)),
-  CONSTRAINT `json.order.shipping_costs` CHECK (json_valid(`shipping_costs`)),
-  CONSTRAINT `json.order.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `order`
---
-
-LOCK TABLES `order` WRITE;
-/*!40000 ALTER TABLE `order` DISABLE KEYS */;
-/*!40000 ALTER TABLE `order` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `order_address`
---
-
-DROP TABLE IF EXISTS `order_address`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `order_address` (
-  `id` binary(16) NOT NULL,
-  `version_id` binary(16) NOT NULL,
-  `country_id` binary(16) NOT NULL,
-  `country_state_id` binary(16) DEFAULT NULL,
-  `order_id` binary(16) NOT NULL,
-  `order_version_id` binary(16) NOT NULL,
-  `company` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `department` varchar(35) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `salutation_id` binary(16) NOT NULL,
-  `title` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `first_name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `last_name` varchar(60) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `street` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `zipcode` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `city` varchar(70) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `vat_id` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `phone_number` varchar(40) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `additional_address_line1` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `additional_address_line2` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`,`version_id`),
-  KEY `fk.order_address.country_id` (`country_id`),
-  KEY `fk.order_address.country_state_id` (`country_state_id`),
-  KEY `fk.order_address.order_id` (`order_id`,`order_version_id`),
-  KEY `fk.order_address.salutation_id` (`salutation_id`),
-  CONSTRAINT `fk.order_address.country_id` FOREIGN KEY (`country_id`) REFERENCES `country` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `fk.order_address.country_state_id` FOREIGN KEY (`country_state_id`) REFERENCES `country_state` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `fk.order_address.order_id` FOREIGN KEY (`order_id`, `order_version_id`) REFERENCES `order` (`id`, `version_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.order_address.salutation_id` FOREIGN KEY (`salutation_id`) REFERENCES `salutation` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `json.order_address.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `order_address`
---
-
-LOCK TABLES `order_address` WRITE;
-/*!40000 ALTER TABLE `order_address` DISABLE KEYS */;
-/*!40000 ALTER TABLE `order_address` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `order_customer`
---
-
-DROP TABLE IF EXISTS `order_customer`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `order_customer` (
-  `id` binary(16) NOT NULL,
-  `version_id` binary(16) NOT NULL,
-  `customer_id` binary(16) DEFAULT NULL,
-  `order_id` binary(16) NOT NULL,
-  `order_version_id` binary(16) NOT NULL,
-  `email` varchar(254) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `salutation_id` binary(16) NOT NULL,
-  `first_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `last_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `title` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `company` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `customer_number` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  `remote_address` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`id`,`version_id`),
-  KEY `fk.order_customer.customer_id` (`customer_id`),
-  KEY `fk.order_customer.order_id` (`order_id`,`order_version_id`),
-  KEY `fk.order_customer.salutation_id` (`salutation_id`),
-  CONSTRAINT `fk.order_customer.customer_id` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `fk.order_customer.order_id` FOREIGN KEY (`order_id`, `order_version_id`) REFERENCES `order` (`id`, `version_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.order_customer.salutation_id` FOREIGN KEY (`salutation_id`) REFERENCES `salutation` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `json.order_customer.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `order_customer`
---
-
-LOCK TABLES `order_customer` WRITE;
-/*!40000 ALTER TABLE `order_customer` DISABLE KEYS */;
-/*!40000 ALTER TABLE `order_customer` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `order_delivery`
---
-
-DROP TABLE IF EXISTS `order_delivery`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `order_delivery` (
-  `id` binary(16) NOT NULL,
-  `version_id` binary(16) NOT NULL,
-  `order_id` binary(16) NOT NULL,
-  `order_version_id` binary(16) NOT NULL,
-  `state_id` binary(16) NOT NULL,
-  `shipping_order_address_id` binary(16) DEFAULT NULL,
-  `shipping_order_address_version_id` binary(16) DEFAULT NULL,
-  `shipping_method_id` binary(16) NOT NULL,
-  `tracking_codes` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `shipping_date_earliest` date NOT NULL,
-  `shipping_date_latest` date NOT NULL,
-  `shipping_costs` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`,`version_id`),
-  KEY `idx.state_index` (`state_id`),
-  KEY `fk.order_delivery.order_id` (`order_id`,`order_version_id`),
-  KEY `fk.order_delivery.shipping_method_id` (`shipping_method_id`),
-  KEY `fk.order_delivery.shipping_order_address_id` (`shipping_order_address_id`,`shipping_order_address_version_id`),
-  CONSTRAINT `fk.order_delivery.order_id` FOREIGN KEY (`order_id`, `order_version_id`) REFERENCES `order` (`id`, `version_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.order_delivery.shipping_method_id` FOREIGN KEY (`shipping_method_id`) REFERENCES `shipping_method` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `fk.order_delivery.shipping_order_address_id` FOREIGN KEY (`shipping_order_address_id`, `shipping_order_address_version_id`) REFERENCES `order_address` (`id`, `version_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `json.order_delivery.shipping_costs` CHECK (json_valid(`shipping_costs`)),
-  CONSTRAINT `json.order_delivery.custom_fields` CHECK (json_valid(`custom_fields`)),
-  CONSTRAINT `json.order_delivery.tracking_codes` CHECK (json_valid(`tracking_codes`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `order_delivery`
---
-
-LOCK TABLES `order_delivery` WRITE;
-/*!40000 ALTER TABLE `order_delivery` DISABLE KEYS */;
-/*!40000 ALTER TABLE `order_delivery` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `order_delivery_position`
---
-
-DROP TABLE IF EXISTS `order_delivery_position`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `order_delivery_position` (
-  `id` binary(16) NOT NULL,
-  `version_id` binary(16) NOT NULL,
-  `order_delivery_id` binary(16) NOT NULL,
-  `order_delivery_version_id` binary(16) NOT NULL,
-  `order_line_item_id` binary(16) NOT NULL,
-  `order_line_item_version_id` binary(16) NOT NULL,
-  `price` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `total_price` int(11) GENERATED ALWAYS AS (json_unquote(json_extract(`price`,'$.totalPrice'))) VIRTUAL,
-  `unit_price` int(11) GENERATED ALWAYS AS (json_unquote(json_extract(`price`,'$.unitPrice'))) VIRTUAL,
-  `quantity` int(11) GENERATED ALWAYS AS (json_unquote(json_extract(`price`,'$.quantity'))) VIRTUAL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`,`version_id`),
-  KEY `fk.order_delivery_position.order_delivery_id` (`order_delivery_id`,`order_delivery_version_id`),
-  KEY `fk.order_delivery_position.order_line_item_id` (`order_line_item_id`,`order_line_item_version_id`),
-  CONSTRAINT `fk.order_delivery_position.order_delivery_id` FOREIGN KEY (`order_delivery_id`, `order_delivery_version_id`) REFERENCES `order_delivery` (`id`, `version_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.order_delivery_position.order_line_item_id` FOREIGN KEY (`order_line_item_id`, `order_line_item_version_id`) REFERENCES `order_line_item` (`id`, `version_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `json.order_delivery_position.price` CHECK (json_valid(`price`)),
-  CONSTRAINT `json.order_delivery_position.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `order_delivery_position`
---
-
-LOCK TABLES `order_delivery_position` WRITE;
-/*!40000 ALTER TABLE `order_delivery_position` DISABLE KEYS */;
-/*!40000 ALTER TABLE `order_delivery_position` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `order_line_item`
---
-
-DROP TABLE IF EXISTS `order_line_item`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `order_line_item` (
-  `id` binary(16) NOT NULL,
-  `version_id` binary(16) NOT NULL,
-  `order_id` binary(16) NOT NULL,
-  `order_version_id` binary(16) NOT NULL,
-  `parent_id` binary(16) DEFAULT NULL,
-  `parent_version_id` binary(16) DEFAULT NULL,
-  `identifier` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `referenced_id` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `product_id` binary(16) DEFAULT NULL,
-  `product_version_id` binary(16) DEFAULT NULL,
-  `label` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `cover_id` binary(16) DEFAULT NULL,
-  `quantity` int(11) NOT NULL,
-  `unit_price` double GENERATED ALWAYS AS (json_unquote(json_extract(`price`,'$.unitPrice'))) VIRTUAL,
-  `total_price` double GENERATED ALWAYS AS (json_unquote(json_extract(`price`,'$.totalPrice'))) VIRTUAL,
-  `type` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `payload` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `price_definition` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `price` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `stackable` tinyint(1) NOT NULL DEFAULT 1,
-  `removable` tinyint(1) NOT NULL DEFAULT 1,
-  `good` tinyint(1) NOT NULL DEFAULT 1,
-  `position` int(11) NOT NULL DEFAULT 1,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`,`version_id`),
-  KEY `fk.order_line_item.order_id` (`order_id`,`order_version_id`),
-  KEY `fk.order_line_item.parent_id` (`parent_id`,`parent_version_id`),
-  KEY `fk.order_line_item.cover_id` (`cover_id`),
-  KEY `product_id` (`product_id`,`product_version_id`),
-  CONSTRAINT `fk.order_line_item.cover_id` FOREIGN KEY (`cover_id`) REFERENCES `media` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `fk.order_line_item.order_id` FOREIGN KEY (`order_id`, `order_version_id`) REFERENCES `order` (`id`, `version_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.order_line_item.parent_id` FOREIGN KEY (`parent_id`, `parent_version_id`) REFERENCES `order_line_item` (`id`, `version_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `order_line_item_ibfk_1` FOREIGN KEY (`product_id`, `product_version_id`) REFERENCES `product` (`id`, `version_id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `json.order_line_item.payload` CHECK (json_valid(`payload`)),
-  CONSTRAINT `json.order_line_item.price` CHECK (json_valid(`price`)),
-  CONSTRAINT `json.order_line_item.price_definition` CHECK (json_valid(`price_definition`)),
-  CONSTRAINT `json.order_line_item.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `order_line_item`
---
-
-LOCK TABLES `order_line_item` WRITE;
-/*!40000 ALTER TABLE `order_line_item` DISABLE KEYS */;
-/*!40000 ALTER TABLE `order_line_item` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `order_tag`
---
-
-DROP TABLE IF EXISTS `order_tag`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `order_tag` (
-  `order_id` binary(16) NOT NULL,
-  `order_version_id` binary(16) NOT NULL,
-  `tag_id` binary(16) NOT NULL,
-  PRIMARY KEY (`order_id`,`order_version_id`,`tag_id`),
-  KEY `fk.order_tag.tag_id` (`tag_id`),
-  CONSTRAINT `fk.order_tag.order_tag__order_version_id` FOREIGN KEY (`order_id`, `order_version_id`) REFERENCES `order` (`id`, `version_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.order_tag.tag_id` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `order_tag`
---
-
-LOCK TABLES `order_tag` WRITE;
-/*!40000 ALTER TABLE `order_tag` DISABLE KEYS */;
-/*!40000 ALTER TABLE `order_tag` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `order_transaction`
---
-
-DROP TABLE IF EXISTS `order_transaction`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `order_transaction` (
-  `id` binary(16) NOT NULL,
-  `version_id` binary(16) NOT NULL,
-  `order_id` binary(16) NOT NULL,
-  `order_version_id` binary(16) NOT NULL,
-  `state_id` binary(16) NOT NULL,
-  `payment_method_id` binary(16) NOT NULL,
-  `amount` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`,`version_id`),
-  KEY `idx.state_index` (`state_id`),
-  KEY `fk.order_transaction.order_id` (`order_id`,`order_version_id`),
-  KEY `fk.order_transaction.payment_method_id` (`payment_method_id`),
-  CONSTRAINT `fk.order_transaction.order_id` FOREIGN KEY (`order_id`, `order_version_id`) REFERENCES `order` (`id`, `version_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.order_transaction.payment_method_id` FOREIGN KEY (`payment_method_id`) REFERENCES `payment_method` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `fk.order_transaction.state_id` FOREIGN KEY (`state_id`) REFERENCES `state_machine_state` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `json.order_transaction.amount` CHECK (json_valid(`amount`)),
-  CONSTRAINT `json.order_transaction.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `order_transaction`
---
-
-LOCK TABLES `order_transaction` WRITE;
-/*!40000 ALTER TABLE `order_transaction` DISABLE KEYS */;
-/*!40000 ALTER TABLE `order_transaction` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `payment_method`
---
-
-DROP TABLE IF EXISTS `payment_method`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `payment_method` (
-  `id` binary(16) NOT NULL,
-  `handler_identifier` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Shopware\\Core\\Checkout\\Payment\\Cart\\PaymentHandler\\DefaultPayment',
-  `position` int(11) NOT NULL DEFAULT 1,
-  `active` tinyint(1) NOT NULL DEFAULT 0,
-  `availability_rule_id` binary(16) DEFAULT NULL,
-  `plugin_id` binary(16) DEFAULT NULL,
-  `media_id` binary(16) DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk.payment_method.availability_rule_id` (`availability_rule_id`),
-  KEY `fk.payment_method.plugin_id` (`plugin_id`),
-  KEY `fk.payment_method.media_id` (`media_id`),
-  CONSTRAINT `fk.payment_method.availability_rule_id` FOREIGN KEY (`availability_rule_id`) REFERENCES `rule` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `fk.payment_method.media_id` FOREIGN KEY (`media_id`) REFERENCES `media` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `fk.payment_method.plugin_id` FOREIGN KEY (`plugin_id`) REFERENCES `plugin` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `payment_method`
---
-
-LOCK TABLES `payment_method` WRITE;
-/*!40000 ALTER TABLE `payment_method` DISABLE KEYS */;
-INSERT INTO `payment_method` VALUES ('	™ñ\nÛ\0F9›1Qb¥6¶M','Swag\\PayPal\\Payment\\PayPalPuiPaymentHandler',-99,0,'²e£«ËA ’TÓş$Øè',NULL,NULL,'2020-04-04 21:05:47.381',NULL),('½‘ı¡IS¦íC‚‹Eöµ','Shopware\\Core\\Checkout\\Payment\\Cart\\PaymentHandler\\PrePayment',2,1,NULL,NULL,NULL,'2020-04-04 21:03:14.386',NULL),('†Ÿ¨ßª·DQŠ\nÂ?†ÀñR','Shopware\\Core\\Checkout\\Payment\\Cart\\PaymentHandler\\InvoicePayment',5,1,NULL,NULL,NULL,'2020-04-04 21:03:14.385',NULL),('Øqó¨ÛC·ŠÂÊ\nÁqk','Swag\\PayPal\\Payment\\PayPalPaymentHandler',-100,0,NULL,NULL,NULL,'2020-04-04 21:05:47.379',NULL),('Ú•KD4·Lµ¾±ä¶DQ','Shopware\\Core\\Checkout\\Payment\\Cart\\PaymentHandler\\DebitPayment',4,0,NULL,NULL,NULL,'2020-04-04 21:03:14.384',NULL),('à—Œÿ8B„•èú–ıö','Shopware\\Core\\Checkout\\Payment\\Cart\\PaymentHandler\\CashPayment',1,1,NULL,NULL,NULL,'2020-04-04 21:03:14.386',NULL);
-/*!40000 ALTER TABLE `payment_method` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `payment_method_translation`
---
-
-DROP TABLE IF EXISTS `payment_method_translation`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `payment_method_translation` (
-  `payment_method_id` binary(16) NOT NULL,
-  `language_id` binary(16) NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `description` mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`payment_method_id`,`language_id`),
-  KEY `fk.payment_method_translation.language_id` (`language_id`),
-  CONSTRAINT `fk.payment_method_translation.language_id` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.payment_method_translation.payment_method_id` FOREIGN KEY (`payment_method_id`) REFERENCES `payment_method` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `json.payment_method_translation.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `payment_method_translation`
---
-
-LOCK TABLES `payment_method_translation` WRITE;
-/*!40000 ALTER TABLE `payment_method_translation` DISABLE KEYS */;
-INSERT INTO `payment_method_translation` VALUES ('	™ñ\nÛ\0F9›1Qb¥6¶M','/»_ââšMpªXTÎ|ãâ','Pay upon invoice','Buy comfortably on invoice and pay later.',NULL,'2020-04-04 21:05:47.380',NULL),('	™ñ\nÛ\0F9›1Qb¥6¶M','‹/pó¡L†…Mã4Ó8','Rechnungskauf','Kaufen Sie ganz bequem auf Rechnung und bezahlen Sie spÃ¤ter.',NULL,'2020-04-04 21:05:47.380',NULL),('½‘ı¡IS¦íC‚‹Eöµ','/»_ââšMpªXTÎ|ãâ','Paid in advance','Pay in advance and get your order afterwards',NULL,'2020-04-04 21:03:14.386',NULL),('½‘ı¡IS¦íC‚‹Eöµ','‹/pó¡L†…Mã4Ó8','Vorkasse','Sie zahlen einfach vorab und erhalten die Ware bequem und gÃ¼nstig bei Zahlungseingang nach Hause geliefert.',NULL,'2020-04-04 21:03:14.386',NULL),('†Ÿ¨ßª·DQŠ\nÂ?†ÀñR','/»_ââšMpªXTÎ|ãâ','Invoice','Payment by invoice. Shopware provides automatic invoicing for all customers on orders after the first. This is to avoid defaults on payment.',NULL,'2020-04-04 21:03:14.385',NULL),('†Ÿ¨ßª·DQŠ\nÂ?†ÀñR','‹/pó¡L†…Mã4Ó8','Rechnung','Sie zahlen einfach und bequem auf Rechnung. Shopware bietet z.B. auch die MÃ¶glichkeit, Rechnungen automatisiert erst ab der 2. Bestellung fÃ¼r Kunden zur VerfÃ¼gung zu stellen, um ZahlungsausfÃ¤lle zu vermeiden.',NULL,'2020-04-04 21:03:14.386',NULL),('Øqó¨ÛC·ŠÂÊ\nÁqk','/»_ââšMpªXTÎ|ãâ','PayPal','Payment via PayPal - easy, fast and secure.',NULL,'2020-04-04 21:05:47.378',NULL),('Øqó¨ÛC·ŠÂÊ\nÁqk','‹/pó¡L†…Mã4Ó8',NULL,'Bezahlung per PayPal - einfach, schnell und sicher.',NULL,'2020-04-04 21:05:47.379',NULL),('Ú•KD4·Lµ¾±ä¶DQ','/»_ââšMpªXTÎ|ãâ','Direct Debit','Pre-authorized payment, funds are withdrawn directly from the debited account.',NULL,'2020-04-04 21:03:14.385',NULL),('Ú•KD4·Lµ¾±ä¶DQ','‹/pó¡L†…Mã4Ó8','Lastschrift','Vorab autorisierte Zahlungsvereinbarung, Zahlungen werden direkt vom zu belastenden Konto abgebucht.',NULL,'2020-04-04 21:03:14.385',NULL),('à—Œÿ8B„•èú–ıö','/»_ââšMpªXTÎ|ãâ','Cash on delivery','Payment upon receipt of goods.',NULL,'2020-04-04 21:03:14.386',NULL),('à—Œÿ8B„•èú–ıö','‹/pó¡L†…Mã4Ó8','Nachnahme','Zahlung bei Erhalt der Ware.',NULL,'2020-04-04 21:03:14.386',NULL);
-/*!40000 ALTER TABLE `payment_method_translation` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `plugin`
---
-
-DROP TABLE IF EXISTS `plugin`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `plugin` (
-  `id` binary(16) NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `base_class` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `composer_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `active` tinyint(1) NOT NULL DEFAULT 0,
-  `managed_by_composer` tinyint(1) NOT NULL DEFAULT 0,
-  `path` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `autoload` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `author` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `copyright` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `license` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `version` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `upgrade_version` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `icon` mediumblob DEFAULT NULL,
-  `installed_at` datetime(3) DEFAULT NULL,
-  `upgraded_at` datetime(3) DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uniq.name` (`name`),
-  UNIQUE KEY `uniq.baseClass` (`base_class`),
-  CONSTRAINT `json.autoload` CHECK (json_valid(`autoload`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `plugin`
---
-
-LOCK TABLES `plugin` WRITE;
-/*!40000 ALTER TABLE `plugin` DISABLE KEYS */;
-/*!40000 ALTER TABLE `plugin` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `plugin_translation`
---
-
-DROP TABLE IF EXISTS `plugin_translation`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `plugin_translation` (
-  `plugin_id` binary(16) NOT NULL,
-  `language_id` binary(16) NOT NULL,
-  `label` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `description` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `manufacturer_link` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `support_link` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `changelog` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`plugin_id`,`language_id`),
-  KEY `fk.plugin_translation.language_id` (`language_id`),
-  CONSTRAINT `fk.plugin_translation.language_id` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.plugin_translation.plugin_id` FOREIGN KEY (`plugin_id`) REFERENCES `plugin` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `json.plugin_translation.changelog` CHECK (json_valid(`changelog`)),
-  CONSTRAINT `json.plugin_translation.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `plugin_translation`
---
-
-LOCK TABLES `plugin_translation` WRITE;
-/*!40000 ALTER TABLE `plugin_translation` DISABLE KEYS */;
-/*!40000 ALTER TABLE `plugin_translation` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `product`
---
-
-DROP TABLE IF EXISTS `product`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `product` (
-  `id` binary(16) NOT NULL,
-  `version_id` binary(16) NOT NULL,
-  `auto_increment` int(11) NOT NULL AUTO_INCREMENT,
-  `product_number` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `active` tinyint(1) unsigned NOT NULL DEFAULT 1,
-  `parent_id` binary(16) DEFAULT NULL,
-  `parent_version_id` binary(16) DEFAULT NULL,
-  `tax_id` binary(16) DEFAULT NULL,
-  `product_manufacturer_id` binary(16) DEFAULT NULL,
-  `product_manufacturer_version_id` binary(16) DEFAULT NULL,
-  `delivery_time_id` binary(16) DEFAULT NULL,
-  `deliveryTime` binary(16) DEFAULT NULL,
-  `product_media_id` binary(16) DEFAULT NULL,
-  `product_media_version_id` binary(16) DEFAULT NULL,
-  `unit_id` binary(16) DEFAULT NULL,
-  `category_tree` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `option_ids` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `property_ids` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `tax` binary(16) DEFAULT NULL,
-  `manufacturer` binary(16) DEFAULT NULL,
-  `cover` binary(16) DEFAULT NULL,
-  `unit` binary(16) DEFAULT NULL,
-  `media` binary(16) DEFAULT NULL,
-  `prices` binary(16) DEFAULT NULL,
-  `visibilities` binary(16) DEFAULT NULL,
-  `properties` binary(16) DEFAULT NULL,
-  `categories` binary(16) DEFAULT NULL,
-  `translations` binary(16) DEFAULT NULL,
-  `price` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `listing_prices` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `manufacturer_number` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `ean` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `stock` int(11) NOT NULL,
-  `available_stock` int(11) DEFAULT NULL,
-  `available` tinyint(1) NOT NULL DEFAULT 1,
-  `restock_time` int(11) DEFAULT NULL,
-  `is_closeout` tinyint(1) DEFAULT NULL,
-  `purchase_steps` int(11) unsigned DEFAULT NULL,
-  `max_purchase` int(11) unsigned DEFAULT NULL,
-  `min_purchase` int(11) unsigned DEFAULT NULL,
-  `purchase_unit` decimal(11,4) unsigned DEFAULT NULL,
-  `reference_unit` decimal(10,3) unsigned DEFAULT NULL,
-  `shipping_free` tinyint(1) DEFAULT NULL,
-  `purchase_price` double DEFAULT NULL,
-  `mark_as_topseller` tinyint(1) unsigned DEFAULT NULL,
-  `weight` decimal(10,3) unsigned DEFAULT NULL,
-  `width` decimal(10,3) unsigned DEFAULT NULL,
-  `height` decimal(10,3) unsigned DEFAULT NULL,
-  `length` decimal(10,3) unsigned DEFAULT NULL,
-  `release_date` datetime(3) DEFAULT NULL,
-  `whitelist_ids` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `blacklist_ids` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `tag_ids` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `tags` binary(16) DEFAULT NULL,
-  `variant_restrictions` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `configurator_group_config` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) DEFAULT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  `rating_average` float DEFAULT NULL,
-  `display_group` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `child_count` int(11) DEFAULT NULL,
-  `crossSellings` binary(16) DEFAULT NULL,
-  PRIMARY KEY (`id`,`version_id`),
-  UNIQUE KEY `auto_increment` (`auto_increment`),
-  UNIQUE KEY `uniq.product.product_number__version_id` (`product_number`,`version_id`),
-  KEY `fk.product.product_manufacturer_id` (`product_manufacturer_id`,`product_manufacturer_version_id`),
-  KEY `fk.product.tax_id` (`tax_id`),
-  KEY `fk.product.unit_id` (`unit_id`),
-  KEY `fk.product.parent_id` (`parent_id`,`parent_version_id`),
-  KEY `fk.product.product_media_id` (`product_media_id`,`product_media_version_id`),
-  CONSTRAINT `fk.product.parent_id` FOREIGN KEY (`parent_id`, `parent_version_id`) REFERENCES `product` (`id`, `version_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.product.product_manufacturer_id` FOREIGN KEY (`product_manufacturer_id`, `product_manufacturer_version_id`) REFERENCES `product_manufacturer` (`id`, `version_id`) ON UPDATE CASCADE,
-  CONSTRAINT `fk.product.product_media_id` FOREIGN KEY (`product_media_id`, `product_media_version_id`) REFERENCES `product_media` (`id`, `version_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.product.tax_id` FOREIGN KEY (`tax_id`) REFERENCES `tax` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `fk.product.unit_id` FOREIGN KEY (`unit_id`) REFERENCES `unit` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `json.product.category_tree` CHECK (json_valid(`category_tree`)),
-  CONSTRAINT `json.product.option_ids` CHECK (json_valid(`option_ids`)),
-  CONSTRAINT `json.product.property_ids` CHECK (json_valid(`property_ids`)),
-  CONSTRAINT `json.product.price` CHECK (json_valid(`price`)),
-  CONSTRAINT `json.product.listing_prices` CHECK (json_valid(`listing_prices`)),
-  CONSTRAINT `json.product.blacklist_ids` CHECK (json_valid(`blacklist_ids`)),
-  CONSTRAINT `json.product.whitelist_ids` CHECK (json_valid(`whitelist_ids`)),
-  CONSTRAINT `json.product.tag_ids` CHECK (json_valid(`tag_ids`)),
-  CONSTRAINT `json.product.variant_restrictions` CHECK (json_valid(`variant_restrictions`))
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `product`
---
-
-LOCK TABLES `product` WRITE;
-/*!40000 ALTER TABLE `product` DISABLE KEYS */;
-INSERT INTO `product` VALUES ('Üh@°OFœË£TËğ¹g','©ãéjKÂ¾KÙÎu,4%',1,'SWDEMO10002',1,NULL,'©ãéjKÂ¾KÙÎu,4%','ÙH0Ã´FŒ‚€Â®E¬gt','Ì ÃeÓLûˆ¿«<>ÓP','©ãéjKÂ¾KÙÎu,4%',NULL,NULL,'„5jq#=K>ŸA}ÌˆPÈ/',NULL,NULL,'[\"0c8312bca2c0411d82320304db4e9f28\",\"251448b91bc742de85643f5fccd89051\"]',NULL,NULL,'ÙH0Ã´FŒ‚€Â®E¬gt','Ì ÃeÓLûˆ¿«<>ÓP','„5jq#=K>ŸA}ÌˆPÈ/',NULL,'Üh@°OFœË£TËğ¹g','Üh@°OFœË£TËğ¹g','Üh@°OFœË£TËğ¹g','Üh@°OFœË£TËğ¹g','Üh@°OFœË£TËğ¹g','Üh@°OFœË£TËğ¹g','{\"cb7d2554b0ce847cd82f3ac9bd1c0dfca\":{\"net\":798.31999999999994,\"gross\":950,\"linked\":true,\"currencyId\":\"b7d2554b0ce847cd82f3ac9bd1c0dfca\"}}','{\"structs\":\"O:75:\\\"Shopware\\\\Core\\\\Framework\\\\DataAbstractionLayer\\\\Pricing\\\\ListingPriceCollection\\\":2:{s:11:\\\"\\u0000*\\u0000elements\\\";a:8:{i:0;O:65:\\\"Shopware\\\\Core\\\\Framework\\\\DataAbstractionLayer\\\\Pricing\\\\ListingPrice\\\":5:{s:13:\\\"\\u0000*\\u0000currencyId\\\";s:32:\\\"26edc9d01f694f53b7cb13285d57e4f1\\\";s:9:\\\"\\u0000*\\u0000ruleId\\\";s:32:\\\"28caae75a5624f0d985abd0eb32aa160\\\";s:7:\\\"\\u0000*\\u0000from\\\";O:58:\\\"Shopware\\\\Core\\\\Framework\\\\DataAbstractionLayer\\\\Pricing\\\\Price\\\":6:{s:13:\\\"\\u0000*\\u0000currencyId\\\";s:32:\\\"26edc9d01f694f53b7cb13285d57e4f1\\\";s:6:\\\"\\u0000*\\u0000net\\\";d:2728.98;s:8:\\\"\\u0000*\\u0000gross\\\";d:3247.5;s:9:\\\"\\u0000*\\u0000linked\\\";b:1;s:12:\\\"\\u0000*\\u0000listPrice\\\";N;s:13:\\\"\\u0000*\\u0000extensions\\\";a:0:{}}s:5:\\\"\\u0000*\\u0000to\\\";O:58:\\\"Shopware\\\\Core\\\\Framework\\\\DataAbstractionLayer\\\\Pricing\\\\Price\\\":6:{s:13:\\\"\\u0000*\\u0000currencyId\\\";s:32:\\\"26edc9d01f694f53b7cb13285d57e4f1\\\";s:6:\\\"\\u0000*\\u0000net\\\";d:2910.9299999999998;s:8:\\\"\\u0000*\\u0000gross\\\";d:3464;s:9:\\\"\\u0000*\\u0000linked\\\";b:1;s:12:\\\"\\u0000*\\u0000listPrice\\\";N;s:13:\\\"\\u0000*\\u0000extensions\\\";a:0:{}}s:13:\\\"\\u0000*\\u0000extensions\\\";a:0:{}}i:1;O:65:\\\"Shopware\\\\Core\\\\Framework\\\\DataAbstractionLayer\\\\Pricing\\\\ListingPrice\\\":5:{s:13:\\\"\\u0000*\\u0000currencyId\\\";s:32:\\\"829a26c8162c4fb3a04cc7f12d0013b0\\\";s:9:\\\"\\u0000*\\u0000ruleId\\\";s:32:\\\"28caae75a5624f0d985abd0eb32aa160\\\";s:7:\\\"\\u0000*\\u0000from\\\";O:58:\\\"Shopware\\\\Core\\\\Framework\\\\DataAbstractionLayer\\\\Pricing\\\\Price\\\":6:{s:13:\\\"\\u0000*\\u0000currencyId\\\";s:32:\\\"829a26c8162c4fb3a04cc7f12d0013b0\\\";s:6:\\\"\\u0000*\\u0000net\\\";d:4707.9700000000003;s:8:\\\"\\u0000*\\u0000gross\\\";d:5602.5;s:9:\\\"\\u0000*\\u0000linked\\\";b:1;s:12:\\\"\\u0000*\\u0000listPrice\\\";N;s:13:\\\"\\u0000*\\u0000extensions\\\";a:0:{}}s:5:\\\"\\u0000*\\u0000to\\\";O:58:\\\"Shopware\\\\Core\\\\Framework\\\\DataAbstractionLayer\\\\Pricing\\\\Price\\\":6:{s:13:\\\"\\u0000*\\u0000currencyId\\\";s:32:\\\"829a26c8162c4fb3a04cc7f12d0013b0\\\";s:6:\\\"\\u0000*\\u0000net\\\";d:5021.8599999999997;s:8:\\\"\\u0000*\\u0000gross\\\";d:5976;s:9:\\\"\\u0000*\\u0000linked\\\";b:1;s:12:\\\"\\u0000*\\u0000listPrice\\\";N;s:13:\\\"\\u0000*\\u0000extensions\\\";a:0:{}}s:13:\\\"\\u0000*\\u0000extensions\\\";a:0:{}}i:2;O:65:\\\"Shopware\\\\Core\\\\Framework\\\\DataAbstractionLayer\\\\Pricing\\\\ListingPrice\\\":5:{s:13:\\\"\\u0000*\\u0000currencyId\\\";s:32:\\\"8777a2d74b944ff09edb52d7d62fdd17\\\";s:9:\\\"\\u0000*\\u0000ruleId\\\";s:32:\\\"28caae75a5624f0d985abd0eb32aa160\\\";s:7:\\\"\\u0000*\\u0000from\\\";O:58:\\\"Shopware\\\\Core\\\\Framework\\\\DataAbstractionLayer\\\\Pricing\\\\Price\\\":6:{s:13:\\\"\\u0000*\\u0000currencyId\\\";s:32:\\\"8777a2d74b944ff09edb52d7d62fdd17\\\";s:6:\\\"\\u0000*\\u0000net\\\";d:62.390000000000001;s:8:\\\"\\u0000*\\u0000gross\\\";d:74.25;s:9:\\\"\\u0000*\\u0000linked\\\";b:1;s:12:\\\"\\u0000*\\u0000listPrice\\\";N;s:13:\\\"\\u0000*\\u0000extensions\\\";a:0:{}}s:5:\\\"\\u0000*\\u0000to\\\";O:58:\\\"Shopware\\\\Core\\\\Framework\\\\DataAbstractionLayer\\\\Pricing\\\\Price\\\":6:{s:13:\\\"\\u0000*\\u0000currencyId\\\";s:32:\\\"8777a2d74b944ff09edb52d7d62fdd17\\\";s:6:\\\"\\u0000*\\u0000net\\\";d:66.549999999999997;s:8:\\\"\\u0000*\\u0000gross\\\";d:79.200000000000003;s:9:\\\"\\u0000*\\u0000linked\\\";b:1;s:12:\\\"\\u0000*\\u0000listPrice\\\";N;s:13:\\\"\\u0000*\\u0000extensions\\\";a:0:{}}s:13:\\\"\\u0000*\\u0000extensions\\\";a:0:{}}i:3;O:65:\\\"Shopware\\\\Core\\\\Framework\\\\DataAbstractionLayer\\\\Pricing\\\\ListingPrice\\\":5:{s:13:\\\"\\u0000*\\u0000currencyId\\\";s:32:\\\"9dc04b67373e44678bbbc05e67981946\\\";s:9:\\\"\\u0000*\\u0000ruleId\\\";s:32:\\\"28caae75a5624f0d985abd0eb32aa160\\\";s:7:\\\"\\u0000*\\u0000from\\\";O:58:\\\"Shopware\\\\Core\\\\Framework\\\\DataAbstractionLayer\\\\Pricing\\\\Price\\\":6:{s:13:\\\"\\u0000*\\u0000currencyId\\\";s:32:\\\"9dc04b67373e44678bbbc05e67981946\\\";s:6:\\\"\\u0000*\\u0000net\\\";d:737.92999999999995;s:8:\\\"\\u0000*\\u0000gross\\\";d:878.13999999999999;s:9:\\\"\\u0000*\\u0000linked\\\";b:1;s:12:\\\"\\u0000*\\u0000listPrice\\\";N;s:13:\\\"\\u0000*\\u0000extensions\\\";a:0:{}}s:5:\\\"\\u0000*\\u0000to\\\";O:58:\\\"Shopware\\\\Core\\\\Framework\\\\DataAbstractionLayer\\\\Pricing\\\\Price\\\":6:{s:13:\\\"\\u0000*\\u0000currencyId\\\";s:32:\\\"9dc04b67373e44678bbbc05e67981946\\\";s:6:\\\"\\u0000*\\u0000net\\\";d:787.13;s:8:\\\"\\u0000*\\u0000gross\\\";d:936.67999999999995;s:9:\\\"\\u0000*\\u0000linked\\\";b:1;s:12:\\\"\\u0000*\\u0000listPrice\\\";N;s:13:\\\"\\u0000*\\u0000extensions\\\";a:0:{}}s:13:\\\"\\u0000*\\u0000extensions\\\";a:0:{}}i:4;O:65:\\\"Shopware\\\\Core\\\\Framework\\\\DataAbstractionLayer\\\\Pricing\\\\ListingPrice\\\":5:{s:13:\\\"\\u0000*\\u0000currencyId\\\";s:32:\\\"a89f2c126e4144e4b20aec69d51b5ec8\\\";s:9:\\\"\\u0000*\\u0000ruleId\\\";s:32:\\\"28caae75a5624f0d985abd0eb32aa160\\\";s:7:\\\"\\u0000*\\u0000from\\\";O:58:\\\"Shopware\\\\Core\\\\Framework\\\\DataAbstractionLayer\\\\Pricing\\\\Price\\\":6:{s:13:\\\"\\u0000*\\u0000currencyId\\\";s:32:\\\"a89f2c126e4144e4b20aec69d51b5ec8\\\";s:6:\\\"\\u0000*\\u0000net\\\";d:6623.9300000000003;s:8:\\\"\\u0000*\\u0000gross\\\";d:7882.5;s:9:\\\"\\u0000*\\u0000linked\\\";b:1;s:12:\\\"\\u0000*\\u0000listPrice\\\";N;s:13:\\\"\\u0000*\\u0000extensions\\\";a:0:{}}s:5:\\\"\\u0000*\\u0000to\\\";O:58:\\\"Shopware\\\\Core\\\\Framework\\\\DataAbstractionLayer\\\\Pricing\\\\Price\\\":6:{s:13:\\\"\\u0000*\\u0000currencyId\\\";s:32:\\\"a89f2c126e4144e4b20aec69d51b5ec8\\\";s:6:\\\"\\u0000*\\u0000net\\\";d:7065.5600000000004;s:8:\\\"\\u0000*\\u0000gross\\\";d:8408;s:9:\\\"\\u0000*\\u0000linked\\\";b:1;s:12:\\\"\\u0000*\\u0000listPrice\\\";N;s:13:\\\"\\u0000*\\u0000extensions\\\";a:0:{}}s:13:\\\"\\u0000*\\u0000extensions\\\";a:0:{}}i:5;O:65:\\\"Shopware\\\\Core\\\\Framework\\\\DataAbstractionLayer\\\\Pricing\\\\ListingPrice\\\":5:{s:13:\\\"\\u0000*\\u0000currencyId\\\";s:32:\\\"b7d2554b0ce847cd82f3ac9bd1c0dfca\\\";s:9:\\\"\\u0000*\\u0000ruleId\\\";s:32:\\\"28caae75a5624f0d985abd0eb32aa160\\\";s:7:\\\"\\u0000*\\u0000from\\\";O:58:\\\"Shopware\\\\Core\\\\Framework\\\\DataAbstractionLayer\\\\Pricing\\\\Price\\\":6:{s:13:\\\"\\u0000*\\u0000currencyId\\\";s:32:\\\"b7d2554b0ce847cd82f3ac9bd1c0dfca\\\";s:6:\\\"\\u0000*\\u0000net\\\";d:630.25;s:8:\\\"\\u0000*\\u0000gross\\\";i:750;s:9:\\\"\\u0000*\\u0000linked\\\";b:1;s:12:\\\"\\u0000*\\u0000listPrice\\\";N;s:13:\\\"\\u0000*\\u0000extensions\\\";a:0:{}}s:5:\\\"\\u0000*\\u0000to\\\";O:58:\\\"Shopware\\\\Core\\\\Framework\\\\DataAbstractionLayer\\\\Pricing\\\\Price\\\":6:{s:13:\\\"\\u0000*\\u0000currencyId\\\";s:32:\\\"b7d2554b0ce847cd82f3ac9bd1c0dfca\\\";s:6:\\\"\\u0000*\\u0000net\\\";d:672.26999999999998;s:8:\\\"\\u0000*\\u0000gross\\\";i:800;s:9:\\\"\\u0000*\\u0000linked\\\";b:1;s:12:\\\"\\u0000*\\u0000listPrice\\\";N;s:13:\\\"\\u0000*\\u0000extensions\\\";a:0:{}}s:13:\\\"\\u0000*\\u0000extensions\\\";a:0:{}}i:6;O:65:\\\"Shopware\\\\Core\\\\Framework\\\\DataAbstractionLayer\\\\Pricing\\\\ListingPrice\\\":5:{s:13:\\\"\\u0000*\\u0000currencyId\\\";s:32:\\\"ba44934e9ab148e0888502fb7ef3e2a1\\\";s:9:\\\"\\u0000*\\u0000ruleId\\\";s:32:\\\"28caae75a5624f0d985abd0eb32aa160\\\";s:7:\\\"\\u0000*\\u0000from\\\";O:58:\\\"Shopware\\\\Core\\\\Framework\\\\DataAbstractionLayer\\\\Pricing\\\\Price\\\":6:{s:13:\\\"\\u0000*\\u0000currencyId\\\";s:32:\\\"ba44934e9ab148e0888502fb7ef3e2a1\\\";s:6:\\\"\\u0000*\\u0000net\\\";d:693.27999999999997;s:8:\\\"\\u0000*\\u0000gross\\\";d:825;s:9:\\\"\\u0000*\\u0000linked\\\";b:1;s:12:\\\"\\u0000*\\u0000listPrice\\\";N;s:13:\\\"\\u0000*\\u0000extensions\\\";a:0:{}}s:5:\\\"\\u0000*\\u0000to\\\";O:58:\\\"Shopware\\\\Core\\\\Framework\\\\DataAbstractionLayer\\\\Pricing\\\\Price\\\":6:{s:13:\\\"\\u0000*\\u0000currencyId\\\";s:32:\\\"ba44934e9ab148e0888502fb7ef3e2a1\\\";s:6:\\\"\\u0000*\\u0000net\\\";d:739.5;s:8:\\\"\\u0000*\\u0000gross\\\";d:880;s:9:\\\"\\u0000*\\u0000linked\\\";b:1;s:12:\\\"\\u0000*\\u0000listPrice\\\";N;s:13:\\\"\\u0000*\\u0000extensions\\\";a:0:{}}s:13:\\\"\\u0000*\\u0000extensions\\\";a:0:{}}i:7;O:65:\\\"Shopware\\\\Core\\\\Framework\\\\DataAbstractionLayer\\\\Pricing\\\\ListingPrice\\\":5:{s:13:\\\"\\u0000*\\u0000currencyId\\\";s:32:\\\"dc1e92f1a30149c2b72110bf17fd42cf\\\";s:9:\\\"\\u0000*\\u0000ruleId\\\";s:32:\\\"28caae75a5624f0d985abd0eb32aa160\\\";s:7:\\\"\\u0000*\\u0000from\\\";O:58:\\\"Shopware\\\\Core\\\\Framework\\\\DataAbstractionLayer\\\\Pricing\\\\Price\\\":6:{s:13:\\\"\\u0000*\\u0000currencyId\\\";s:32:\\\"dc1e92f1a30149c2b72110bf17fd42cf\\\";s:6:\\\"\\u0000*\\u0000net\\\";d:561.90999999999997;s:8:\\\"\\u0000*\\u0000gross\\\";d:668.67999999999995;s:9:\\\"\\u0000*\\u0000linked\\\";b:1;s:12:\\\"\\u0000*\\u0000listPrice\\\";N;s:13:\\\"\\u0000*\\u0000extensions\\\";a:0:{}}s:5:\\\"\\u0000*\\u0000to\\\";O:58:\\\"Shopware\\\\Core\\\\Framework\\\\DataAbstractionLayer\\\\Pricing\\\\Price\\\":6:{s:13:\\\"\\u0000*\\u0000currencyId\\\";s:32:\\\"dc1e92f1a30149c2b72110bf17fd42cf\\\";s:6:\\\"\\u0000*\\u0000net\\\";d:599.38;s:8:\\\"\\u0000*\\u0000gross\\\";d:713.25999999999999;s:9:\\\"\\u0000*\\u0000linked\\\";b:1;s:12:\\\"\\u0000*\\u0000listPrice\\\";N;s:13:\\\"\\u0000*\\u0000extensions\\\";a:0:{}}s:13:\\\"\\u0000*\\u0000extensions\\\";a:0:{}}}s:13:\\\"\\u0000*\\u0000extensions\\\";a:0:{}}\",\"formatted\":{\"r28caae75a5624f0d985abd0eb32aa160\":{\"c26edc9d01f694f53b7cb13285d57e4f1\":{\"currencyId\":\"26edc9d01f694f53b7cb13285d57e4f1\",\"ruleId\":\"28caae75a5624f0d985abd0eb32aa160\",\"from\":{\"net\":2728.98,\"gross\":3247.5,\"linked\":true,\"currencyId\":\"26edc9d01f694f53b7cb13285d57e4f1\"},\"to\":{\"net\":2910.9299999999998,\"gross\":3464,\"linked\":true,\"currencyId\":\"26edc9d01f694f53b7cb13285d57e4f1\"}},\"c829a26c8162c4fb3a04cc7f12d0013b0\":{\"currencyId\":\"829a26c8162c4fb3a04cc7f12d0013b0\",\"ruleId\":\"28caae75a5624f0d985abd0eb32aa160\",\"from\":{\"net\":4707.9700000000003,\"gross\":5602.5,\"linked\":true,\"currencyId\":\"829a26c8162c4fb3a04cc7f12d0013b0\"},\"to\":{\"net\":5021.8599999999997,\"gross\":5976,\"linked\":true,\"currencyId\":\"829a26c8162c4fb3a04cc7f12d0013b0\"}},\"c8777a2d74b944ff09edb52d7d62fdd17\":{\"currencyId\":\"8777a2d74b944ff09edb52d7d62fdd17\",\"ruleId\":\"28caae75a5624f0d985abd0eb32aa160\",\"from\":{\"net\":62.390000000000001,\"gross\":74.25,\"linked\":true,\"currencyId\":\"8777a2d74b944ff09edb52d7d62fdd17\"},\"to\":{\"net\":66.549999999999997,\"gross\":79.200000000000003,\"linked\":true,\"currencyId\":\"8777a2d74b944ff09edb52d7d62fdd17\"}},\"c9dc04b67373e44678bbbc05e67981946\":{\"currencyId\":\"9dc04b67373e44678bbbc05e67981946\",\"ruleId\":\"28caae75a5624f0d985abd0eb32aa160\",\"from\":{\"net\":737.92999999999995,\"gross\":878.13999999999999,\"linked\":true,\"currencyId\":\"9dc04b67373e44678bbbc05e67981946\"},\"to\":{\"net\":787.13,\"gross\":936.67999999999995,\"linked\":true,\"currencyId\":\"9dc04b67373e44678bbbc05e67981946\"}},\"ca89f2c126e4144e4b20aec69d51b5ec8\":{\"currencyId\":\"a89f2c126e4144e4b20aec69d51b5ec8\",\"ruleId\":\"28caae75a5624f0d985abd0eb32aa160\",\"from\":{\"net\":6623.9300000000003,\"gross\":7882.5,\"linked\":true,\"currencyId\":\"a89f2c126e4144e4b20aec69d51b5ec8\"},\"to\":{\"net\":7065.5600000000004,\"gross\":8408,\"linked\":true,\"currencyId\":\"a89f2c126e4144e4b20aec69d51b5ec8\"}},\"cb7d2554b0ce847cd82f3ac9bd1c0dfca\":{\"currencyId\":\"b7d2554b0ce847cd82f3ac9bd1c0dfca\",\"ruleId\":\"28caae75a5624f0d985abd0eb32aa160\",\"from\":{\"net\":630.25,\"gross\":750,\"linked\":true,\"currencyId\":\"b7d2554b0ce847cd82f3ac9bd1c0dfca\"},\"to\":{\"net\":672.26999999999998,\"gross\":800,\"linked\":true,\"currencyId\":\"b7d2554b0ce847cd82f3ac9bd1c0dfca\"}},\"cba44934e9ab148e0888502fb7ef3e2a1\":{\"currencyId\":\"ba44934e9ab148e0888502fb7ef3e2a1\",\"ruleId\":\"28caae75a5624f0d985abd0eb32aa160\",\"from\":{\"net\":693.27999999999997,\"gross\":825,\"linked\":true,\"currencyId\":\"ba44934e9ab148e0888502fb7ef3e2a1\"},\"to\":{\"net\":739.5,\"gross\":880,\"linked\":true,\"currencyId\":\"ba44934e9ab148e0888502fb7ef3e2a1\"}},\"cdc1e92f1a30149c2b72110bf17fd42cf\":{\"currencyId\":\"dc1e92f1a30149c2b72110bf17fd42cf\",\"ruleId\":\"28caae75a5624f0d985abd0eb32aa160\",\"from\":{\"net\":561.90999999999997,\"gross\":668.67999999999995,\"linked\":true,\"currencyId\":\"dc1e92f1a30149c2b72110bf17fd42cf\"},\"to\":{\"net\":599.38,\"gross\":713.25999999999999,\"linked\":true,\"currencyId\":\"dc1e92f1a30149c2b72110bf17fd42cf\"}}}}}',NULL,NULL,10,10,1,3,0,1,NULL,1,1.0000,1.000,1,950,NULL,45.000,590.000,600.000,840.000,'2020-04-04 21:05:18.643',NULL,NULL,NULL,'Üh@°OFœË£TËğ¹g',NULL,NULL,'2020-04-04 21:05:18.657',NULL,NULL,'9cc83811832d4b1f1593acb545f36678',0,'Üh@°OFœË£TËğ¹g'),('!FqGÂ€µä–´¯I\0','©ãéjKÂ¾KÙÎu,4%',7,'SWDEMO10005.2',1,'C¢>¿Lê¼`U¢_ª‡','©ãéjKÂ¾KÙÎu,4%',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'[\"0c8312bca2c0411d82320304db4e9f28\",\"a515ae260223466f8e37471d279e6406\",\"8de9b484c54f441c894774e5f57e485c\"]','[\"2bfd278e87204807a890da4a3e81dd90\",\"acfd7586d02848f1ac801f4776efa414\"]','[\"5997d91dc0784997bdef68dfc5a08912\",\"7cab88165ae5420f921232511b6e8f7d\",\"96638a1c7ab847bbb3ca64167ab30a3e\",\"acfd7586d02848f1ac801f4776efa414\"]','ÙH0Ã´FŒ‚€Â®E¬gt','$éfvéD° ­Ü Õg(Ë','*Æ+¢sG¦ˆ\nÁy\r·',NULL,'C¢>¿Lê¼`U¢_ª‡','C¢>¿Lê¼`U¢_ª‡','C¢>¿Lê¼`U¢_ª‡','C¢>¿Lê¼`U¢_ª‡','C¢>¿Lê¼`U¢_ª‡','C¢>¿Lê¼`U¢_ª‡',NULL,NULL,NULL,NULL,50,50,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'C¢>¿Lê¼`U¢_ª‡',NULL,NULL,'2020-04-04 21:05:19.099',NULL,NULL,'d88fdc25bf3013e9cc57d679009b77a0',0,'C¢>¿Lê¼`U¢_ª‡'),('Ü^ˆK¤Œ,_\0U@','©ãéjKÂ¾KÙÎu,4%',2,'SWDEMO100013',0,NULL,'©ãéjKÂ¾KÙÎu,4%','ÙH0Ã´FŒ‚€Â®E¬gt','#&ÖtLˆ¼øRÙÒì·','©ãéjKÂ¾KÙÎu,4%',NULL,NULL,'ih­dˆˆDg™Æ8äIÿÅ',NULL,NULL,'[\"0c8312bca2c0411d82320304db4e9f28\",\"77b959cf66de4c1590c7f9b7da3982f3\",\"bb22b05bff9140f3808b1cff975b75eb\"]',NULL,'[\"22bdaee755804c1d8099c0d3696e852c\",\"77421c4f75af40c8a57657cdc2ad49a2\"]','ÙH0Ã´FŒ‚€Â®E¬gt','#&ÖtLˆ¼øRÙÒì·','ih­dˆˆDg™Æ8äIÿÅ',NULL,'Ü^ˆK¤Œ,_\0U@','Ü^ˆK¤Œ,_\0U@','Ü^ˆK¤Œ,_\0U@','Ü^ˆK¤Œ,_\0U@','Ü^ˆK¤Œ,_\0U@','Ü^ˆK¤Œ,_\0U@','{\"cb7d2554b0ce847cd82f3ac9bd1c0dfca\":{\"net\":1.6699999999999999,\"gross\":1.99,\"linked\":true,\"currencyId\":\"b7d2554b0ce847cd82f3ac9bd1c0dfca\"}}',NULL,NULL,NULL,40,40,1,3,0,1,NULL,1,250.0000,250.000,0,1.99,NULL,NULL,NULL,NULL,NULL,'2020-04-04 21:05:18.643',NULL,NULL,NULL,'Ü^ˆK¤Œ,_\0U@',NULL,NULL,'2020-04-04 21:05:18.795',NULL,NULL,'27c34d8a0a473716816a8631d55e660a',0,'Ü^ˆK¤Œ,_\0U@'),('$kÀ. KèŒKXÔKM¿\n','©ãéjKÂ¾KÙÎu,4%',6,'SWDEMO10005.1',1,'C¢>¿Lê¼`U¢_ª‡','©ãéjKÂ¾KÙÎu,4%',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'[\"0c8312bca2c0411d82320304db4e9f28\",\"a515ae260223466f8e37471d279e6406\",\"8de9b484c54f441c894774e5f57e485c\"]','[\"2bfd278e87204807a890da4a3e81dd90\",\"5997d91dc0784997bdef68dfc5a08912\"]','[\"5997d91dc0784997bdef68dfc5a08912\",\"7cab88165ae5420f921232511b6e8f7d\",\"96638a1c7ab847bbb3ca64167ab30a3e\",\"acfd7586d02848f1ac801f4776efa414\"]','ÙH0Ã´FŒ‚€Â®E¬gt','$éfvéD° ­Ü Õg(Ë','*Æ+¢sG¦ˆ\nÁy\r·',NULL,'C¢>¿Lê¼`U¢_ª‡','C¢>¿Lê¼`U¢_ª‡','C¢>¿Lê¼`U¢_ª‡','C¢>¿Lê¼`U¢_ª‡','C¢>¿Lê¼`U¢_ª‡','C¢>¿Lê¼`U¢_ª‡',NULL,NULL,NULL,NULL,50,50,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'C¢>¿Lê¼`U¢_ª‡',NULL,NULL,'2020-04-04 21:05:19.098',NULL,NULL,'d88fdc25bf3013e9cc57d679009b77a0',0,'C¢>¿Lê¼`U¢_ª‡'),('*ˆÙµGL~†€qd›ä<','©ãéjKÂ¾KÙÎu,4%',3,'SWDEMO10001',1,NULL,'©ãéjKÂ¾KÙÎu,4%','ÙH0Ã´FŒ‚€Â®E¬gt','$éfvéD° ­Ü Õg(Ë','©ãéjKÂ¾KÙÎu,4%',NULL,NULL,'pãR \\E	ÆZ[G	J*',NULL,NULL,'[\"0c8312bca2c0411d82320304db4e9f28\",\"251448b91bc742de85643f5fccd89051\"]',NULL,'[\"6f9359239c994b48b7de282ee19a714d\",\"78c53f3f6dd14eb4927978415bfb74db\",\"7cab88165ae5420f921232511b6e8f7d\",\"dc6f98beeca44852beb078a9e8e21e7d\"]','ÙH0Ã´FŒ‚€Â®E¬gt','$éfvéD° ­Ü Õg(Ë','pãR \\E	ÆZ[G	J*',NULL,'*ˆÙµGL~†€qd›ä<','*ˆÙµGL~†€qd›ä<','*ˆÙµGL~†€qd›ä<','*ˆÙµGL~†€qd›ä<','*ˆÙµGL~†€qd›ä<','*ˆÙµGL~†€qd›ä<','{\"cb7d2554b0ce847cd82f3ac9bd1c0dfca\":{\"net\":416.75999999999999,\"gross\":495.94999999999999,\"linked\":true,\"currencyId\":\"b7d2554b0ce847cd82f3ac9bd1c0dfca\"}}',NULL,NULL,NULL,10,10,1,3,0,1,NULL,1,1.0000,1.000,0,495.95,NULL,0.170,NULL,NULL,NULL,'2020-04-04 21:05:18.643',NULL,NULL,NULL,'*ˆÙµGL~†€qd›ä<',NULL,NULL,'2020-04-04 21:05:18.897',NULL,NULL,'ad2fab7ad7babdd7322b341443c0033b',0,'*ˆÙµGL~†€qd›ä<'),('8!ÜªlVKŸíRFyš,','©ãéjKÂ¾KÙÎu,4%',10,'SWDEMO10005.5',1,'C¢>¿Lê¼`U¢_ª‡','©ãéjKÂ¾KÙÎu,4%',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'[\"0c8312bca2c0411d82320304db4e9f28\",\"a515ae260223466f8e37471d279e6406\",\"8de9b484c54f441c894774e5f57e485c\"]','[\"5997d91dc0784997bdef68dfc5a08912\",\"ad735af1ebfb421e93e408b073c4a89a\"]','[\"5997d91dc0784997bdef68dfc5a08912\",\"7cab88165ae5420f921232511b6e8f7d\",\"96638a1c7ab847bbb3ca64167ab30a3e\",\"acfd7586d02848f1ac801f4776efa414\"]','ÙH0Ã´FŒ‚€Â®E¬gt','$éfvéD° ­Ü Õg(Ë','*Æ+¢sG¦ˆ\nÁy\r·',NULL,'C¢>¿Lê¼`U¢_ª‡','C¢>¿Lê¼`U¢_ª‡','C¢>¿Lê¼`U¢_ª‡','C¢>¿Lê¼`U¢_ª‡','C¢>¿Lê¼`U¢_ª‡','C¢>¿Lê¼`U¢_ª‡',NULL,NULL,NULL,NULL,50,50,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'C¢>¿Lê¼`U¢_ª‡',NULL,NULL,'2020-04-04 21:05:19.105',NULL,NULL,'d88fdc25bf3013e9cc57d679009b77a0',0,'C¢>¿Lê¼`U¢_ª‡'),(':Àó)ˆKW¢Ìå¢Ÿ4wœ','©ãéjKÂ¾KÙÎu,4%',4,'SWDEMO10006',1,NULL,'©ãéjKÂ¾KÙÎu,4%','ÙH0Ã´FŒ‚€Â®E¬gt','Ì ÃeÓLûˆ¿«<>ÓP','©ãéjKÂ¾KÙÎu,4%',NULL,NULL,'-à)‘ÍH¤¬lÃ\\±s ',NULL,NULL,'[\"0c8312bca2c0411d82320304db4e9f28\",\"a515ae260223466f8e37471d279e6406\",\"2185182cbbd4462ea844abeb2a438b33\"]',NULL,'[\"5997d91dc0784997bdef68dfc5a08912\",\"78c53f3f6dd14eb4927978415bfb74db\",\"c53fa30db00e4a84b4516f6b07c02e8d\"]','ÙH0Ã´FŒ‚€Â®E¬gt','Ì ÃeÓLûˆ¿«<>ÓP','-à)‘ÍH¤¬lÃ\\±s ',NULL,':Àó)ˆKW¢Ìå¢Ÿ4wœ',':Àó)ˆKW¢Ìå¢Ÿ4wœ',':Àó)ˆKW¢Ìå¢Ÿ4wœ',':Àó)ˆKW¢Ìå¢Ÿ4wœ',':Àó)ˆKW¢Ìå¢Ÿ4wœ',':Àó)ˆKW¢Ìå¢Ÿ4wœ','{\"cb7d2554b0ce847cd82f3ac9bd1c0dfca\":{\"net\":15,\"gross\":20,\"linked\":true,\"currencyId\":\"b7d2554b0ce847cd82f3ac9bd1c0dfca\"}}',NULL,NULL,NULL,50,50,1,3,0,1,NULL,1,1.0000,1.000,1,20,NULL,0.150,NULL,NULL,NULL,'2020-04-04 21:05:18.643',NULL,NULL,NULL,':Àó)ˆKW¢Ìå¢Ÿ4wœ',NULL,NULL,'2020-04-04 21:05:18.988',NULL,NULL,'72358a503f8624b7a92020a0e3e551b3',0,':Àó)ˆKW¢Ìå¢Ÿ4wœ'),('C¢>¿Lê¼`U¢_ª‡','©ãéjKÂ¾KÙÎu,4%',5,'SWDEMO10005',1,NULL,'©ãéjKÂ¾KÙÎu,4%','ÙH0Ã´FŒ‚€Â®E¬gt','$éfvéD° ­Ü Õg(Ë','©ãéjKÂ¾KÙÎu,4%',NULL,NULL,'*Æ+¢sG¦ˆ\nÁy\r·',NULL,NULL,'[\"0c8312bca2c0411d82320304db4e9f28\",\"a515ae260223466f8e37471d279e6406\",\"8de9b484c54f441c894774e5f57e485c\"]',NULL,'[\"5997d91dc0784997bdef68dfc5a08912\",\"7cab88165ae5420f921232511b6e8f7d\",\"96638a1c7ab847bbb3ca64167ab30a3e\",\"acfd7586d02848f1ac801f4776efa414\"]','ÙH0Ã´FŒ‚€Â®E¬gt','$éfvéD° ­Ü Õg(Ë','*Æ+¢sG¦ˆ\nÁy\r·',NULL,'C¢>¿Lê¼`U¢_ª‡','C¢>¿Lê¼`U¢_ª‡','C¢>¿Lê¼`U¢_ª‡','C¢>¿Lê¼`U¢_ª‡','C¢>¿Lê¼`U¢_ª‡','C¢>¿Lê¼`U¢_ª‡','{\"cb7d2554b0ce847cd82f3ac9bd1c0dfca\":{\"net\":16.799999999999997,\"gross\":19.989999999999998,\"linked\":true,\"currencyId\":\"b7d2554b0ce847cd82f3ac9bd1c0dfca\"}}',NULL,NULL,NULL,50,50,1,3,0,1,NULL,1,1.0000,1.000,1,19.99,NULL,0.500,NULL,NULL,NULL,'2020-04-04 21:05:18.643',NULL,NULL,NULL,'C¢>¿Lê¼`U¢_ª‡',NULL,NULL,'2020-04-04 21:05:19.097',NULL,NULL,NULL,6,'C¢>¿Lê¼`U¢_ª‡'),('m3—AÊåG¼—||¸ş|6­','©ãéjKÂ¾KÙÎu,4%',8,'SWDEMO10005.3',1,'C¢>¿Lê¼`U¢_ª‡','©ãéjKÂ¾KÙÎu,4%',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'[\"0c8312bca2c0411d82320304db4e9f28\",\"a515ae260223466f8e37471d279e6406\",\"8de9b484c54f441c894774e5f57e485c\"]','[\"52454db2adf942b2ac079a296f454a10\",\"5997d91dc0784997bdef68dfc5a08912\"]','[\"5997d91dc0784997bdef68dfc5a08912\",\"7cab88165ae5420f921232511b6e8f7d\",\"96638a1c7ab847bbb3ca64167ab30a3e\",\"acfd7586d02848f1ac801f4776efa414\"]','ÙH0Ã´FŒ‚€Â®E¬gt','$éfvéD° ­Ü Õg(Ë','*Æ+¢sG¦ˆ\nÁy\r·',NULL,'C¢>¿Lê¼`U¢_ª‡','C¢>¿Lê¼`U¢_ª‡','C¢>¿Lê¼`U¢_ª‡','C¢>¿Lê¼`U¢_ª‡','C¢>¿Lê¼`U¢_ª‡','C¢>¿Lê¼`U¢_ª‡',NULL,NULL,NULL,NULL,50,50,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'C¢>¿Lê¼`U¢_ª‡',NULL,NULL,'2020-04-04 21:05:19.101',NULL,NULL,'d88fdc25bf3013e9cc57d679009b77a0',0,'C¢>¿Lê¼`U¢_ª‡'),('p¹´f*qCñ¨¸íM','©ãéjKÂ¾KÙÎu,4%',14,'SWDEMO10007.2',1,'Ç¼¢\'SÈM¶ŠP+AF','©ãéjKÂ¾KÙÎu,4%',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'[\"0c8312bca2c0411d82320304db4e9f28\",\"a515ae260223466f8e37471d279e6406\",\"2185182cbbd4462ea844abeb2a438b33\"]','[\"54147692cbfb43419a6d11e26cad44dc\"]','[\"41e5013b67d64d3a92b7a275da8af441\",\"5193ffa5de8648a1bcfba1fa8a26c02b\",\"54147692cbfb43419a6d11e26cad44dc\",\"5997d91dc0784997bdef68dfc5a08912\",\"78c53f3f6dd14eb4927978415bfb74db\",\"96638a1c7ab847bbb3ca64167ab30a3e\",\"acfd7586d02848f1ac801f4776efa414\"]','ÙH0Ã´FŒ‚€Â®E¬gt','$éfvéD° ­Ü Õg(Ë','XÑ””AT•Ùx-Ü’®',NULL,'Ç¼¢\'SÈM¶ŠP+AF','Ç¼¢\'SÈM¶ŠP+AF','Ç¼¢\'SÈM¶ŠP+AF','Ç¼¢\'SÈM¶ŠP+AF','Ç¼¢\'SÈM¶ŠP+AF','Ç¼¢\'SÈM¶ŠP+AF',NULL,NULL,NULL,NULL,50,50,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'Ç¼¢\'SÈM¶ŠP+AF',NULL,NULL,'2020-04-04 21:05:19.282',NULL,NULL,'af160339563fcd7ae2c9becf4cd95adb',0,'Ç¼¢\'SÈM¶ŠP+AF'),('†—V\Z|êJÎŠjµß™1¾','©ãéjKÂ¾KÙÎu,4%',15,'SWDEMO10007.3',1,'Ç¼¢\'SÈM¶ŠP+AF','©ãéjKÂ¾KÙÎu,4%',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'[\"0c8312bca2c0411d82320304db4e9f28\",\"a515ae260223466f8e37471d279e6406\",\"2185182cbbd4462ea844abeb2a438b33\"]','[\"5997d91dc0784997bdef68dfc5a08912\"]','[\"41e5013b67d64d3a92b7a275da8af441\",\"5193ffa5de8648a1bcfba1fa8a26c02b\",\"54147692cbfb43419a6d11e26cad44dc\",\"5997d91dc0784997bdef68dfc5a08912\",\"78c53f3f6dd14eb4927978415bfb74db\",\"96638a1c7ab847bbb3ca64167ab30a3e\",\"acfd7586d02848f1ac801f4776efa414\"]','ÙH0Ã´FŒ‚€Â®E¬gt','$éfvéD° ­Ü Õg(Ë','XÑ””AT•Ùx-Ü’®',NULL,'Ç¼¢\'SÈM¶ŠP+AF','Ç¼¢\'SÈM¶ŠP+AF','Ç¼¢\'SÈM¶ŠP+AF','Ç¼¢\'SÈM¶ŠP+AF','Ç¼¢\'SÈM¶ŠP+AF','Ç¼¢\'SÈM¶ŠP+AF',NULL,NULL,NULL,NULL,50,50,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'Ç¼¢\'SÈM¶ŠP+AF',NULL,NULL,'2020-04-04 21:05:19.283',NULL,NULL,'af160339563fcd7ae2c9becf4cd95adb',0,'Ç¼¢\'SÈM¶ŠP+AF'),('–€meqOq³RHĞ71>','©ãéjKÂ¾KÙÎu,4%',9,'SWDEMO10005.4',1,'C¢>¿Lê¼`U¢_ª‡','©ãéjKÂ¾KÙÎu,4%',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'[\"0c8312bca2c0411d82320304db4e9f28\",\"a515ae260223466f8e37471d279e6406\",\"8de9b484c54f441c894774e5f57e485c\"]','[\"52454db2adf942b2ac079a296f454a10\",\"acfd7586d02848f1ac801f4776efa414\"]','[\"5997d91dc0784997bdef68dfc5a08912\",\"7cab88165ae5420f921232511b6e8f7d\",\"96638a1c7ab847bbb3ca64167ab30a3e\",\"acfd7586d02848f1ac801f4776efa414\"]','ÙH0Ã´FŒ‚€Â®E¬gt','$éfvéD° ­Ü Õg(Ë','*Æ+¢sG¦ˆ\nÁy\r·',NULL,'C¢>¿Lê¼`U¢_ª‡','C¢>¿Lê¼`U¢_ª‡','C¢>¿Lê¼`U¢_ª‡','C¢>¿Lê¼`U¢_ª‡','C¢>¿Lê¼`U¢_ª‡','C¢>¿Lê¼`U¢_ª‡',NULL,NULL,NULL,NULL,50,50,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'C¢>¿Lê¼`U¢_ª‡',NULL,NULL,'2020-04-04 21:05:19.103',NULL,NULL,'d88fdc25bf3013e9cc57d679009b77a0',0,'C¢>¿Lê¼`U¢_ª‡'),('˜X°Èì O£»ÏŒü†…','©ãéjKÂ¾KÙÎu,4%',11,'SWDEMO10005.6',1,'C¢>¿Lê¼`U¢_ª‡','©ãéjKÂ¾KÙÎu,4%',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'[\"0c8312bca2c0411d82320304db4e9f28\",\"a515ae260223466f8e37471d279e6406\",\"8de9b484c54f441c894774e5f57e485c\"]','[\"acfd7586d02848f1ac801f4776efa414\",\"ad735af1ebfb421e93e408b073c4a89a\"]','[\"5997d91dc0784997bdef68dfc5a08912\",\"7cab88165ae5420f921232511b6e8f7d\",\"96638a1c7ab847bbb3ca64167ab30a3e\",\"acfd7586d02848f1ac801f4776efa414\"]','ÙH0Ã´FŒ‚€Â®E¬gt','$éfvéD° ­Ü Õg(Ë','*Æ+¢sG¦ˆ\nÁy\r·',NULL,'C¢>¿Lê¼`U¢_ª‡','C¢>¿Lê¼`U¢_ª‡','C¢>¿Lê¼`U¢_ª‡','C¢>¿Lê¼`U¢_ª‡','C¢>¿Lê¼`U¢_ª‡','C¢>¿Lê¼`U¢_ª‡',NULL,NULL,NULL,NULL,50,50,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'C¢>¿Lê¼`U¢_ª‡',NULL,NULL,'2020-04-04 21:05:19.106',NULL,NULL,'d88fdc25bf3013e9cc57d679009b77a0',0,'C¢>¿Lê¼`U¢_ª‡'),('©„õì¨ªL¼êÈë±\nÊ','©ãéjKÂ¾KÙÎu,4%',13,'SWDEMO10007.1',1,'Ç¼¢\'SÈM¶ŠP+AF','©ãéjKÂ¾KÙÎu,4%',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'[\"0c8312bca2c0411d82320304db4e9f28\",\"a515ae260223466f8e37471d279e6406\",\"2185182cbbd4462ea844abeb2a438b33\"]','[\"41e5013b67d64d3a92b7a275da8af441\"]','[\"41e5013b67d64d3a92b7a275da8af441\",\"5193ffa5de8648a1bcfba1fa8a26c02b\",\"54147692cbfb43419a6d11e26cad44dc\",\"5997d91dc0784997bdef68dfc5a08912\",\"78c53f3f6dd14eb4927978415bfb74db\",\"96638a1c7ab847bbb3ca64167ab30a3e\",\"acfd7586d02848f1ac801f4776efa414\"]','ÙH0Ã´FŒ‚€Â®E¬gt','$éfvéD° ­Ü Õg(Ë','XÑ””AT•Ùx-Ü’®',NULL,'Ç¼¢\'SÈM¶ŠP+AF','Ç¼¢\'SÈM¶ŠP+AF','Ç¼¢\'SÈM¶ŠP+AF','Ç¼¢\'SÈM¶ŠP+AF','Ç¼¢\'SÈM¶ŠP+AF','Ç¼¢\'SÈM¶ŠP+AF',NULL,NULL,NULL,NULL,50,50,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'Ç¼¢\'SÈM¶ŠP+AF',NULL,NULL,'2020-04-04 21:05:19.281',NULL,NULL,'af160339563fcd7ae2c9becf4cd95adb',0,'Ç¼¢\'SÈM¶ŠP+AF'),('Ç¼¢\'SÈM¶ŠP+AF','©ãéjKÂ¾KÙÎu,4%',12,'SWDEMO10007',1,NULL,'©ãéjKÂ¾KÙÎu,4%','ÙH0Ã´FŒ‚€Â®E¬gt','$éfvéD° ­Ü Õg(Ë','©ãéjKÂ¾KÙÎu,4%',NULL,NULL,'XÑ””AT•Ùx-Ü’®',NULL,NULL,'[\"0c8312bca2c0411d82320304db4e9f28\",\"a515ae260223466f8e37471d279e6406\",\"2185182cbbd4462ea844abeb2a438b33\"]',NULL,'[\"41e5013b67d64d3a92b7a275da8af441\",\"5193ffa5de8648a1bcfba1fa8a26c02b\",\"54147692cbfb43419a6d11e26cad44dc\",\"5997d91dc0784997bdef68dfc5a08912\",\"78c53f3f6dd14eb4927978415bfb74db\",\"96638a1c7ab847bbb3ca64167ab30a3e\",\"acfd7586d02848f1ac801f4776efa414\"]','ÙH0Ã´FŒ‚€Â®E¬gt','$éfvéD° ­Ü Õg(Ë','XÑ””AT•Ùx-Ü’®',NULL,'Ç¼¢\'SÈM¶ŠP+AF','Ç¼¢\'SÈM¶ŠP+AF','Ç¼¢\'SÈM¶ŠP+AF','Ç¼¢\'SÈM¶ŠP+AF','Ç¼¢\'SÈM¶ŠP+AF','Ç¼¢\'SÈM¶ŠP+AF','{\"cb7d2554b0ce847cd82f3ac9bd1c0dfca\":{\"net\":16.799999999999997,\"gross\":19.989999999999998,\"linked\":true,\"currencyId\":\"b7d2554b0ce847cd82f3ac9bd1c0dfca\"}}',NULL,NULL,NULL,50,50,1,3,0,1,NULL,1,1.0000,1.000,1,19.99,NULL,NULL,NULL,NULL,NULL,'2020-04-04 21:05:18.643',NULL,NULL,NULL,'Ç¼¢\'SÈM¶ŠP+AF',NULL,NULL,'2020-04-04 21:05:19.280',NULL,NULL,NULL,4,'Ç¼¢\'SÈM¶ŠP+AF'),('òZI‰’ C¸Ÿ\r4E¥®-','©ãéjKÂ¾KÙÎu,4%',16,'SWDEMO10007.4',1,'Ç¼¢\'SÈM¶ŠP+AF','©ãéjKÂ¾KÙÎu,4%',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'[\"0c8312bca2c0411d82320304db4e9f28\",\"a515ae260223466f8e37471d279e6406\",\"2185182cbbd4462ea844abeb2a438b33\"]','[\"acfd7586d02848f1ac801f4776efa414\"]','[\"41e5013b67d64d3a92b7a275da8af441\",\"5193ffa5de8648a1bcfba1fa8a26c02b\",\"54147692cbfb43419a6d11e26cad44dc\",\"5997d91dc0784997bdef68dfc5a08912\",\"78c53f3f6dd14eb4927978415bfb74db\",\"96638a1c7ab847bbb3ca64167ab30a3e\",\"acfd7586d02848f1ac801f4776efa414\"]','ÙH0Ã´FŒ‚€Â®E¬gt','$éfvéD° ­Ü Õg(Ë','XÑ””AT•Ùx-Ü’®',NULL,'Ç¼¢\'SÈM¶ŠP+AF','Ç¼¢\'SÈM¶ŠP+AF','Ç¼¢\'SÈM¶ŠP+AF','Ç¼¢\'SÈM¶ŠP+AF','Ç¼¢\'SÈM¶ŠP+AF','Ç¼¢\'SÈM¶ŠP+AF',NULL,NULL,NULL,NULL,50,50,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'Ç¼¢\'SÈM¶ŠP+AF',NULL,NULL,'2020-04-04 21:05:19.285',NULL,NULL,'af160339563fcd7ae2c9becf4cd95adb',0,'Ç¼¢\'SÈM¶ŠP+AF');
-/*!40000 ALTER TABLE `product` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `product_category`
---
-
-DROP TABLE IF EXISTS `product_category`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `product_category` (
-  `product_id` binary(16) NOT NULL,
-  `product_version_id` binary(16) NOT NULL,
-  `category_id` binary(16) NOT NULL,
-  `category_version_id` binary(16) NOT NULL,
-  PRIMARY KEY (`product_id`,`product_version_id`,`category_id`,`category_version_id`),
-  KEY `fk.product_category.category_id` (`category_id`,`category_version_id`),
-  CONSTRAINT `fk.product_category.category_id` FOREIGN KEY (`category_id`, `category_version_id`) REFERENCES `category` (`id`, `version_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.product_category.product_id` FOREIGN KEY (`product_id`, `product_version_id`) REFERENCES `product` (`id`, `version_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `product_category`
---
-
-LOCK TABLES `product_category` WRITE;
-/*!40000 ALTER TABLE `product_category` DISABLE KEYS */;
-INSERT INTO `product_category` VALUES ('Üh@°OFœË£TËğ¹g','©ãéjKÂ¾KÙÎu,4%','%H¹ÇBŞ…d?_ÌØQ','©ãéjKÂ¾KÙÎu,4%'),('Ü^ˆK¤Œ,_\0U@','©ãéjKÂ¾KÙÎu,4%','»\"°[ÿ‘@ó€‹ÿ—[uë','©ãéjKÂ¾KÙÎu,4%'),('*ˆÙµGL~†€qd›ä<','©ãéjKÂ¾KÙÎu,4%','%H¹ÇBŞ…d?_ÌØQ','©ãéjKÂ¾KÙÎu,4%'),(':Àó)ˆKW¢Ìå¢Ÿ4wœ','©ãéjKÂ¾KÙÎu,4%','!…,»ÔF.¨D«ë*C‹3','©ãéjKÂ¾KÙÎu,4%'),('C¢>¿Lê¼`U¢_ª‡','©ãéjKÂ¾KÙÎu,4%','é´„ÅOD‰Gtåõ~H\\','©ãéjKÂ¾KÙÎu,4%'),('Ç¼¢\'SÈM¶ŠP+AF','©ãéjKÂ¾KÙÎu,4%','!…,»ÔF.¨D«ë*C‹3','©ãéjKÂ¾KÙÎu,4%');
-/*!40000 ALTER TABLE `product_category` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `product_category_tree`
---
-
-DROP TABLE IF EXISTS `product_category_tree`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `product_category_tree` (
-  `product_id` binary(16) NOT NULL,
-  `product_version_id` binary(16) NOT NULL,
-  `category_id` binary(16) NOT NULL,
-  `category_version_id` binary(16) NOT NULL,
-  PRIMARY KEY (`product_id`,`product_version_id`,`category_id`,`category_version_id`),
-  KEY `fk.product_category_tree.category_id` (`category_id`,`category_version_id`),
-  CONSTRAINT `fk.product_category_tree.category_id` FOREIGN KEY (`category_id`, `category_version_id`) REFERENCES `category` (`id`, `version_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.product_category_tree.product_id` FOREIGN KEY (`product_id`, `product_version_id`) REFERENCES `product` (`id`, `version_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `product_category_tree`
---
-
-LOCK TABLES `product_category_tree` WRITE;
-/*!40000 ALTER TABLE `product_category_tree` DISABLE KEYS */;
-INSERT INTO `product_category_tree` VALUES ('Üh@°OFœË£TËğ¹g','©ãéjKÂ¾KÙÎu,4%','ƒ¼¢ÀA‚2ÛNŸ(','©ãéjKÂ¾KÙÎu,4%'),('Üh@°OFœË£TËğ¹g','©ãéjKÂ¾KÙÎu,4%','%H¹ÇBŞ…d?_ÌØQ','©ãéjKÂ¾KÙÎu,4%'),('!FqGÂ€µä–´¯I\0','©ãéjKÂ¾KÙÎu,4%','ƒ¼¢ÀA‚2ÛNŸ(','©ãéjKÂ¾KÙÎu,4%'),('!FqGÂ€µä–´¯I\0','©ãéjKÂ¾KÙÎu,4%','é´„ÅOD‰Gtåõ~H\\','©ãéjKÂ¾KÙÎu,4%'),('!FqGÂ€µä–´¯I\0','©ãéjKÂ¾KÙÎu,4%','¥®&#Fo7G\'d','©ãéjKÂ¾KÙÎu,4%'),('Ü^ˆK¤Œ,_\0U@','©ãéjKÂ¾KÙÎu,4%','ƒ¼¢ÀA‚2ÛNŸ(','©ãéjKÂ¾KÙÎu,4%'),('Ü^ˆK¤Œ,_\0U@','©ãéjKÂ¾KÙÎu,4%','w¹YÏfŞLÇù·Ú9‚ó','©ãéjKÂ¾KÙÎu,4%'),('Ü^ˆK¤Œ,_\0U@','©ãéjKÂ¾KÙÎu,4%','»\"°[ÿ‘@ó€‹ÿ—[uë','©ãéjKÂ¾KÙÎu,4%'),('$kÀ. KèŒKXÔKM¿\n','©ãéjKÂ¾KÙÎu,4%','ƒ¼¢ÀA‚2ÛNŸ(','©ãéjKÂ¾KÙÎu,4%'),('$kÀ. KèŒKXÔKM¿\n','©ãéjKÂ¾KÙÎu,4%','é´„ÅOD‰Gtåõ~H\\','©ãéjKÂ¾KÙÎu,4%'),('$kÀ. KèŒKXÔKM¿\n','©ãéjKÂ¾KÙÎu,4%','¥®&#Fo7G\'d','©ãéjKÂ¾KÙÎu,4%'),('*ˆÙµGL~†€qd›ä<','©ãéjKÂ¾KÙÎu,4%','ƒ¼¢ÀA‚2ÛNŸ(','©ãéjKÂ¾KÙÎu,4%'),('*ˆÙµGL~†€qd›ä<','©ãéjKÂ¾KÙÎu,4%','%H¹ÇBŞ…d?_ÌØQ','©ãéjKÂ¾KÙÎu,4%'),('8!ÜªlVKŸíRFyš,','©ãéjKÂ¾KÙÎu,4%','ƒ¼¢ÀA‚2ÛNŸ(','©ãéjKÂ¾KÙÎu,4%'),('8!ÜªlVKŸíRFyš,','©ãéjKÂ¾KÙÎu,4%','é´„ÅOD‰Gtåõ~H\\','©ãéjKÂ¾KÙÎu,4%'),('8!ÜªlVKŸíRFyš,','©ãéjKÂ¾KÙÎu,4%','¥®&#Fo7G\'d','©ãéjKÂ¾KÙÎu,4%'),(':Àó)ˆKW¢Ìå¢Ÿ4wœ','©ãéjKÂ¾KÙÎu,4%','ƒ¼¢ÀA‚2ÛNŸ(','©ãéjKÂ¾KÙÎu,4%'),(':Àó)ˆKW¢Ìå¢Ÿ4wœ','©ãéjKÂ¾KÙÎu,4%','!…,»ÔF.¨D«ë*C‹3','©ãéjKÂ¾KÙÎu,4%'),(':Àó)ˆKW¢Ìå¢Ÿ4wœ','©ãéjKÂ¾KÙÎu,4%','¥®&#Fo7G\'d','©ãéjKÂ¾KÙÎu,4%'),('C¢>¿Lê¼`U¢_ª‡','©ãéjKÂ¾KÙÎu,4%','ƒ¼¢ÀA‚2ÛNŸ(','©ãéjKÂ¾KÙÎu,4%'),('C¢>¿Lê¼`U¢_ª‡','©ãéjKÂ¾KÙÎu,4%','é´„ÅOD‰Gtåõ~H\\','©ãéjKÂ¾KÙÎu,4%'),('C¢>¿Lê¼`U¢_ª‡','©ãéjKÂ¾KÙÎu,4%','¥®&#Fo7G\'d','©ãéjKÂ¾KÙÎu,4%'),('m3—AÊåG¼—||¸ş|6­','©ãéjKÂ¾KÙÎu,4%','ƒ¼¢ÀA‚2ÛNŸ(','©ãéjKÂ¾KÙÎu,4%'),('m3—AÊåG¼—||¸ş|6­','©ãéjKÂ¾KÙÎu,4%','é´„ÅOD‰Gtåõ~H\\','©ãéjKÂ¾KÙÎu,4%'),('m3—AÊåG¼—||¸ş|6­','©ãéjKÂ¾KÙÎu,4%','¥®&#Fo7G\'d','©ãéjKÂ¾KÙÎu,4%'),('p¹´f*qCñ¨¸íM','©ãéjKÂ¾KÙÎu,4%','ƒ¼¢ÀA‚2ÛNŸ(','©ãéjKÂ¾KÙÎu,4%'),('p¹´f*qCñ¨¸íM','©ãéjKÂ¾KÙÎu,4%','!…,»ÔF.¨D«ë*C‹3','©ãéjKÂ¾KÙÎu,4%'),('p¹´f*qCñ¨¸íM','©ãéjKÂ¾KÙÎu,4%','¥®&#Fo7G\'d','©ãéjKÂ¾KÙÎu,4%'),('†—V\Z|êJÎŠjµß™1¾','©ãéjKÂ¾KÙÎu,4%','ƒ¼¢ÀA‚2ÛNŸ(','©ãéjKÂ¾KÙÎu,4%'),('†—V\Z|êJÎŠjµß™1¾','©ãéjKÂ¾KÙÎu,4%','!…,»ÔF.¨D«ë*C‹3','©ãéjKÂ¾KÙÎu,4%'),('†—V\Z|êJÎŠjµß™1¾','©ãéjKÂ¾KÙÎu,4%','¥®&#Fo7G\'d','©ãéjKÂ¾KÙÎu,4%'),('–€meqOq³RHĞ71>','©ãéjKÂ¾KÙÎu,4%','ƒ¼¢ÀA‚2ÛNŸ(','©ãéjKÂ¾KÙÎu,4%'),('–€meqOq³RHĞ71>','©ãéjKÂ¾KÙÎu,4%','é´„ÅOD‰Gtåõ~H\\','©ãéjKÂ¾KÙÎu,4%'),('–€meqOq³RHĞ71>','©ãéjKÂ¾KÙÎu,4%','¥®&#Fo7G\'d','©ãéjKÂ¾KÙÎu,4%'),('˜X°Èì O£»ÏŒü†…','©ãéjKÂ¾KÙÎu,4%','ƒ¼¢ÀA‚2ÛNŸ(','©ãéjKÂ¾KÙÎu,4%'),('˜X°Èì O£»ÏŒü†…','©ãéjKÂ¾KÙÎu,4%','é´„ÅOD‰Gtåõ~H\\','©ãéjKÂ¾KÙÎu,4%'),('˜X°Èì O£»ÏŒü†…','©ãéjKÂ¾KÙÎu,4%','¥®&#Fo7G\'d','©ãéjKÂ¾KÙÎu,4%'),('©„õì¨ªL¼êÈë±\nÊ','©ãéjKÂ¾KÙÎu,4%','ƒ¼¢ÀA‚2ÛNŸ(','©ãéjKÂ¾KÙÎu,4%'),('©„õì¨ªL¼êÈë±\nÊ','©ãéjKÂ¾KÙÎu,4%','!…,»ÔF.¨D«ë*C‹3','©ãéjKÂ¾KÙÎu,4%'),('©„õì¨ªL¼êÈë±\nÊ','©ãéjKÂ¾KÙÎu,4%','¥®&#Fo7G\'d','©ãéjKÂ¾KÙÎu,4%'),('Ç¼¢\'SÈM¶ŠP+AF','©ãéjKÂ¾KÙÎu,4%','ƒ¼¢ÀA‚2ÛNŸ(','©ãéjKÂ¾KÙÎu,4%'),('Ç¼¢\'SÈM¶ŠP+AF','©ãéjKÂ¾KÙÎu,4%','!…,»ÔF.¨D«ë*C‹3','©ãéjKÂ¾KÙÎu,4%'),('Ç¼¢\'SÈM¶ŠP+AF','©ãéjKÂ¾KÙÎu,4%','¥®&#Fo7G\'d','©ãéjKÂ¾KÙÎu,4%'),('òZI‰’ C¸Ÿ\r4E¥®-','©ãéjKÂ¾KÙÎu,4%','ƒ¼¢ÀA‚2ÛNŸ(','©ãéjKÂ¾KÙÎu,4%'),('òZI‰’ C¸Ÿ\r4E¥®-','©ãéjKÂ¾KÙÎu,4%','!…,»ÔF.¨D«ë*C‹3','©ãéjKÂ¾KÙÎu,4%'),('òZI‰’ C¸Ÿ\r4E¥®-','©ãéjKÂ¾KÙÎu,4%','¥®&#Fo7G\'d','©ãéjKÂ¾KÙÎu,4%');
-/*!40000 ALTER TABLE `product_category_tree` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `product_configurator_setting`
---
-
-DROP TABLE IF EXISTS `product_configurator_setting`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `product_configurator_setting` (
-  `id` binary(16) NOT NULL,
-  `version_id` binary(16) NOT NULL,
-  `product_id` binary(16) NOT NULL,
-  `product_version_id` binary(16) NOT NULL,
-  `property_group_option_id` binary(16) NOT NULL,
-  `price` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `position` int(11) NOT NULL DEFAULT 0,
-  `media_id` binary(16) DEFAULT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`,`version_id`),
-  KEY `fk.product_configurator_setting.product_id` (`product_id`,`product_version_id`),
-  KEY `fk.product_configurator_setting.media_id` (`media_id`),
-  KEY `fk.product_configurator_setting.property_group_option_id` (`property_group_option_id`),
-  CONSTRAINT `fk.product_configurator_setting.media_id` FOREIGN KEY (`media_id`) REFERENCES `media` (`id`) ON DELETE SET NULL,
-  CONSTRAINT `fk.product_configurator_setting.product_id` FOREIGN KEY (`product_id`, `product_version_id`) REFERENCES `product` (`id`, `version_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.product_configurator_setting.property_group_option_id` FOREIGN KEY (`property_group_option_id`) REFERENCES `property_group_option` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `json.product_configurator_setting.price` CHECK (json_valid(`price`)),
-  CONSTRAINT `json.product_configurator_setting.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `product_configurator_setting`
---
-
-LOCK TABLES `product_configurator_setting` WRITE;
-/*!40000 ALTER TABLE `product_configurator_setting` DISABLE KEYS */;
-INSERT INTO `product_configurator_setting` VALUES ('/¨æ¡ÍÒL€°)¾âÿ1P$','©ãéjKÂ¾KÙÎu,4%','Ç¼¢\'SÈM¶ŠP+AF','©ãéjKÂ¾KÙÎu,4%','Aå;gÖM:’·¢uÚŠôA',NULL,0,NULL,NULL,'2020-04-04 21:05:19.279',NULL),('2z_ZÍ½J€¯®à2wĞ\ZÂ','©ãéjKÂ¾KÙÎu,4%','Ç¼¢\'SÈM¶ŠP+AF','©ãéjKÂ¾KÙÎu,4%','¬ıu†Ğ(Hñ¬€Gvï¤',NULL,0,NULL,NULL,'2020-04-04 21:05:19.278',NULL),(']ìi¢tpC¦¦LhâSœ$','©ãéjKÂ¾KÙÎu,4%','Ç¼¢\'SÈM¶ŠP+AF','©ãéjKÂ¾KÙÎu,4%','Tv’ËûCAšmâl­DÜ',NULL,0,NULL,NULL,'2020-04-04 21:05:19.280',NULL),('k0÷aµO®†hš[Zb^','©ãéjKÂ¾KÙÎu,4%','C¢>¿Lê¼`U¢_ª‡','©ãéjKÂ¾KÙÎu,4%','+ı\'‡ H¨ÚJ>İ',NULL,0,'l»Ü´?B¾€µ÷RÕ¡Ä',NULL,'2020-04-04 21:05:19.095',NULL),('mv%\\‡‡F`‘4Š6¼€\'R','©ãéjKÂ¾KÙÎu,4%','Ç¼¢\'SÈM¶ŠP+AF','©ãéjKÂ¾KÙÎu,4%','Y—ÙÀxI—½ïhßÅ ‰',NULL,0,NULL,NULL,'2020-04-04 21:05:19.279',NULL),('‰€Š„ÄüHêƒ6º*ÍNa','©ãéjKÂ¾KÙÎu,4%','C¢>¿Lê¼`U¢_ª‡','©ãéjKÂ¾KÙÎu,4%','­sZñëûB“ä°sÄ¨š',NULL,0,'*Æ+¢sG¦ˆ\nÁy\r·',NULL,'2020-04-04 21:05:19.096',NULL),('®R@°ò5M%Ÿ&\\~šÀw','©ãéjKÂ¾KÙÎu,4%','C¢>¿Lê¼`U¢_ª‡','©ãéjKÂ¾KÙÎu,4%','REM²­ùB²¬š)oEJ',NULL,0,'öš¸®BĞN²ºµì/ğ©<',NULL,'2020-04-04 21:05:19.096',NULL),('¿²/²®%L_˜Îq¨nc','©ãéjKÂ¾KÙÎu,4%','C¢>¿Lê¼`U¢_ª‡','©ãéjKÂ¾KÙÎu,4%','¬ıu†Ğ(Hñ¬€Gvï¤',NULL,0,NULL,NULL,'2020-04-04 21:05:19.094',NULL),('Áõ\r™ÊB&¼Ö„WşÚ','©ãéjKÂ¾KÙÎu,4%','C¢>¿Lê¼`U¢_ª‡','©ãéjKÂ¾KÙÎu,4%','Y—ÙÀxI—½ïhßÅ ‰',NULL,0,NULL,NULL,'2020-04-04 21:05:19.096',NULL);
-/*!40000 ALTER TABLE `product_configurator_setting` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `product_cross_selling`
---
-
-DROP TABLE IF EXISTS `product_cross_selling`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `product_cross_selling` (
-  `id` binary(16) NOT NULL,
-  `position` int(11) NOT NULL,
-  `sort_by` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `sort_direction` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `active` tinyint(1) DEFAULT 0,
-  `limit` int(11) NOT NULL DEFAULT 24,
-  `product_id` binary(16) NOT NULL,
-  `product_version_id` binary(16) NOT NULL,
-  `product_stream_id` binary(16) NOT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk.product_cross_selling.product_id` (`product_id`,`product_version_id`),
-  KEY `fk.product_cross_selling.product_stream_id` (`product_stream_id`),
-  CONSTRAINT `fk.product_cross_selling.product_id` FOREIGN KEY (`product_id`, `product_version_id`) REFERENCES `product` (`id`, `version_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.product_cross_selling.product_stream_id` FOREIGN KEY (`product_stream_id`) REFERENCES `product_stream` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `product_cross_selling`
---
-
-LOCK TABLES `product_cross_selling` WRITE;
-/*!40000 ALTER TABLE `product_cross_selling` DISABLE KEYS */;
-/*!40000 ALTER TABLE `product_cross_selling` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `product_cross_selling_translation`
---
-
-DROP TABLE IF EXISTS `product_cross_selling_translation`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `product_cross_selling_translation` (
-  `product_cross_selling_id` binary(16) NOT NULL,
-  `language_id` binary(16) NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`product_cross_selling_id`,`language_id`),
-  KEY `fk.product_cross_selling_translation.language_id` (`language_id`),
-  CONSTRAINT `fk.product_cross_selling_translation.language_id` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.product_cross_selling_translation.product_cross_selling_id` FOREIGN KEY (`product_cross_selling_id`) REFERENCES `product_cross_selling` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `product_cross_selling_translation`
---
-
-LOCK TABLES `product_cross_selling_translation` WRITE;
-/*!40000 ALTER TABLE `product_cross_selling_translation` DISABLE KEYS */;
-/*!40000 ALTER TABLE `product_cross_selling_translation` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `product_export`
---
-
-DROP TABLE IF EXISTS `product_export`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `product_export` (
-  `id` binary(16) NOT NULL,
-  `product_stream_id` binary(16) NOT NULL,
-  `storefront_sales_channel_id` binary(16) DEFAULT NULL,
-  `sales_channel_id` binary(16) NOT NULL,
-  `sales_channel_domain_id` binary(16) DEFAULT NULL,
-  `file_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `access_key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `encoding` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `file_format` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `include_variants` tinyint(1) DEFAULT 0,
-  `generate_by_cronjob` tinyint(1) NOT NULL DEFAULT 0,
-  `generated_at` datetime(3) DEFAULT NULL,
-  `interval` int(11) NOT NULL,
-  `header_template` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `body_template` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `footer_template` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  `currency_id` binary(16) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `file_name` (`file_name`),
-  KEY `fk.product_export.product_stream_id` (`product_stream_id`),
-  KEY `fk.product_export.storefront_sales_channel_id` (`storefront_sales_channel_id`),
-  KEY `fk.product_export.sales_channel_id` (`sales_channel_id`),
-  KEY `fk.product_export.sales_channel_domain_id` (`sales_channel_domain_id`),
-  CONSTRAINT `fk.product_export.product_stream_id` FOREIGN KEY (`product_stream_id`) REFERENCES `product_stream` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.product_export.sales_channel_domain_id` FOREIGN KEY (`sales_channel_domain_id`) REFERENCES `sales_channel_domain` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.product_export.sales_channel_id` FOREIGN KEY (`sales_channel_id`) REFERENCES `sales_channel` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.product_export.storefront_sales_channel_id` FOREIGN KEY (`storefront_sales_channel_id`) REFERENCES `sales_channel` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `product_export`
---
-
-LOCK TABLES `product_export` WRITE;
-/*!40000 ALTER TABLE `product_export` DISABLE KEYS */;
-/*!40000 ALTER TABLE `product_export` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `product_keyword_dictionary`
---
-
-DROP TABLE IF EXISTS `product_keyword_dictionary`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `product_keyword_dictionary` (
-  `id` binary(16) NOT NULL,
-  `language_id` binary(16) NOT NULL,
-  `keyword` varchar(500) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `reversed` varchar(500) GENERATED ALWAYS AS (reverse(`keyword`)) STORED,
-  PRIMARY KEY (`id`,`language_id`),
-  KEY `idx.product_keyword_dictionary.language_id` (`language_id`),
-  CONSTRAINT `fk.product_keyword_dictionary.language_id` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `product_keyword_dictionary`
---
-
-LOCK TABLES `product_keyword_dictionary` WRITE;
-/*!40000 ALTER TABLE `product_keyword_dictionary` DISABLE KEYS */;
-INSERT INTO `product_keyword_dictionary` VALUES ('º\r>oŒF‰‘gæhıßFÃ','/»_ââšMpªXTÎ|ãâ','main','niam'),('%cF~ @è™Ãh~','‹/pó¡L†…Mã4Ó8','SWDEMO100013','310001OMEDWS'),('qòv\rKÑ}„¤»—a','‹/pó¡L†…Mã4Ó8','Shopware Freizeit','tiezierF erawpohS'),('‰§ıyŞBú€ª­jT{N','‹/pó¡L†…Mã4Ó8','SWDEMO10005','50001OMEDWS'),('Ö†ñmNO°L”YQA','‹/pó¡L†…Mã4Ó8','mit','tim'),('Ú	l\0A5 !ºYP›','/»_ââšMpªXTÎ|ãâ','SWDEMO10007.1','1.70001OMEDWS'),('mÒSGx*²å>','‹/pó¡L†…Mã4Ó8','variantenprodukt','tkudorpnetnairav'),('ˆsÓêÓG â	\ZfßÁ','/»_ââšMpªXTÎ|ãâ','Shopware Freetime','emiteerF erawpohS'),('yÚ×KG	‹ä„š^V|§','/»_ââšMpªXTÎ|ãâ','highlighting','gnithgilhgih'),('2vÍUD4®B`|º¾U\0','‹/pó¡L†…Mã4Ó8','hauptprodukt','tkudorptpuah'),('L|Ù…MÏ¨Æóé','/»_ââšMpªXTÎ|ãâ','SWDEMO10007.4','4.70001OMEDWS'),('«¬$7H<£HóöV)—','‹/pó¡L†…Mã4Ó8','SWDEMO10006','60001OMEDWS'),('ÄL€mkD-¹%š¨|®È','‹/pó¡L†…Mã4Ó8','variantenprodukt','tkudorpnetnairav'),('ÀüGşOG†‘MŒQóX','‹/pó¡L†…Mã4Ó8','Shopware Kleidung','gnudielK erawpohS'),('áWäoIa‚µ’cOõ','/»_ââšMpªXTÎ|ãâ','product','tcudorp'),('+Ê¬b]G_¼s(¶¸Ğî','/»_ââšMpªXTÎ|ãâ','variant','tnairav'),('8q2LÙ™õ^©\råº','/»_ââšMpªXTÎ|ãâ','reviews','sweiver'),(' CS\\Ë«MY˜báR:\\Ë','‹/pó¡L†…Mã4Ó8','hauptprodukt','tkudorptpuah'),('!»AÈøíKÇƒ#ÑÎ€Nm','/»_ââšMpªXTÎ|ãâ','product','tcudorp'),('!ì}üCgB˜Ø&÷FÏ‰','/»_ââšMpªXTÎ|ãâ','product','tcudorp'),('\"ÔÈ±ÍBM–Îéï²È','/»_ââšMpªXTÎ|ãâ','properties','seitreporp'),('\'+ÜĞ˜åGi¹çËsßG8','‹/pó¡L†…Mã4Ó8','SWDEMO10007.1','1.70001OMEDWS'),('\'äĞõÛOQ€ÖäÄ±ñú','‹/pó¡L†…Mã4Ó8','SWDEMO10001','10001OMEDWS'),('(Õ¹¶™K”£9n-?—Q','/»_ââšMpªXTÎ|ãâ','main','niam'),('-*çFK^Bœ=ÜuÙm','/»_ââšMpªXTÎ|ãâ','prices','secirp'),('1šP±9@&‚óc:Ù½ÈQ','‹/pó¡L†…Mã4Ó8','hervorhebung','gnubehrovreh'),('2\'BÿgÀDk»”çã™ËFZ','‹/pó¡L†…Mã4Ó8','eigenschaften','netfahcsnegie'),('3)øºüJµŠ~± }H¥§','/»_ââšMpªXTÎ|ãâ','SWDEMO10005.4','4.50001OMEDWS'),('3Lª6o#JX˜—NÙmlõ','/»_ââšMpªXTÎ|ãâ','SWDEMO10005.2','2.50001OMEDWS'),('4\r‘ÉÜ•L*€æ¨j–2q','‹/pó¡L†…Mã4Ó8','SWDEMO10005.2','2.50001OMEDWS'),('5ÎEh—B1½7Â\"¹·','/»_ââšMpªXTÎ|ãâ','advanced','decnavda'),('5tİ%€\rGö—£#À­g','‹/pó¡L†…Mã4Ó8','versandkostenfrei','ierfnetsokdnasrev'),('6­J^tMË˜jş+›–*','/»_ââšMpªXTÎ|ãâ','SWDEMO100013','310001OMEDWS'),('6ù2A•Bµ RÉÃåØ˜é','/»_ââšMpªXTÎ|ãâ','with','htiw'),('82;ŒOÖBz¨‘¸…È','/»_ââšMpªXTÎ|ãâ','with','htiw'),(':¬\"ÂÖ¸B€yÚßÊË/','‹/pó¡L†…Mã4Ó8','Shopware Kleidung','gnudielK erawpohS'),('=óËÉ iB„»TÕ¬ÔÆ×5','/»_ââšMpªXTÎ|ãâ','Shopware Freetime','emiteerF erawpohS'),('A#˜3A°£m†yxÁ','‹/pó¡L†…Mã4Ó8','Shopware Kleidung','gnudielK erawpohS'),('AY´=JN$”5/FËP-7','/»_ââšMpªXTÎ|ãâ','main','niam'),('AÑ÷{dºNâœjò’&á=','‹/pó¡L†…Mã4Ó8','mit','tim'),('F;–Î¤;Lš‡]Š°ú«_–','/»_ââšMpªXTÎ|ãâ','Shopware Fashion','noihsaF erawpohS'),('HÁÓ”dL·¸¨—M¬‹Ã','/»_ââšMpªXTÎ|ãâ','SWDEMO10005.5','5.50001OMEDWS'),('Ib&‰ÁK†‹sù0,ê}','‹/pó¡L†…Mã4Ó8','hauptprodukt','tkudorptpuah'),('Iwû¥‚Où¦ãÚ…«ÈW?','‹/pó¡L†…Mã4Ó8','SWDEMO10007.2','2.70001OMEDWS'),('Kûo:H0‰¯V±µ“ƒ','/»_ââšMpªXTÎ|ãâ','SWDEMO10005','50001OMEDWS'),('L1”æÏL@ì¼İß¯ÌT','/»_ââšMpªXTÎ|ãâ','free','eerf'),('M¯#\Z7]G(ıÒõŒ‡²','/»_ââšMpªXTÎ|ãâ','SWDEMO10005.1','1.50001OMEDWS'),('NFJ`9jHº¨?£	i1·','‹/pó¡L†…Mã4Ó8','mit','tim'),('P3çR¿EH²I¾°¹<ëÃ','/»_ââšMpªXTÎ|ãâ','main','niam'),('Qq>àHş@!®+.…xvE','/»_ââšMpªXTÎ|ãâ','SWDEMO10005.3','3.50001OMEDWS'),('Qß÷íXÑBH„0©ZæÑ','‹/pó¡L†…Mã4Ó8','Shopware Kleidung','gnudielK erawpohS'),('SÜ0>‡Bîb©{(p¾&','/»_ââšMpªXTÎ|ãâ','with','htiw'),('Tİ¥eõÇK¯“1¶ár°c÷','‹/pó¡L†…Mã4Ó8','SWDEMO10007.4','4.70001OMEDWS'),('U.fTK>š¯9G²GÏ','/»_ââšMpªXTÎ|ãâ','main','niam'),('Uº—v\\F©¿a€vcYÈˆ','/»_ââšMpªXTÎ|ãâ','main','niam'),('XVëTäâMW‹£hhñ/','‹/pó¡L†…Mã4Ó8','SWDEMO10005.6','6.50001OMEDWS'),('Y|Ğ„rCN‘5‰õ!pw†','‹/pó¡L†…Mã4Ó8','hauptartikel','lekitratpuah'),('Zul†\\áC3„<jôØI»','/»_ââšMpªXTÎ|ãâ','with','htiw'),('[\r‰ûKïNí¾³§Ç16á','/»_ââšMpªXTÎ|ãâ','variant','tnairav'),(']kÊ&ˆşL…ëPSËQ\\','/»_ââšMpªXTÎ|ãâ','product','tcudorp'),('^m3f…M¼‘ŒwĞÏU','‹/pó¡L†…Mã4Ó8','SWDEMO10007','70001OMEDWS'),('_ÓtQŸ{K £.zÆn‘R/','‹/pó¡L†…Mã4Ó8','eigenschaften','netfahcsnegie'),('c®\Z|gNM?¡¼Œ}³Iå','/»_ââšMpªXTÎ|ãâ','Shopware Fashion','noihsaF erawpohS'),('eZwHš7K¦†JMëÊ,xÇ','/»_ââšMpªXTÎ|ãâ','properties','seitreporp'),('eúz¥ÕìO^¬pÎ^‘)–','‹/pó¡L†…Mã4Ó8','Shopware Lebensmittel','lettimsnebeL erawpohS'),('ifÿ¶ùlO]¦v°ë@)6','/»_ââšMpªXTÎ|ãâ','main','niam'),('i½H GÄ–TJ~†\0p<','/»_ââšMpªXTÎ|ãâ','with','htiw'),('kŒ/\ZßyJ=¿œ›ŒÌùai','/»_ââšMpªXTÎ|ãâ','product','tcudorp'),('mgºà¸ÖIËæ$º\0”','/»_ââšMpªXTÎ|ãâ','SWDEMO10006','60001OMEDWS'),('mü%ÒœÏJ”sHˆ ','/»_ââšMpªXTÎ|ãâ','Shopware Fashion','noihsaF erawpohS'),('nÛÔr5O±·İ“iZnşè','‹/pó¡L†…Mã4Ó8','hauptprodukt','tkudorptpuah'),('o\"£çHO@-^0íÄğ½','‹/pó¡L†…Mã4Ó8','eigenschaften','netfahcsnegie'),('röñ íI—rÒQIå¡','/»_ââšMpªXTÎ|ãâ','Shopware Fashion','noihsaF erawpohS'),('s\ZÊóË×A¬\r©\'€EŒ','‹/pó¡L†…Mã4Ó8','hauptprodukt','tkudorptpuah'),('}í.æ35A¡·êıß÷ã','‹/pó¡L†…Mã4Ó8','hauptprodukt','tkudorptpuah'),('}öâ‹­xC©#Ÿıe¤','‹/pó¡L†…Mã4Ó8','Shopware Kleidung','gnudielK erawpohS'),('~6µ#c@ã­!w_Ì%','‹/pó¡L†…Mã4Ó8','Shopware Kleidung','gnudielK erawpohS'),('j€İ7B°ëËU\rÕğ¼','/»_ââšMpªXTÎ|ãâ','Shopware Fashion','noihsaF erawpohS'),('€±™£>øDş¶0ÖZ^Õ‡™','‹/pó¡L†…Mã4Ó8','mit','tim'),('°\ZqàGjŠÌj?˜ãU’','/»_ââšMpªXTÎ|ãâ','product','tcudorp'),('‚^-XÏHÏ‚˜d½&%','/»_ââšMpªXTÎ|ãâ','properties','seitreporp'),('‰[uS`ÛOİ„Y¾…_Œ','/»_ââšMpªXTÎ|ãâ','Shopware Fashion','noihsaF erawpohS'),('Švá¶®GX@¸›¥','‹/pó¡L†…Mã4Ó8','erweiterten','netretiewre'),('’8<ÏçO‹ø³©€şù»','‹/pó¡L†…Mã4Ó8','eigenschaften','netfahcsnegie'),('“ÜÒ#mMg²À-#]!','/»_ââšMpªXTÎ|ãâ','with','htiw'),('•º	/Kg®ÔÈ,ò’¸²','‹/pó¡L†…Mã4Ó8','Shopware Kleidung','gnudielK erawpohS'),('—À—T|OêŠí¾H²[\'','‹/pó¡L†…Mã4Ó8','Shopware Kleidung','gnudielK erawpohS'),('š0ÂùÑDmŸq½£İM§','‹/pó¡L†…Mã4Ó8','Shopware Kleidung','gnudielK erawpohS'),('œÑ:6IÂ€Ñ¥Hş\"·','/»_ââšMpªXTÎ|ãâ','product','tcudorp'),('\\¢·ŸÙLùšÙØ¿ò°t','/»_ââšMpªXTÎ|ãâ','SWDEMO10005.6','6.50001OMEDWS'),('ÅWæMxD‹¶ ·ö4d','‹/pó¡L†…Mã4Ó8','SWDEMO10002','20001OMEDWS'),('¡{«BbBš<pÀl¢µ','/»_ââšMpªXTÎ|ãâ','variant','tnairav'),('¥­”¿¤¥CÅ–pÌÃE‡b','‹/pó¡L†…Mã4Ó8','variantenprodukt','tkudorpnetnairav'),('¦„i´1I<€ó£öÅÑ\0ş','/»_ââšMpªXTÎ|ãâ','main','niam'),('§WØBû(Cœ«ë<à)2¾','/»_ââšMpªXTÎ|ãâ','SWDEMO10007.2','2.70001OMEDWS'),('ª5Ôqt¢A.”û›5ä\"põ','/»_ââšMpªXTÎ|ãâ','product','tcudorp'),('«K¹C²ŸºMìlTÃ ','/»_ââšMpªXTÎ|ãâ','SWDEMO10007','70001OMEDWS'),('­Õ™Ê¤I–µ³.3L\nUÈ','/»_ââšMpªXTÎ|ãâ','product','tcudorp'),('®:åNëKŠ¤ï–äøŸ','/»_ââšMpªXTÎ|ãâ','with','htiw'),('±€÷s¯çA¼’¨ã|\Z¡Â','‹/pó¡L†…Mã4Ó8','SWDEMO10007.3','3.70001OMEDWS'),('³\"iªEcFXšQçËeˆü','‹/pó¡L†…Mã4Ó8','SWDEMO10005.3','3.50001OMEDWS'),('µ\ZcqÔC¯µS°A®3}Š','‹/pó¡L†…Mã4Ó8','hauptprodukt','tkudorptpuah'),('·Ÿë6ãOqŒ•u©Ï¦','‹/pó¡L†…Mã4Ó8','variantenprodukt','tkudorpnetnairav'),('·Şüó,@Dà`5\rëb','/»_ââšMpªXTÎ|ãâ','Shopware Fashion','noihsaF erawpohS'),('¹\"~]ÓAA°€ô‡áNÇ|','/»_ââšMpªXTÎ|ãâ','product','tcudorp'),('»Í$u·¯On€.7°Í/','‹/pó¡L†…Mã4Ó8','preisen','nesierp'),('¾EkŒ?@1 ¼©Ï0`S','‹/pó¡L†…Mã4Ó8','Shopware Kleidung','gnudielK erawpohS'),('¾·A-¸áHV“ÉÜBEÒ','‹/pó¡L†…Mã4Ó8','mit','tim'),('¾ÅÃTá@Z™÷ïSÔ|ø{','‹/pó¡L†…Mã4Ó8','SWDEMO10005.5','5.50001OMEDWS'),('¾ÉØÃESÃâŸ¥uü','/»_ââšMpªXTÎ|ãâ','Shopware Fashion','noihsaF erawpohS'),('¿óÌ%mD-¤ôÉÄ¶','/»_ââšMpªXTÎ|ãâ','variant','tnairav'),('Á{ûÜX¥N€šÏÈäT¾7','/»_ââšMpªXTÎ|ãâ','Shopware Fashion','noihsaF erawpohS'),('Å‚_ï¶qE›‡Af’éyá','/»_ââšMpªXTÎ|ãâ','SWDEMO10007.3','3.70001OMEDWS'),('È\"¦˜Ly³™m}Mƒs’','/»_ââšMpªXTÎ|ãâ','Shopware Food','dooF erawpohS'),('Ê%DsÏ¹BÌ¼ñÅªüfz«','‹/pó¡L†…Mã4Ó8','eigenschaften','netfahcsnegie'),('Ê-—õÛO®ÒµÀÆ§Z','‹/pó¡L†…Mã4Ó8','variantenprodukt','tkudorpnetnairav'),('ÍiãºOF·JÙV‘ˆ%c','/»_ââšMpªXTÎ|ãâ','variant','tnairav'),('Ï&‡ i.BU¬Úä÷@\rù','‹/pó¡L†…Mã4Ó8','mit','tim'),('Ï´ÏØ‚@h¤ŠAQú™\r','/»_ââšMpªXTÎ|ãâ','variant','tnairav'),('Ïú[¡B.H6”ÑE•µ>_','‹/pó¡L†…Mã4Ó8','variantenprodukt','tkudorpnetnairav'),('ĞAÀÛE¹¶`¡‘x†','/»_ââšMpªXTÎ|ãâ','product','tcudorp'),('Ñ\'éNĞ™é¤ıñd€','/»_ââšMpªXTÎ|ãâ','product','tcudorp'),('Ñx„¿£+C«øÀq¿×F','/»_ââšMpªXTÎ|ãâ','Shopware Fashion','noihsaF erawpohS'),('ÑøGâ½«Dõµv´,Û‹','/»_ââšMpªXTÎ|ãâ','shipping','gnippihs'),('Ò¤/û>Bš³ó¢D¤t‘','/»_ââšMpªXTÎ|ãâ','variant','tnairav'),('Ø;B6fÉFN¨ÊÉ“2Ÿ','/»_ââšMpªXTÎ|ãâ','properties','seitreporp'),('Ú(Ø6ÉœK?»gİ‹L÷…','/»_ââšMpªXTÎ|ãâ','Shopware Fashion','noihsaF erawpohS'),('Úr÷tçPNCªƒËıørk','‹/pó¡L†…Mã4Ó8','Shopware Kleidung','gnudielK erawpohS'),('Û#ÌhìAh¿	3Yá‡cB','/»_ââšMpªXTÎ|ãâ','Shopware Fashion','noihsaF erawpohS'),('İk…cl\"C½½âéÿO_\n','‹/pó¡L†…Mã4Ó8','SWDEMO10005.1','1.50001OMEDWS'),('Ş!ßkkD ±åm¼¡O€','/»_ââšMpªXTÎ|ãâ','SWDEMO10001','10001OMEDWS'),('ŞäWşCÀLş“ûgª†Êª','‹/pó¡L†…Mã4Ó8','SWDEMO10005.4','4.50001OMEDWS'),('âÿU¡SGïº<«?nÌ','‹/pó¡L†…Mã4Ó8','mit','tim'),('ã¦|šIÌ‹€¦¦\\où7','‹/pó¡L†…Mã4Ó8','variantenprodukt','tkudorpnetnairav'),('åbíu¾âKªÅ€êÓ¿ø\n','/»_ââšMpªXTÎ|ãâ','properties','seitreporp'),('êLŒ_G\0¼r—­kŠû_','/»_ââšMpªXTÎ|ãâ','SWDEMO10002','20001OMEDWS'),('ë	¢5¤LD&‘C/fº','‹/pó¡L†…Mã4Ó8','Shopware Kleidung','gnudielK erawpohS'),('îØüš”gG¡«~EÊğD²','‹/pó¡L†…Mã4Ó8','bewertungen','negnutreweb'),('îÙ\\Wd2DX±ĞD/’qq','‹/pó¡L†…Mã4Ó8','hauptprodukt','tkudorptpuah'),('ï)iu†AO[ğ³™=¶#','/»_ââšMpªXTÎ|ãâ','with','htiw'),('ñhüşÊH|­B‰Æ¡A','/»_ââšMpªXTÎ|ãâ','main','niam'),('ñ PÑOÚCü…±2~ùQú','‹/pó¡L†…Mã4Ó8','Shopware Kleidung','gnudielK erawpohS'),('ö*v>}ÎDşŒ}D¬m¯¯Ê','/»_ââšMpªXTÎ|ãâ','product','tcudorp'),('÷Zµ8º@§‘•´G¶¶3','/»_ââšMpªXTÎ|ãâ','product','tcudorp'),('ø¬‰ğ=vC¦n¤¶Ÿ“´…','‹/pó¡L†…Mã4Ó8','Shopware Freizeit','tiezierF erawpohS'),('üSŒmñ€FJ¼yî·ó©D','/»_ââšMpªXTÎ|ãâ','product','tcudorp'),('şôòòşK”ß;#Àjå','‹/pó¡L†…Mã4Ó8','mit','tim'),('şı˜÷ÂüM\\¾V2œ>@^','/»_ââšMpªXTÎ|ãâ','product','tcudorp'),('ÿpÉAœDµµC6”å0','/»_ââšMpªXTÎ|ãâ','Shopware Fashion','noihsaF erawpohS');
-/*!40000 ALTER TABLE `product_keyword_dictionary` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `product_manufacturer`
---
-
-DROP TABLE IF EXISTS `product_manufacturer`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `product_manufacturer` (
-  `id` binary(16) NOT NULL,
-  `version_id` binary(16) NOT NULL,
-  `link` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `media_id` binary(16) DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`,`version_id`),
-  KEY `fk.product_manufacturer.media_id` (`media_id`),
-  CONSTRAINT `fk.product_manufacturer.media_id` FOREIGN KEY (`media_id`) REFERENCES `media` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `product_manufacturer`
---
-
-LOCK TABLES `product_manufacturer` WRITE;
-/*!40000 ALTER TABLE `product_manufacturer` DISABLE KEYS */;
-INSERT INTO `product_manufacturer` VALUES ('#&ÖtLˆ¼øRÙÒì·','©ãéjKÂ¾KÙÎu,4%',NULL,NULL,'2020-04-04 21:05:18.792',NULL),('_úâ´ÀC9†`á·„','©ãéjKÂ¾KÙÎu,4%',NULL,NULL,'2020-04-04 21:03:14.399',NULL),('$éfvéD° ­Ü Õg(Ë','©ãéjKÂ¾KÙÎu,4%',NULL,NULL,'2020-04-04 21:05:18.895',NULL),('Ì ÃeÓLûˆ¿«<>ÓP','©ãéjKÂ¾KÙÎu,4%',NULL,NULL,'2020-04-04 21:05:18.651',NULL);
-/*!40000 ALTER TABLE `product_manufacturer` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `product_manufacturer_translation`
---
-
-DROP TABLE IF EXISTS `product_manufacturer_translation`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `product_manufacturer_translation` (
-  `product_manufacturer_id` binary(16) NOT NULL,
-  `product_manufacturer_version_id` binary(16) NOT NULL,
-  `language_id` binary(16) NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `description` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`product_manufacturer_id`,`product_manufacturer_version_id`,`language_id`),
-  KEY `fk.product_manufacturer_translation.language_id` (`language_id`),
-  CONSTRAINT `fk.product_manufacturer_translation.language_id` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.product_manufacturer_translation.product_manufacturer_id` FOREIGN KEY (`product_manufacturer_id`, `product_manufacturer_version_id`) REFERENCES `product_manufacturer` (`id`, `version_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `json.product_manufacturer_translation.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `product_manufacturer_translation`
---
-
-LOCK TABLES `product_manufacturer_translation` WRITE;
-/*!40000 ALTER TABLE `product_manufacturer_translation` DISABLE KEYS */;
-INSERT INTO `product_manufacturer_translation` VALUES ('#&ÖtLˆ¼øRÙÒì·','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','Shopware Food',NULL,NULL,'2020-04-04 21:05:18.792',NULL),('#&ÖtLˆ¼øRÙÒì·','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','Shopware Lebensmittel',NULL,NULL,'2020-04-04 21:05:18.791',NULL),('_úâ´ÀC9†`á·„','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','shopware AG',NULL,NULL,'2020-04-04 21:03:14.399',NULL),('_úâ´ÀC9†`á·„','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','shopware AG',NULL,NULL,'2020-04-04 21:03:14.399',NULL),('$éfvéD° ­Ü Õg(Ë','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','Shopware Fashion',NULL,NULL,'2020-04-04 21:05:18.895',NULL),('$éfvéD° ­Ü Õg(Ë','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','Shopware Kleidung',NULL,NULL,'2020-04-04 21:05:18.895',NULL),('Ì ÃeÓLûˆ¿«<>ÓP','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','Shopware Freetime',NULL,NULL,'2020-04-04 21:05:18.651',NULL),('Ì ÃeÓLûˆ¿«<>ÓP','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','Shopware Freizeit',NULL,NULL,'2020-04-04 21:05:18.650',NULL);
-/*!40000 ALTER TABLE `product_manufacturer_translation` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `product_media`
---
-
-DROP TABLE IF EXISTS `product_media`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `product_media` (
-  `id` binary(16) NOT NULL,
-  `version_id` binary(16) NOT NULL,
-  `position` int(11) NOT NULL DEFAULT 1,
-  `product_id` binary(16) NOT NULL,
-  `product_version_id` binary(16) NOT NULL,
-  `media_id` binary(16) NOT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`,`version_id`),
-  KEY `fk.product_media.media_id` (`media_id`),
-  KEY `fk.product_media.product_id` (`product_id`,`product_version_id`),
-  CONSTRAINT `fk.product_media.media_id` FOREIGN KEY (`media_id`) REFERENCES `media` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.product_media.product_id` FOREIGN KEY (`product_id`, `product_version_id`) REFERENCES `product` (`id`, `version_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `json.product_media.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `product_media`
---
-
-LOCK TABLES `product_media` WRITE;
-/*!40000 ALTER TABLE `product_media` DISABLE KEYS */;
-INSERT INTO `product_media` VALUES ('*Æ+¢sG¦ˆ\nÁy\r·','©ãéjKÂ¾KÙÎu,4%',1,'C¢>¿Lê¼`U¢_ª‡','©ãéjKÂ¾KÙÎu,4%','*Æ+¢sG¦ˆ\nÁy\r·',NULL,'2020-04-04 21:05:19.092',NULL),('-à)‘ÍH¤¬lÃ\\±s ','©ãéjKÂ¾KÙÎu,4%',1,':Àó)ˆKW¢Ìå¢Ÿ4wœ','©ãéjKÂ¾KÙÎu,4%','-à)‘ÍH¤¬lÃ\\±s ',NULL,'2020-04-04 21:05:18.987',NULL),('XÑ””AT•Ùx-Ü’®','©ãéjKÂ¾KÙÎu,4%',1,'Ç¼¢\'SÈM¶ŠP+AF','©ãéjKÂ¾KÙÎu,4%','XÑ””AT•Ùx-Ü’®',NULL,'2020-04-04 21:05:19.277',NULL),('ih­dˆˆDg™Æ8äIÿÅ','©ãéjKÂ¾KÙÎu,4%',1,'Ü^ˆK¤Œ,_\0U@','©ãéjKÂ¾KÙÎu,4%','ih­dˆˆDg™Æ8äIÿÅ',NULL,'2020-04-04 21:05:18.794',NULL),('pãR \\E	ÆZ[G	J*','©ãéjKÂ¾KÙÎu,4%',1,'*ˆÙµGL~†€qd›ä<','©ãéjKÂ¾KÙÎu,4%','pãR \\E	ÆZ[G	J*',NULL,'2020-04-04 21:05:18.896',NULL),('„5jq#=K>ŸA}ÌˆPÈ/','©ãéjKÂ¾KÙÎu,4%',1,'Üh@°OFœË£TËğ¹g','©ãéjKÂ¾KÙÎu,4%','„5jq#=K>ŸA}ÌˆPÈ/',NULL,'2020-04-04 21:05:18.655',NULL);
-/*!40000 ALTER TABLE `product_media` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `product_option`
---
-
-DROP TABLE IF EXISTS `product_option`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `product_option` (
-  `product_id` binary(16) NOT NULL,
-  `product_version_id` binary(16) NOT NULL,
-  `property_group_option_id` binary(16) NOT NULL,
-  PRIMARY KEY (`product_id`,`product_version_id`,`property_group_option_id`),
-  KEY `fk.product_option.property_group_option_id` (`property_group_option_id`),
-  CONSTRAINT `fk.product_option.product_id` FOREIGN KEY (`product_id`, `product_version_id`) REFERENCES `product` (`id`, `version_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.product_option.property_group_option_id` FOREIGN KEY (`property_group_option_id`) REFERENCES `property_group_option` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `product_option`
---
-
-LOCK TABLES `product_option` WRITE;
-/*!40000 ALTER TABLE `product_option` DISABLE KEYS */;
-INSERT INTO `product_option` VALUES ('!FqGÂ€µä–´¯I\0','©ãéjKÂ¾KÙÎu,4%','+ı\'‡ H¨ÚJ>İ'),('!FqGÂ€µä–´¯I\0','©ãéjKÂ¾KÙÎu,4%','¬ıu†Ğ(Hñ¬€Gvï¤'),('$kÀ. KèŒKXÔKM¿\n','©ãéjKÂ¾KÙÎu,4%','+ı\'‡ H¨ÚJ>İ'),('$kÀ. KèŒKXÔKM¿\n','©ãéjKÂ¾KÙÎu,4%','Y—ÙÀxI—½ïhßÅ ‰'),('8!ÜªlVKŸíRFyš,','©ãéjKÂ¾KÙÎu,4%','Y—ÙÀxI—½ïhßÅ ‰'),('8!ÜªlVKŸíRFyš,','©ãéjKÂ¾KÙÎu,4%','­sZñëûB“ä°sÄ¨š'),('m3—AÊåG¼—||¸ş|6­','©ãéjKÂ¾KÙÎu,4%','REM²­ùB²¬š)oEJ'),('m3—AÊåG¼—||¸ş|6­','©ãéjKÂ¾KÙÎu,4%','Y—ÙÀxI—½ïhßÅ ‰'),('p¹´f*qCñ¨¸íM','©ãéjKÂ¾KÙÎu,4%','Tv’ËûCAšmâl­DÜ'),('†—V\Z|êJÎŠjµß™1¾','©ãéjKÂ¾KÙÎu,4%','Y—ÙÀxI—½ïhßÅ ‰'),('–€meqOq³RHĞ71>','©ãéjKÂ¾KÙÎu,4%','REM²­ùB²¬š)oEJ'),('–€meqOq³RHĞ71>','©ãéjKÂ¾KÙÎu,4%','¬ıu†Ğ(Hñ¬€Gvï¤'),('˜X°Èì O£»ÏŒü†…','©ãéjKÂ¾KÙÎu,4%','¬ıu†Ğ(Hñ¬€Gvï¤'),('˜X°Èì O£»ÏŒü†…','©ãéjKÂ¾KÙÎu,4%','­sZñëûB“ä°sÄ¨š'),('©„õì¨ªL¼êÈë±\nÊ','©ãéjKÂ¾KÙÎu,4%','Aå;gÖM:’·¢uÚŠôA'),('òZI‰’ C¸Ÿ\r4E¥®-','©ãéjKÂ¾KÙÎu,4%','¬ıu†Ğ(Hñ¬€Gvï¤');
-/*!40000 ALTER TABLE `product_option` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `product_price`
---
-
-DROP TABLE IF EXISTS `product_price`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `product_price` (
-  `id` binary(16) NOT NULL,
-  `version_id` binary(16) NOT NULL,
-  `rule_id` binary(16) NOT NULL,
-  `product_id` binary(16) NOT NULL,
-  `product_version_id` binary(16) NOT NULL,
-  `price` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `quantity_start` int(11) NOT NULL,
-  `quantity_end` int(11) DEFAULT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`,`version_id`),
-  KEY `fk.product_price.product_id` (`product_id`,`product_version_id`),
-  KEY `fk.product_price.rule_id` (`rule_id`),
-  CONSTRAINT `fk.product_price.product_id` FOREIGN KEY (`product_id`, `product_version_id`) REFERENCES `product` (`id`, `version_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.product_price.rule_id` FOREIGN KEY (`rule_id`) REFERENCES `rule` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `json.product_price.price` CHECK (json_valid(`price`)),
-  CONSTRAINT `json.product_price.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `product_price`
---
-
-LOCK TABLES `product_price` WRITE;
-/*!40000 ALTER TABLE `product_price` DISABLE KEYS */;
-INSERT INTO `product_price` VALUES ('Y«R¡dA¶™2_Å¬®›Y','©ãéjKÂ¾KÙÎu,4%','(Ê®u¥bO\r˜Z½³*¡`','Üh@°OFœË£TËğ¹g','©ãéjKÂ¾KÙÎu,4%','{\"cb7d2554b0ce847cd82f3ac9bd1c0dfca\":{\"net\":630.25,\"gross\":750,\"linked\":true,\"currencyId\":\"b7d2554b0ce847cd82f3ac9bd1c0dfca\"}}',12,NULL,NULL,'2020-04-04 21:05:18.653',NULL),('Ÿ^ÖÇˆH}¥p]!’‡Ô','©ãéjKÂ¾KÙÎu,4%','(Ê®u¥bO\r˜Z½³*¡`','Üh@°OFœË£TËğ¹g','©ãéjKÂ¾KÙÎu,4%','{\"cb7d2554b0ce847cd82f3ac9bd1c0dfca\":{\"net\":672.26999999999998,\"gross\":800,\"linked\":true,\"currencyId\":\"b7d2554b0ce847cd82f3ac9bd1c0dfca\"}}',1,11,NULL,'2020-04-04 21:05:18.654',NULL);
-/*!40000 ALTER TABLE `product_price` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `product_property`
---
-
-DROP TABLE IF EXISTS `product_property`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `product_property` (
-  `product_id` binary(16) NOT NULL,
-  `product_version_id` binary(16) NOT NULL,
-  `property_group_option_id` binary(16) NOT NULL,
-  PRIMARY KEY (`product_id`,`product_version_id`,`property_group_option_id`),
-  KEY `fk.product_property.configuration_option_id` (`property_group_option_id`),
-  CONSTRAINT `fk.product_property.configuration_option_id` FOREIGN KEY (`property_group_option_id`) REFERENCES `property_group_option` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.product_property.product_id` FOREIGN KEY (`product_id`, `product_version_id`) REFERENCES `product` (`id`, `version_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `product_property`
---
-
-LOCK TABLES `product_property` WRITE;
-/*!40000 ALTER TABLE `product_property` DISABLE KEYS */;
-INSERT INTO `product_property` VALUES ('Ü^ˆK¤Œ,_\0U@','©ãéjKÂ¾KÙÎu,4%','\"½®çU€L€™ÀÓin…,'),('Ü^ˆK¤Œ,_\0U@','©ãéjKÂ¾KÙÎu,4%','wBOu¯@È¥vWÍÂ­I¢'),('*ˆÙµGL~†€qd›ä<','©ãéjKÂ¾KÙÎu,4%','o“Y#œ™KH·Ş(.ášqM'),('*ˆÙµGL~†€qd›ä<','©ãéjKÂ¾KÙÎu,4%','xÅ??mÑN´’yxA[ûtÛ'),('*ˆÙµGL~†€qd›ä<','©ãéjKÂ¾KÙÎu,4%','|«ˆZåB’2Qn}'),('*ˆÙµGL~†€qd›ä<','©ãéjKÂ¾KÙÎu,4%','Üo˜¾ì¤HR¾°x©èâ}'),(':Àó)ˆKW¢Ìå¢Ÿ4wœ','©ãéjKÂ¾KÙÎu,4%','Y—ÙÀxI—½ïhßÅ ‰'),(':Àó)ˆKW¢Ìå¢Ÿ4wœ','©ãéjKÂ¾KÙÎu,4%','xÅ??mÑN´’yxA[ûtÛ'),(':Àó)ˆKW¢Ìå¢Ÿ4wœ','©ãéjKÂ¾KÙÎu,4%','Å?£\r°J„´QokÀ.'),('C¢>¿Lê¼`U¢_ª‡','©ãéjKÂ¾KÙÎu,4%','Y—ÙÀxI—½ïhßÅ ‰'),('C¢>¿Lê¼`U¢_ª‡','©ãéjKÂ¾KÙÎu,4%','|«ˆZåB’2Qn}'),('C¢>¿Lê¼`U¢_ª‡','©ãéjKÂ¾KÙÎu,4%','–cŠz¸G»³Êdz³\n>'),('C¢>¿Lê¼`U¢_ª‡','©ãéjKÂ¾KÙÎu,4%','¬ıu†Ğ(Hñ¬€Gvï¤'),('Ç¼¢\'SÈM¶ŠP+AF','©ãéjKÂ¾KÙÎu,4%','Aå;gÖM:’·¢uÚŠôA'),('Ç¼¢\'SÈM¶ŠP+AF','©ãéjKÂ¾KÙÎu,4%','Q“ÿ¥Ş†H¡¼û¡úŠ&À+'),('Ç¼¢\'SÈM¶ŠP+AF','©ãéjKÂ¾KÙÎu,4%','Tv’ËûCAšmâl­DÜ'),('Ç¼¢\'SÈM¶ŠP+AF','©ãéjKÂ¾KÙÎu,4%','Y—ÙÀxI—½ïhßÅ ‰'),('Ç¼¢\'SÈM¶ŠP+AF','©ãéjKÂ¾KÙÎu,4%','xÅ??mÑN´’yxA[ûtÛ'),('Ç¼¢\'SÈM¶ŠP+AF','©ãéjKÂ¾KÙÎu,4%','–cŠz¸G»³Êdz³\n>'),('Ç¼¢\'SÈM¶ŠP+AF','©ãéjKÂ¾KÙÎu,4%','¬ıu†Ğ(Hñ¬€Gvï¤');
-/*!40000 ALTER TABLE `product_property` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `product_review`
---
-
-DROP TABLE IF EXISTS `product_review`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `product_review` (
-  `id` binary(16) NOT NULL,
-  `product_id` binary(16) NOT NULL,
-  `customer_id` binary(16) DEFAULT NULL,
-  `sales_channel_id` binary(16) DEFAULT NULL,
-  `language_id` binary(16) DEFAULT NULL,
-  `external_user` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `external_email` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `content` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `points` double DEFAULT NULL,
-  `status` tinyint(1) DEFAULT 0,
-  `comment` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `product_version_id` binary(16) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk.product_review.product_id` (`product_id`,`product_version_id`),
-  KEY `fk.product_review.customer_id` (`customer_id`),
-  KEY `fk.product_review.sales_channel_id` (`sales_channel_id`),
-  KEY `fk.product_review.language_id` (`language_id`),
-  CONSTRAINT `fk.product_review.customer_id` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.product_review.language_id` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.product_review.product_id` FOREIGN KEY (`product_id`, `product_version_id`) REFERENCES `product` (`id`, `version_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.product_review.sales_channel_id` FOREIGN KEY (`sales_channel_id`) REFERENCES `sales_channel` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `product_review`
---
-
-LOCK TABLES `product_review` WRITE;
-/*!40000 ALTER TABLE `product_review` DISABLE KEYS */;
-/*!40000 ALTER TABLE `product_review` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `product_search_keyword`
---
-
-DROP TABLE IF EXISTS `product_search_keyword`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `product_search_keyword` (
-  `id` binary(16) NOT NULL,
-  `version_id` binary(16) NOT NULL,
-  `language_id` binary(16) NOT NULL,
-  `product_id` binary(16) NOT NULL,
-  `product_version_id` binary(16) NOT NULL,
-  `keyword` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `ranking` double NOT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`,`version_id`,`language_id`),
-  KEY `idx.product_search_keyword.product_id` (`product_id`,`product_version_id`),
-  KEY `idx.product_search_keyword.language_id` (`language_id`),
-  CONSTRAINT `fk.product_search_keyword.language_id` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.product_search_keyword.product_id` FOREIGN KEY (`product_id`, `product_version_id`) REFERENCES `product` (`id`, `version_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `product_search_keyword`
---
-
-LOCK TABLES `product_search_keyword` WRITE;
-/*!40000 ALTER TABLE `product_search_keyword` DISABLE KEYS */;
-INSERT INTO `product_search_keyword` VALUES ('q>š±\ZA­Y(e¸ƒßş','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','p¹´f*qCñ¨¸íM','©ãéjKÂ¾KÙÎu,4%','SWDEMO10007.2',1000,'2020-04-05 17:38:27.327',NULL),('º…uIğ³FUÅ o','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','Üh@°OFœË£TËğ¹g','©ãéjKÂ¾KÙÎu,4%','erweiterten',700,'2020-04-05 17:38:27.327',NULL),('d\\¿TòL‘p£›Oº‹\n','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','Ç¼¢\'SÈM¶ŠP+AF','©ãéjKÂ¾KÙÎu,4%','Shopware Fashion',500,'2020-04-05 17:38:27.347',NULL),('Ñ·÷¢ƒ@—†•šr×î','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','Ü^ˆK¤Œ,_\0U@','©ãéjKÂ¾KÙÎu,4%','with',700,'2020-04-05 17:38:27.347',NULL),('	qbMj“G[š§®ÎÉr','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','Üh@°OFœË£TËğ¹g','©ãéjKÂ¾KÙÎu,4%','SWDEMO10002',1000,'2020-04-05 17:38:27.347',NULL),('	ÇÚ3NYI”¾sT»Ï)Ë«','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','©„õì¨ªL¼êÈë±\nÊ','©ãéjKÂ¾KÙÎu,4%','with',700,'2020-04-05 17:38:27.347',NULL),('\n¢íoşJü§ÛºGÚî•E','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','˜X°Èì O£»ÏŒü†…','©ãéjKÂ¾KÙÎu,4%','Shopware Fashion',500,'2020-04-05 17:38:27.347',NULL),('O_rtH07ËéÈ','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','–€meqOq³RHĞ71>','©ãéjKÂ¾KÙÎu,4%','variant',700,'2020-04-05 17:38:27.347',NULL),('—ïx•ËB¸§©íHÆ©Š','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','!FqGÂ€µä–´¯I\0','©ãéjKÂ¾KÙÎu,4%','variantenprodukt',700,'2020-04-05 17:38:27.327',NULL),('\\xJ(Nù\'OK\'è','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','òZI‰’ C¸Ÿ\r4E¥®-','©ãéjKÂ¾KÙÎu,4%','Shopware Kleidung',500,'2020-04-05 17:38:27.327',NULL),('l¢ƒBÈ‚14,šô”','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','!FqGÂ€µä–´¯I\0','©ãéjKÂ¾KÙÎu,4%','Shopware Kleidung',500,'2020-04-05 17:38:27.327',NULL),('ÕvªHG­A\"–>ªK','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','†—V\Z|êJÎŠjµß™1¾','©ãéjKÂ¾KÙÎu,4%','SWDEMO10007.3',1000,'2020-04-05 17:38:27.347',NULL),('ù(úC‡¶–èÑ7è','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','$kÀ. KèŒKXÔKM¿\n','©ãéjKÂ¾KÙÎu,4%','variant',700,'2020-04-05 17:38:27.347',NULL),('àwúÜ5N‡’¼ïry÷ÿ','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','†—V\Z|êJÎŠjµß™1¾','©ãéjKÂ¾KÙÎu,4%','hauptprodukt',700,'2020-04-05 17:38:27.327',NULL),('¯c(°L’6ª‰º§','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','Ü^ˆK¤Œ,_\0U@','©ãéjKÂ¾KÙÎu,4%','SWDEMO100013',1000,'2020-04-05 17:38:27.327',NULL),('\"ÊëfBG£À™ùaú ','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ',':Àó)ˆKW¢Ìå¢Ÿ4wœ','©ãéjKÂ¾KÙÎu,4%','main',700,'2020-04-05 17:38:27.347',NULL),('¸aßñL‰ÒÆÔõ','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','C¢>¿Lê¼`U¢_ª‡','©ãéjKÂ¾KÙÎu,4%','variant',700,'2020-04-05 17:38:27.347',NULL),('2OYñâMš˜Š¯H','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','Ü^ˆK¤Œ,_\0U@','©ãéjKÂ¾KÙÎu,4%','mit',700,'2020-04-05 17:38:27.327',NULL),(' 	dKùG5œ‘´Ü­*','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','m3—AÊåG¼—||¸ş|6­','©ãéjKÂ¾KÙÎu,4%','variant',700,'2020-04-05 17:38:27.347',NULL),(' \nìN\nÄLš”‚ÅŸ×%i','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','m3—AÊåG¼—||¸ş|6­','©ãéjKÂ¾KÙÎu,4%','Shopware Fashion',500,'2020-04-05 17:38:27.347',NULL),(' Lf§§ºBÂµÂ[À«‰Æ','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','†—V\Z|êJÎŠjµß™1¾','©ãéjKÂ¾KÙÎu,4%','Shopware Fashion',500,'2020-04-05 17:38:27.347',NULL),(' ó©£ULŸ¥˜®ÖiÙÌ','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','p¹´f*qCñ¨¸íM','©ãéjKÂ¾KÙÎu,4%','main',700,'2020-04-05 17:38:27.347',NULL),('#,ó¸ÿJÑ¨K%Ü¸','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','†—V\Z|êJÎŠjµß™1¾','©ãéjKÂ¾KÙÎu,4%','with',700,'2020-04-05 17:38:27.347',NULL),('$ï>{¢Cb§|ğÊ˜ãC','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','8!ÜªlVKŸíRFyš,','©ãéjKÂ¾KÙÎu,4%','variantenprodukt',700,'2020-04-05 17:38:27.327',NULL),('\'N†>È´K¦¹\"¡3Dy','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','C¢>¿Lê¼`U¢_ª‡','©ãéjKÂ¾KÙÎu,4%','Shopware Fashion',500,'2020-04-05 17:38:27.347',NULL),('*l—Ş5EğŒ ±½ìv','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','p¹´f*qCñ¨¸íM','©ãéjKÂ¾KÙÎu,4%','product',700,'2020-04-05 17:38:27.347',NULL),('*ıYh@Fc¸!;ºè$c”','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','C¢>¿Lê¼`U¢_ª‡','©ãéjKÂ¾KÙÎu,4%','Shopware Kleidung',500,'2020-04-05 17:38:27.327',NULL),(',ª36JJ¹)¢ÎDÊ“','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','†—V\Z|êJÎŠjµß™1¾','©ãéjKÂ¾KÙÎu,4%','eigenschaften',700,'2020-04-05 17:38:27.327',NULL),(',eO\'gK0†ëtGö','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','Ç¼¢\'SÈM¶ŠP+AF','©ãéjKÂ¾KÙÎu,4%','Shopware Kleidung',500,'2020-04-05 17:38:27.327',NULL),('-BhÑtJ~·¢{EnÈà','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','m3—AÊåG¼—||¸ş|6­','©ãéjKÂ¾KÙÎu,4%','Shopware Kleidung',500,'2020-04-05 17:38:27.327',NULL),('05?HÍ°K«•3ıĞ+©½','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','Üh@°OFœË£TËğ¹g','©ãéjKÂ¾KÙÎu,4%','mit',700,'2020-04-05 17:38:27.327',NULL),('0øåæ°ÊOt­Â\nÒ£¶Ü','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','m3—AÊåG¼—||¸ş|6­','©ãéjKÂ¾KÙÎu,4%','product',700,'2020-04-05 17:38:27.347',NULL),('6ÍsO+Gµ¢®<Ä¨ìÓ\Z','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','†—V\Z|êJÎŠjµß™1¾','©ãéjKÂ¾KÙÎu,4%','mit',700,'2020-04-05 17:38:27.327',NULL),('6Í»8O„¨lL°(D)','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','Ç¼¢\'SÈM¶ŠP+AF','©ãéjKÂ¾KÙÎu,4%','eigenschaften',700,'2020-04-05 17:38:27.327',NULL),('7MF[6<A¿–àæªŒ9oQ','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','*ˆÙµGL~†€qd›ä<','©ãéjKÂ¾KÙÎu,4%','Shopware Fashion',500,'2020-04-05 17:38:27.347',NULL),('91“Ù•A-—üdƒ7¦%','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','Ç¼¢\'SÈM¶ŠP+AF','©ãéjKÂ¾KÙÎu,4%','properties',700,'2020-04-05 17:38:27.347',NULL),('9İ=¼äKŞ³No¬šNq','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','m3—AÊåG¼—||¸ş|6­','©ãéjKÂ¾KÙÎu,4%','variantenprodukt',700,'2020-04-05 17:38:27.327',NULL),('E„˜LE¿¹ş¢ì3','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','Üh@°OFœË£TËğ¹g','©ãéjKÂ¾KÙÎu,4%','hauptprodukt',700,'2020-04-05 17:38:27.327',NULL),('EèÁûƒº@I–¯VÖ<\'~	','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','8!ÜªlVKŸíRFyš,','©ãéjKÂ¾KÙÎu,4%','variant',700,'2020-04-05 17:38:27.347',NULL),('G]¤Á¾KGM°J°Í%0\r£','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','˜X°Èì O£»ÏŒü†…','©ãéjKÂ¾KÙÎu,4%','Shopware Kleidung',500,'2020-04-05 17:38:27.327',NULL),('G„I½A¶¯Ñ¸ä;ÎÆ','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','–€meqOq³RHĞ71>','©ãéjKÂ¾KÙÎu,4%','variantenprodukt',700,'2020-04-05 17:38:27.327',NULL),('Iü¤ËßãAÑ·Ë4ÕXµ','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','*ˆÙµGL~†€qd›ä<','©ãéjKÂ¾KÙÎu,4%','SWDEMO10001',1000,'2020-04-05 17:38:27.327',NULL),('LÉô.hD@M¯†óğt\rĞ©','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','Üh@°OFœË£TËğ¹g','©ãéjKÂ¾KÙÎu,4%','Shopware Freetime',500,'2020-04-05 17:38:27.347',NULL),('P¿Z39C‡ª‘Øç£,','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','m3—AÊåG¼—||¸ş|6­','©ãéjKÂ¾KÙÎu,4%','SWDEMO10005.3',1000,'2020-04-05 17:38:27.347',NULL),('Qí„$ÔC›‰u\\5Ü¤','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','Ç¼¢\'SÈM¶ŠP+AF','©ãéjKÂ¾KÙÎu,4%','SWDEMO10007',1000,'2020-04-05 17:38:27.347',NULL),('Qøw­à!D´‹g—¨6’P','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','p¹´f*qCñ¨¸íM','©ãéjKÂ¾KÙÎu,4%','mit',700,'2020-04-05 17:38:27.327',NULL),('R¼—QhL§‚à˜Fer{','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ',':Àó)ˆKW¢Ìå¢Ÿ4wœ','©ãéjKÂ¾KÙÎu,4%','shipping',700,'2020-04-05 17:38:27.347',NULL),('RN®ü£¾F\Z¯,r„I€àr','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8',':Àó)ˆKW¢Ìå¢Ÿ4wœ','©ãéjKÂ¾KÙÎu,4%','hauptprodukt',700,'2020-04-05 17:38:27.327',NULL),('UğÿşJlñ‰ÏóÉi	','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','©„õì¨ªL¼êÈë±\nÊ','©ãéjKÂ¾KÙÎu,4%','SWDEMO10007.1',1000,'2020-04-05 17:38:27.347',NULL),('V\"3{æóOk“‚…/Fá?','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','C¢>¿Lê¼`U¢_ª‡','©ãéjKÂ¾KÙÎu,4%','SWDEMO10005',1000,'2020-04-05 17:38:27.347',NULL),('XÇ÷æeJW®•–_›01H','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','!FqGÂ€µä–´¯I\0','©ãéjKÂ¾KÙÎu,4%','SWDEMO10005.2',1000,'2020-04-05 17:38:27.327',NULL),('YçdIFğM+¤t«—e¼','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ',':Àó)ˆKW¢Ìå¢Ÿ4wœ','©ãéjKÂ¾KÙÎu,4%','Shopware Freetime',500,'2020-04-05 17:38:27.347',NULL),('[|‚ÜN­±`\rSÆê„','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','Üh@°OFœË£TËğ¹g','©ãéjKÂ¾KÙÎu,4%','preisen',700,'2020-04-05 17:38:27.327',NULL),('\\Rì{ÆA-§¹‡kâ','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','Üh@°OFœË£TËğ¹g','©ãéjKÂ¾KÙÎu,4%','advanced',700,'2020-04-05 17:38:27.347',NULL),('^Â. E©ã—/ß(k²','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ',':Àó)ˆKW¢Ìå¢Ÿ4wœ','©ãéjKÂ¾KÙÎu,4%','highlighting',700,'2020-04-05 17:38:27.347',NULL),('^óVº´ÏK¡‰+&ÊµÁ\r|','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','!FqGÂ€µä–´¯I\0','©ãéjKÂ¾KÙÎu,4%','Shopware Fashion',500,'2020-04-05 17:38:27.347',NULL),('`ö!î	B‘‹J%zn³Z‰','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','!FqGÂ€µä–´¯I\0','©ãéjKÂ¾KÙÎu,4%','SWDEMO10005.2',1000,'2020-04-05 17:38:27.347',NULL),('`ñf2;ÉK\' Lc¼$¢ê','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','Ç¼¢\'SÈM¶ŠP+AF','©ãéjKÂ¾KÙÎu,4%','mit',700,'2020-04-05 17:38:27.327',NULL),('fÄµŠAÖFª‚€?ëY]éÌ','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','Ç¼¢\'SÈM¶ŠP+AF','©ãéjKÂ¾KÙÎu,4%','hauptprodukt',700,'2020-04-05 17:38:27.327',NULL),('gÁ…#cÕE£œ«åº\ZZ§á','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','m3—AÊåG¼—||¸ş|6­','©ãéjKÂ¾KÙÎu,4%','SWDEMO10005.3',1000,'2020-04-05 17:38:27.327',NULL),('iZãİšñDŸfcÍƒ&-','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','8!ÜªlVKŸíRFyš,','©ãéjKÂ¾KÙÎu,4%','SWDEMO10005.5',1000,'2020-04-05 17:38:27.347',NULL),('pú?ÍhE|…òY]\0ìÇ','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','–€meqOq³RHĞ71>','©ãéjKÂ¾KÙÎu,4%','product',700,'2020-04-05 17:38:27.347',NULL),('u‡\n¡E.¢x& …Â$3','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','8!ÜªlVKŸíRFyš,','©ãéjKÂ¾KÙÎu,4%','Shopware Fashion',500,'2020-04-05 17:38:27.347',NULL),('wŒk\Z²¾C§B‚`Æ°Å—','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','Ü^ˆK¤Œ,_\0U@','©ãéjKÂ¾KÙÎu,4%','main',700,'2020-04-05 17:38:27.347',NULL),('w”¨^úG/‹ÌîS\'xã¤','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','Üh@°OFœË£TËğ¹g','©ãéjKÂ¾KÙÎu,4%','prices',700,'2020-04-05 17:38:27.347',NULL),('w–‡üşzCú ?¾ÛN(','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','˜X°Èì O£»ÏŒü†…','©ãéjKÂ¾KÙÎu,4%','variantenprodukt',700,'2020-04-05 17:38:27.327',NULL),('xö’sDs¿Z<0ˆÉÖ','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','©„õì¨ªL¼êÈë±\nÊ','©ãéjKÂ¾KÙÎu,4%','properties',700,'2020-04-05 17:38:27.347',NULL),('xP˜ÛxçDo±’\r[µ','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','©„õì¨ªL¼êÈë±\nÊ','©ãéjKÂ¾KÙÎu,4%','mit',700,'2020-04-05 17:38:27.327',NULL),('zòœ=Æ@!¨ğPI%·\r','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','òZI‰’ C¸Ÿ\r4E¥®-','©ãéjKÂ¾KÙÎu,4%','hauptprodukt',700,'2020-04-05 17:38:27.327',NULL),('€¼4\r‘FB•{ÙçLÕ=§','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ',':Àó)ˆKW¢Ìå¢Ÿ4wœ','©ãéjKÂ¾KÙÎu,4%','SWDEMO10006',1000,'2020-04-05 17:38:27.347',NULL),('ƒQT0•Aóµ˜7\\PòíS','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','Üh@°OFœË£TËğ¹g','©ãéjKÂ¾KÙÎu,4%','main',700,'2020-04-05 17:38:27.347',NULL),('†/êûwLVŸU	W¯N³','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','Ü^ˆK¤Œ,_\0U@','©ãéjKÂ¾KÙÎu,4%','Shopware Food',500,'2020-04-05 17:38:27.347',NULL),('ˆfĞ/Ë=Ca•Š¿r{,ŒW','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','p¹´f*qCñ¨¸íM','©ãéjKÂ¾KÙÎu,4%','Shopware Kleidung',500,'2020-04-05 17:38:27.327',NULL),('‰MñÁ(jI§ùœÏ4x','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','Üh@°OFœË£TËğ¹g','©ãéjKÂ¾KÙÎu,4%','product',700,'2020-04-05 17:38:27.347',NULL),('‹7ô	ïZCz•Ú-ÁÚêï|','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','Ü^ˆK¤Œ,_\0U@','©ãéjKÂ¾KÙÎu,4%','hauptprodukt',700,'2020-04-05 17:38:27.327',NULL),(']ÉQTK+—…¦İ«ôòà','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','†—V\Z|êJÎŠjµß™1¾','©ãéjKÂ¾KÙÎu,4%','product',700,'2020-04-05 17:38:27.347',NULL),('Yüê\\Bb®b¢U†nä','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','Ç¼¢\'SÈM¶ŠP+AF','©ãéjKÂ¾KÙÎu,4%','with',700,'2020-04-05 17:38:27.347',NULL),('{íƒTŸHP¨am¬y§^y','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','8!ÜªlVKŸíRFyš,','©ãéjKÂ¾KÙÎu,4%','SWDEMO10005.5',1000,'2020-04-05 17:38:27.327',NULL),('‘;ß¸îD&²‰¢ÉìuÛ','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ',':Àó)ˆKW¢Ìå¢Ÿ4wœ','©ãéjKÂ¾KÙÎu,4%','free',700,'2020-04-05 17:38:27.347',NULL),('•«Qés²I\'ƒ{ØE-´p@','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ',':Àó)ˆKW¢Ìå¢Ÿ4wœ','©ãéjKÂ¾KÙÎu,4%','product',700,'2020-04-05 17:38:27.347',NULL),('–±©¨SLÁ»6<6½ó²','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','$kÀ. KèŒKXÔKM¿\n','©ãéjKÂ¾KÙÎu,4%','SWDEMO10005.1',1000,'2020-04-05 17:38:27.347',NULL),('šÏĞÅóÃNB†/tê¦:˜','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','8!ÜªlVKŸíRFyš,','©ãéjKÂ¾KÙÎu,4%','product',700,'2020-04-05 17:38:27.347',NULL),('ŸP3^ŞşK\"»@5½Èš','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','òZI‰’ C¸Ÿ\r4E¥®-','©ãéjKÂ¾KÙÎu,4%','properties',700,'2020-04-05 17:38:27.347',NULL),('£^T»eI“”õšnGvu','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','$kÀ. KèŒKXÔKM¿\n','©ãéjKÂ¾KÙÎu,4%','variantenprodukt',700,'2020-04-05 17:38:27.327',NULL),('¤³õß%§Hµºs¶Ò¬5I','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8',':Àó)ˆKW¢Ìå¢Ÿ4wœ','©ãéjKÂ¾KÙÎu,4%','SWDEMO10006',1000,'2020-04-05 17:38:27.327',NULL),('¥5ï‚N«=ù¹sM9Å','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','òZI‰’ C¸Ÿ\r4E¥®-','©ãéjKÂ¾KÙÎu,4%','mit',700,'2020-04-05 17:38:27.327',NULL),('¥½&,“KÖœüî˜ŠÌ','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','–€meqOq³RHĞ71>','©ãéjKÂ¾KÙÎu,4%','SWDEMO10005.4',1000,'2020-04-05 17:38:27.327',NULL),('© Ë#Ş¬@ÔŒØß¸ù','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','p¹´f*qCñ¨¸íM','©ãéjKÂ¾KÙÎu,4%','eigenschaften',700,'2020-04-05 17:38:27.327',NULL),('©Ş:WûH«šT}%ä','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','†—V\Z|êJÎŠjµß™1¾','©ãéjKÂ¾KÙÎu,4%','Shopware Kleidung',500,'2020-04-05 17:38:27.327',NULL),('­ŠTMºéDj£Ì\'©','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','†—V\Z|êJÎŠjµß™1¾','©ãéjKÂ¾KÙÎu,4%','main',700,'2020-04-05 17:38:27.347',NULL),('®‡á±q\'EÍ‚CW©a\0:á','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','˜X°Èì O£»ÏŒü†…','©ãéjKÂ¾KÙÎu,4%','product',700,'2020-04-05 17:38:27.347',NULL),('®ŒjÁyKa¯|æáN]Ã7','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','–€meqOq³RHĞ71>','©ãéjKÂ¾KÙÎu,4%','Shopware Kleidung',500,'2020-04-05 17:38:27.327',NULL),('¯`›7ÌGı±½ğ5P','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','Üh@°OFœË£TËğ¹g','©ãéjKÂ¾KÙÎu,4%','Shopware Freizeit',500,'2020-04-05 17:38:27.327',NULL),('´Pj<±H&­e‹¦Ş¤”','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','˜X°Èì O£»ÏŒü†…','©ãéjKÂ¾KÙÎu,4%','SWDEMO10005.6',1000,'2020-04-05 17:38:27.347',NULL),('µfLİ¹Fç¥ê¥ui¹×\r','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','–€meqOq³RHĞ71>','©ãéjKÂ¾KÙÎu,4%','Shopware Fashion',500,'2020-04-05 17:38:27.347',NULL),('µjül!JIš»€şÅãr','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','$kÀ. KèŒKXÔKM¿\n','©ãéjKÂ¾KÙÎu,4%','product',700,'2020-04-05 17:38:27.347',NULL),('µ²ÖÙ¨Am!±m‰á','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','!FqGÂ€µä–´¯I\0','©ãéjKÂ¾KÙÎu,4%','product',700,'2020-04-05 17:38:27.347',NULL),('¶×»vª¯Ib¶sÍ>läIs','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','òZI‰’ C¸Ÿ\r4E¥®-','©ãéjKÂ¾KÙÎu,4%','main',700,'2020-04-05 17:38:27.347',NULL),('¸Š½LdGv‘,Çš§1','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','òZI‰’ C¸Ÿ\r4E¥®-','©ãéjKÂ¾KÙÎu,4%','Shopware Fashion',500,'2020-04-05 17:38:27.347',NULL),('º^\\¶IOŸ.ğvHÀ','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','$kÀ. KèŒKXÔKM¿\n','©ãéjKÂ¾KÙÎu,4%','SWDEMO10005.1',1000,'2020-04-05 17:38:27.327',NULL),('»BW²ı7LÊ¢Jµ¨[ü','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','Ü^ˆK¤Œ,_\0U@','©ãéjKÂ¾KÙÎu,4%','Shopware Lebensmittel',500,'2020-04-05 17:38:27.327',NULL),('½a8Ø9üC•vYq-Gû','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8',':Àó)ˆKW¢Ìå¢Ÿ4wœ','©ãéjKÂ¾KÙÎu,4%','mit',700,'2020-04-05 17:38:27.327',NULL),('½ããlÅEğ¨{Ø…ë>ŸÏ','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','Ü^ˆK¤Œ,_\0U@','©ãéjKÂ¾KÙÎu,4%','product',700,'2020-04-05 17:38:27.347',NULL),('¿™e\Z|G¹§IÃĞ˜X{B','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','òZI‰’ C¸Ÿ\r4E¥®-','©ãéjKÂ¾KÙÎu,4%','product',700,'2020-04-05 17:38:27.347',NULL),('ÀG&¯[ŸGG§Po6M™vB','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8',':Àó)ˆKW¢Ìå¢Ÿ4wœ','©ãéjKÂ¾KÙÎu,4%','hervorhebung',700,'2020-04-05 17:38:27.327',NULL),('ÀJQÑéÂMX¤(PÀ!¸{','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','C¢>¿Lê¼`U¢_ª‡','©ãéjKÂ¾KÙÎu,4%','SWDEMO10005',1000,'2020-04-05 17:38:27.327',NULL),('ÀP[\ZçôGÉ—²¡\\«a©','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','†—V\Z|êJÎŠjµß™1¾','©ãéjKÂ¾KÙÎu,4%','properties',700,'2020-04-05 17:38:27.347',NULL),('ÆMCÒ¾Jz„´QMU²ñ¼','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','òZI‰’ C¸Ÿ\r4E¥®-','©ãéjKÂ¾KÙÎu,4%','SWDEMO10007.4',1000,'2020-04-05 17:38:27.327',NULL),('Æò}èøšIŒ…[ò·ÇÍı¯','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','p¹´f*qCñ¨¸íM','©ãéjKÂ¾KÙÎu,4%','Shopware Fashion',500,'2020-04-05 17:38:27.347',NULL),('ÉDDš÷(Iy˜ªçü‡‚‚\0','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','Üh@°OFœË£TËğ¹g','©ãéjKÂ¾KÙÎu,4%','SWDEMO10002',1000,'2020-04-05 17:38:27.327',NULL),('Ê´´IQB¾‹¡Pö®','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','$kÀ. KèŒKXÔKM¿\n','©ãéjKÂ¾KÙÎu,4%','Shopware Fashion',500,'2020-04-05 17:38:27.347',NULL),('Ìa\Z·ÆêF8…ñ³ádÎ¯','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','*ˆÙµGL~†€qd›ä<','©ãéjKÂ¾KÙÎu,4%','main',700,'2020-04-05 17:38:27.347',NULL),('Ì‹gƒ;—Ai“ì\0Bÿ£ö','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','p¹´f*qCñ¨¸íM','©ãéjKÂ¾KÙÎu,4%','with',700,'2020-04-05 17:38:27.347',NULL),('ÏıöEç¯?JC!~%Ÿ','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','p¹´f*qCñ¨¸íM','©ãéjKÂ¾KÙÎu,4%','hauptprodukt',700,'2020-04-05 17:38:27.327',NULL),('Ğ+4pwûJ ü¿7ó_','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','C¢>¿Lê¼`U¢_ª‡','©ãéjKÂ¾KÙÎu,4%','variantenprodukt',700,'2020-04-05 17:38:27.327',NULL),('Ò—»€Ö®J„€Æ6$€PM ','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','Üh@°OFœË£TËğ¹g','©ãéjKÂ¾KÙÎu,4%','with',700,'2020-04-05 17:38:27.347',NULL),('Ó%;¾*I¸¸ØÚˆ$ª','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','©„õì¨ªL¼êÈë±\nÊ','©ãéjKÂ¾KÙÎu,4%','hauptprodukt',700,'2020-04-05 17:38:27.327',NULL),('ÓP«ÆŠ«L&—¦*mŠÔK','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','Ç¼¢\'SÈM¶ŠP+AF','©ãéjKÂ¾KÙÎu,4%','main',700,'2020-04-05 17:38:27.347',NULL),('Ö_–ëXN›ˆÅ”D‚¾','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','©„õì¨ªL¼êÈë±\nÊ','©ãéjKÂ¾KÙÎu,4%','Shopware Fashion',500,'2020-04-05 17:38:27.347',NULL),('Öß¼uş‹N2¾–j˜x','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','C¢>¿Lê¼`U¢_ª‡','©ãéjKÂ¾KÙÎu,4%','product',700,'2020-04-05 17:38:27.347',NULL),('×\07›û6Jí»_‡÷•kÂg','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','òZI‰’ C¸Ÿ\r4E¥®-','©ãéjKÂ¾KÙÎu,4%','SWDEMO10007.4',1000,'2020-04-05 17:38:27.347',NULL),('×šëâÃgK³²~kÎë¸Ó','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','Ü^ˆK¤Œ,_\0U@','©ãéjKÂ¾KÙÎu,4%','SWDEMO100013',1000,'2020-04-05 17:38:27.347',NULL),('Ø#øŸ27DÜ›”j7Ç\'jB','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','©„õì¨ªL¼êÈë±\nÊ','©ãéjKÂ¾KÙÎu,4%','Shopware Kleidung',500,'2020-04-05 17:38:27.327',NULL),('ÚÖCºßºEk£ÍÊaàĞ÷','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','*ˆÙµGL~†€qd›ä<','©ãéjKÂ¾KÙÎu,4%','SWDEMO10001',1000,'2020-04-05 17:38:27.347',NULL),('Ûq-«@\0™&m„/÷·Ó','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8',':Àó)ˆKW¢Ìå¢Ÿ4wœ','©ãéjKÂ¾KÙÎu,4%','versandkostenfrei',700,'2020-04-05 17:38:27.327',NULL),('Ûê§_uRB¥¾ ¾ĞBßt','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','*ˆÙµGL~†€qd›ä<','©ãéjKÂ¾KÙÎu,4%','hauptartikel',700,'2020-04-05 17:38:27.327',NULL),('ÜN]™gA¨ˆ™pº³i\Z\Z','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8',':Àó)ˆKW¢Ìå¢Ÿ4wœ','©ãéjKÂ¾KÙÎu,4%','Shopware Freizeit',500,'2020-04-05 17:38:27.327',NULL),('İ%\r\"«KĞ üõ@µ¼','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ',':Àó)ˆKW¢Ìå¢Ÿ4wœ','©ãéjKÂ¾KÙÎu,4%','with',700,'2020-04-05 17:38:27.347',NULL),('ßø ôKyˆ6Eïğ‚“f','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','Ü^ˆK¤Œ,_\0U@','©ãéjKÂ¾KÙÎu,4%','bewertungen',700,'2020-04-05 17:38:27.327',NULL),('ß|š‰ÂÀO»;0zu«Zf','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','©„õì¨ªL¼êÈë±\nÊ','©ãéjKÂ¾KÙÎu,4%','eigenschaften',700,'2020-04-05 17:38:27.327',NULL),('àX&ªu[B¿—é\rW\\5‰','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','*ˆÙµGL~†€qd›ä<','©ãéjKÂ¾KÙÎu,4%','product',700,'2020-04-05 17:38:27.347',NULL),('ásã˜]_J‰¢Ê\0^“ş','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','p¹´f*qCñ¨¸íM','©ãéjKÂ¾KÙÎu,4%','properties',700,'2020-04-05 17:38:27.347',NULL),('âÖ{fÑCD¬üåÑÔ{k^','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','*ˆÙµGL~†€qd›ä<','©ãéjKÂ¾KÙÎu,4%','Shopware Kleidung',500,'2020-04-05 17:38:27.327',NULL),('ã4>ë0†L›z\nù?ÌÅ','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','†—V\Z|êJÎŠjµß™1¾','©ãéjKÂ¾KÙÎu,4%','SWDEMO10007.3',1000,'2020-04-05 17:38:27.327',NULL),('åZš?BŒN:»ÈÅ£ç­','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','©„õì¨ªL¼êÈë±\nÊ','©ãéjKÂ¾KÙÎu,4%','SWDEMO10007.1',1000,'2020-04-05 17:38:27.327',NULL),('è~^KYµLÏ“EŞZó·}','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','Ç¼¢\'SÈM¶ŠP+AF','©ãéjKÂ¾KÙÎu,4%','SWDEMO10007',1000,'2020-04-05 17:38:27.327',NULL),('ì6ƒ­u½M}oq¸3xI.','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','òZI‰’ C¸Ÿ\r4E¥®-','©ãéjKÂ¾KÙÎu,4%','with',700,'2020-04-05 17:38:27.347',NULL),('ì¶¹Ì¯±E&ôKˆ49','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','˜X°Èì O£»ÏŒü†…','©ãéjKÂ¾KÙÎu,4%','SWDEMO10005.6',1000,'2020-04-05 17:38:27.327',NULL),('î…è¢.?E·¼eîw í','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','8!ÜªlVKŸíRFyš,','©ãéjKÂ¾KÙÎu,4%','Shopware Kleidung',500,'2020-04-05 17:38:27.327',NULL),('ïqsÊÑâ@á¤ËŞƒk','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','Ç¼¢\'SÈM¶ŠP+AF','©ãéjKÂ¾KÙÎu,4%','product',700,'2020-04-05 17:38:27.347',NULL),('ğeüÏ‚!Ny¸@yk­H','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','–€meqOq³RHĞ71>','©ãéjKÂ¾KÙÎu,4%','SWDEMO10005.4',1000,'2020-04-05 17:38:27.347',NULL),('ôN[j^ÈD‚‰AÉiìà','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','Ü^ˆK¤Œ,_\0U@','©ãéjKÂ¾KÙÎu,4%','reviews',700,'2020-04-05 17:38:27.347',NULL),('õw&kZ@—•üÖnĞ,','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','©„õì¨ªL¼êÈë±\nÊ','©ãéjKÂ¾KÙÎu,4%','product',700,'2020-04-05 17:38:27.347',NULL),('ö8ÁÖ\"\'Bö¦ì#úYÙV','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','p¹´f*qCñ¨¸íM','©ãéjKÂ¾KÙÎu,4%','SWDEMO10007.2',1000,'2020-04-05 17:38:27.347',NULL),('÷ÖLCHC<½ï*öÃmĞ$','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','©„õì¨ªL¼êÈë±\nÊ','©ãéjKÂ¾KÙÎu,4%','main',700,'2020-04-05 17:38:27.347',NULL),('ø.d«C\'Ú~Ôòz¶V','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','˜X°Èì O£»ÏŒü†…','©ãéjKÂ¾KÙÎu,4%','variant',700,'2020-04-05 17:38:27.347',NULL),('ùwô†^JÍºÖ0Ae«Î','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','òZI‰’ C¸Ÿ\r4E¥®-','©ãéjKÂ¾KÙÎu,4%','eigenschaften',700,'2020-04-05 17:38:27.327',NULL),('ú*Ê¬@IÔ‚ıˆĞ²ã','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ','!FqGÂ€µä–´¯I\0','©ãéjKÂ¾KÙÎu,4%','variant',700,'2020-04-05 17:38:27.347',NULL),('ÿB˜\n¨E¿®>ÃŒÓŒîf','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8','$kÀ. KèŒKXÔKM¿\n','©ãéjKÂ¾KÙÎu,4%','Shopware Kleidung',500,'2020-04-05 17:38:27.327',NULL);
-/*!40000 ALTER TABLE `product_search_keyword` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `product_stream`
---
-
-DROP TABLE IF EXISTS `product_stream`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `product_stream` (
-  `id` binary(16) NOT NULL,
-  `api_filter` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `invalid` tinyint(1) NOT NULL DEFAULT 1,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  CONSTRAINT `json.product_stream.api_filter` CHECK (json_valid(`api_filter`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `product_stream`
---
-
-LOCK TABLES `product_stream` WRITE;
-/*!40000 ALTER TABLE `product_stream` DISABLE KEYS */;
-/*!40000 ALTER TABLE `product_stream` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `product_stream_filter`
---
-
-DROP TABLE IF EXISTS `product_stream_filter`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `product_stream_filter` (
-  `id` binary(16) NOT NULL,
-  `product_stream_id` binary(16) NOT NULL,
-  `parent_id` binary(16) DEFAULT NULL,
-  `type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `field` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `operator` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `value` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `parameters` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `position` int(11) NOT NULL DEFAULT 0,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk.product_stream_filter.product_stream_id` (`product_stream_id`),
-  KEY `fk.product_stream_filter.parent_id` (`parent_id`),
-  CONSTRAINT `fk.product_stream_filter.parent_id` FOREIGN KEY (`parent_id`) REFERENCES `product_stream_filter` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.product_stream_filter.product_stream_id` FOREIGN KEY (`product_stream_id`) REFERENCES `product_stream` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `json.product_stream_filter.parameters` CHECK (json_valid(`parameters`)),
-  CONSTRAINT `json.product_stream_filter.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `product_stream_filter`
---
-
-LOCK TABLES `product_stream_filter` WRITE;
-/*!40000 ALTER TABLE `product_stream_filter` DISABLE KEYS */;
-/*!40000 ALTER TABLE `product_stream_filter` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `product_stream_translation`
---
-
-DROP TABLE IF EXISTS `product_stream_translation`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `product_stream_translation` (
-  `product_stream_id` binary(16) NOT NULL,
-  `language_id` binary(16) NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `description` mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`product_stream_id`,`language_id`),
-  KEY `fk.product_stream_translation.language_id` (`language_id`),
-  CONSTRAINT `fk.product_stream_translation.language_id` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.product_stream_translation.product_stream_id` FOREIGN KEY (`product_stream_id`) REFERENCES `product_stream` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `json.product_stream_translation.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `product_stream_translation`
---
-
-LOCK TABLES `product_stream_translation` WRITE;
-/*!40000 ALTER TABLE `product_stream_translation` DISABLE KEYS */;
-/*!40000 ALTER TABLE `product_stream_translation` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `product_tag`
---
-
-DROP TABLE IF EXISTS `product_tag`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `product_tag` (
-  `product_id` binary(16) NOT NULL,
-  `product_version_id` binary(16) NOT NULL,
-  `tag_id` binary(16) NOT NULL,
-  PRIMARY KEY (`product_id`,`product_version_id`,`tag_id`),
-  KEY `fk.product_tag.tag_id` (`tag_id`),
-  CONSTRAINT `fk.product_tag.product_version_id__product_id` FOREIGN KEY (`product_id`, `product_version_id`) REFERENCES `product` (`id`, `version_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.product_tag.tag_id` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `product_tag`
---
-
-LOCK TABLES `product_tag` WRITE;
-/*!40000 ALTER TABLE `product_tag` DISABLE KEYS */;
-/*!40000 ALTER TABLE `product_tag` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `product_translation`
---
-
-DROP TABLE IF EXISTS `product_translation`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `product_translation` (
-  `product_id` binary(16) NOT NULL,
-  `product_version_id` binary(16) NOT NULL,
-  `language_id` binary(16) NOT NULL,
-  `meta_description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `keywords` mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `description` mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `meta_title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `pack_unit` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`product_id`,`product_version_id`,`language_id`),
-  KEY `fk.product_translation.language_id` (`language_id`),
-  CONSTRAINT `fk.product_translation.language_id` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.product_translation.product_id` FOREIGN KEY (`product_id`, `product_version_id`) REFERENCES `product` (`id`, `version_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `json.product_translation.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `product_translation`
---
-
-LOCK TABLES `product_translation` WRITE;
-/*!40000 ALTER TABLE `product_translation` DISABLE KEYS */;
-INSERT INTO `product_translation` VALUES ('Üh@°OFœË£TËğ¹g','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ',NULL,'Main product with advanced prices',NULL,'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',NULL,NULL,NULL,'2020-04-04 21:05:18.648',NULL),('Üh@°OFœË£TËğ¹g','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8',NULL,'Hauptprodukt mit erweiterten Preisen',NULL,'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',NULL,NULL,NULL,'2020-04-04 21:05:18.648',NULL),('Ü^ˆK¤Œ,_\0U@','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ',NULL,'Main product with reviews',NULL,'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',NULL,NULL,NULL,'2020-04-04 21:05:18.790',NULL),('Ü^ˆK¤Œ,_\0U@','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8',NULL,'Hauptprodukt mit Bewertungen',NULL,'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',NULL,NULL,NULL,'2020-04-04 21:05:18.789',NULL),('*ˆÙµGL~†€qd›ä<','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ',NULL,'Main product',NULL,'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',NULL,NULL,NULL,'2020-04-04 21:05:18.894',NULL),('*ˆÙµGL~†€qd›ä<','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8',NULL,'Hauptartikel',NULL,'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',NULL,NULL,NULL,'2020-04-04 21:05:18.893',NULL),(':Àó)ˆKW¢Ìå¢Ÿ4wœ','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ',NULL,'Main product, free shipping with highlighting',NULL,'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',NULL,NULL,NULL,'2020-04-04 21:05:18.985',NULL),(':Àó)ˆKW¢Ìå¢Ÿ4wœ','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8',NULL,'Hauptprodukt, versandkostenfrei mit Hervorhebung',NULL,'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',NULL,NULL,NULL,'2020-04-04 21:05:18.983',NULL),('C¢>¿Lê¼`U¢_ª‡','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ',NULL,'Variant product',NULL,'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',NULL,NULL,NULL,'2020-04-04 21:05:19.091',NULL),('C¢>¿Lê¼`U¢_ª‡','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8',NULL,'Variantenprodukt',NULL,'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',NULL,NULL,NULL,'2020-04-04 21:05:19.089',NULL),('Ç¼¢\'SÈM¶ŠP+AF','©ãéjKÂ¾KÙÎu,4%','/»_ââšMpªXTÎ|ãâ',NULL,'Main product with properties',NULL,'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',NULL,NULL,NULL,'2020-04-04 21:05:19.275',NULL),('Ç¼¢\'SÈM¶ŠP+AF','©ãéjKÂ¾KÙÎu,4%','‹/pó¡L†…Mã4Ó8',NULL,'Hauptprodukt mit Eigenschaften',NULL,'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',NULL,NULL,NULL,'2020-04-04 21:05:19.274',NULL);
-/*!40000 ALTER TABLE `product_translation` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `product_visibility`
---
-
-DROP TABLE IF EXISTS `product_visibility`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `product_visibility` (
-  `id` binary(16) NOT NULL,
-  `product_id` binary(16) NOT NULL,
-  `product_version_id` binary(16) NOT NULL,
-  `sales_channel_id` binary(16) NOT NULL,
-  `visibility` int(11) NOT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uniq.product_id__sales_channel_id` (`product_id`,`product_version_id`,`sales_channel_id`),
-  KEY `idx.product_visibility.product_id` (`product_id`,`product_version_id`),
-  KEY `idx.product_visibility.sales_channel_id` (`sales_channel_id`),
-  CONSTRAINT `fk.product_visibility.product_id` FOREIGN KEY (`product_id`, `product_version_id`) REFERENCES `product` (`id`, `version_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.product_visibility.sales_channel_id` FOREIGN KEY (`sales_channel_id`) REFERENCES `sales_channel` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `product_visibility`
---
-
-LOCK TABLES `product_visibility` WRITE;
-/*!40000 ALTER TABLE `product_visibility` DISABLE KEYS */;
-INSERT INTO `product_visibility` VALUES ('?´Ö.™mAbZ’–ìdO?','*ˆÙµGL~†€qd›ä<','©ãéjKÂ¾KÙÎu,4%','7ë>–RÙKŞš¤Ãt±\"Ã°',30,'2020-04-04 21:05:18.897',NULL),('c`TÚÄFó¤ÓÊ¤x^ô¦','Ç¼¢\'SÈM¶ŠP+AF','©ãéjKÂ¾KÙÎu,4%','7ë>–RÙKŞš¤Ãt±\"Ã°',30,'2020-04-04 21:05:19.280',NULL),('gp‚Œ©àN@—\0>4ƒ|Ş','Ü^ˆK¤Œ,_\0U@','©ãéjKÂ¾KÙÎu,4%','7ë>–RÙKŞš¤Ãt±\"Ã°',30,'2020-04-04 21:05:18.795',NULL),('‘¨ÖC\Z¬Kr•>ÛŸjQ','Üh@°OFœË£TËğ¹g','©ãéjKÂ¾KÙÎu,4%','7ë>–RÙKŞš¤Ãt±\"Ã°',30,'2020-04-04 21:05:18.657',NULL),('°´Q(Kë¯Û0†ÊßøB','C¢>¿Lê¼`U¢_ª‡','©ãéjKÂ¾KÙÎu,4%','7ë>–RÙKŞš¤Ãt±\"Ã°',30,'2020-04-04 21:05:19.097',NULL),('Ü/İĞ£—Ga­4~La#ÿH',':Àó)ˆKW¢Ìå¢Ÿ4wœ','©ãéjKÂ¾KÙÎu,4%','7ë>–RÙKŞš¤Ãt±\"Ã°',30,'2020-04-04 21:05:18.988',NULL);
-/*!40000 ALTER TABLE `product_visibility` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `promotion`
---
-
-DROP TABLE IF EXISTS `promotion`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `promotion` (
-  `id` binary(16) NOT NULL,
-  `active` tinyint(1) NOT NULL DEFAULT 0,
-  `valid_from` datetime DEFAULT NULL,
-  `valid_until` datetime DEFAULT NULL,
-  `max_redemptions_global` int(11) NOT NULL DEFAULT 1,
-  `max_redemptions_per_customer` int(11) NOT NULL DEFAULT 1,
-  `order_count` int(11) NOT NULL DEFAULT 0,
-  `orders_per_customer_count` longtext COLLATE utf8mb4_bin DEFAULT NULL,
-  `exclusive` tinyint(1) NOT NULL DEFAULT 0,
-  `code` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
-  `use_codes` tinyint(1) NOT NULL DEFAULT 0,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  `customer_restriction` tinyint(1) NOT NULL DEFAULT 0,
-  `exclusion_ids` longtext COLLATE utf8mb4_bin DEFAULT NULL,
-  `use_individual_codes` tinyint(1) NOT NULL DEFAULT 0,
-  `individual_code_pattern` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
-  `use_setgroups` tinyint(1) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `code` (`code`),
-  UNIQUE KEY `individual_code_pattern` (`individual_code_pattern`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `promotion`
---
-
-LOCK TABLES `promotion` WRITE;
-/*!40000 ALTER TABLE `promotion` DISABLE KEYS */;
-/*!40000 ALTER TABLE `promotion` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `promotion_cart_rule`
---
-
-DROP TABLE IF EXISTS `promotion_cart_rule`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `promotion_cart_rule` (
-  `promotion_id` binary(16) NOT NULL,
-  `rule_id` binary(16) NOT NULL,
-  PRIMARY KEY (`promotion_id`,`rule_id`),
-  KEY `fk.promotion_cart_rule.rule_id` (`rule_id`),
-  CONSTRAINT `fk.promotion_cart_rule.promotion_id` FOREIGN KEY (`promotion_id`) REFERENCES `promotion` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `fk.promotion_cart_rule.rule_id` FOREIGN KEY (`rule_id`) REFERENCES `rule` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `promotion_cart_rule`
---
-
-LOCK TABLES `promotion_cart_rule` WRITE;
-/*!40000 ALTER TABLE `promotion_cart_rule` DISABLE KEYS */;
-/*!40000 ALTER TABLE `promotion_cart_rule` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `promotion_discount`
---
-
-DROP TABLE IF EXISTS `promotion_discount`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `promotion_discount` (
-  `id` binary(16) NOT NULL,
-  `promotion_id` binary(16) NOT NULL,
-  `scope` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `type` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `value` double NOT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  `consider_advanced_rules` tinyint(1) NOT NULL DEFAULT 0,
-  `max_value` float DEFAULT NULL,
-  `sorter_key` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `applier_key` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `usage_key` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `idx.promotion_discount.promotion_id` (`promotion_id`),
-  CONSTRAINT `fk.promotion_discount.promotion_id` FOREIGN KEY (`promotion_id`) REFERENCES `promotion` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `promotion_discount`
---
-
-LOCK TABLES `promotion_discount` WRITE;
-/*!40000 ALTER TABLE `promotion_discount` DISABLE KEYS */;
-/*!40000 ALTER TABLE `promotion_discount` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `promotion_discount_prices`
---
-
-DROP TABLE IF EXISTS `promotion_discount_prices`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `promotion_discount_prices` (
-  `id` binary(16) NOT NULL,
-  `discount_id` binary(16) NOT NULL,
-  `currency_id` binary(16) NOT NULL,
-  `price` float NOT NULL DEFAULT 0,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk.promotion_discount_prices.discount_id` (`discount_id`),
-  KEY `fk.promotion_discount_prices.currency_id` (`currency_id`),
-  CONSTRAINT `fk.promotion_discount_prices.currency_id` FOREIGN KEY (`currency_id`) REFERENCES `currency` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.promotion_discount_prices.discount_id` FOREIGN KEY (`discount_id`) REFERENCES `promotion_discount` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `promotion_discount_prices`
---
-
-LOCK TABLES `promotion_discount_prices` WRITE;
-/*!40000 ALTER TABLE `promotion_discount_prices` DISABLE KEYS */;
-/*!40000 ALTER TABLE `promotion_discount_prices` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `promotion_discount_rule`
---
-
-DROP TABLE IF EXISTS `promotion_discount_rule`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `promotion_discount_rule` (
-  `discount_id` binary(16) NOT NULL,
-  `rule_id` binary(16) NOT NULL,
-  PRIMARY KEY (`discount_id`,`rule_id`),
-  KEY `fk.promotion_discount_rule.rule_id` (`rule_id`),
-  CONSTRAINT `fk.promotion_discount_rule.promotion_id` FOREIGN KEY (`discount_id`) REFERENCES `promotion_discount` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `fk.promotion_discount_rule.rule_id` FOREIGN KEY (`rule_id`) REFERENCES `rule` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `promotion_discount_rule`
---
-
-LOCK TABLES `promotion_discount_rule` WRITE;
-/*!40000 ALTER TABLE `promotion_discount_rule` DISABLE KEYS */;
-/*!40000 ALTER TABLE `promotion_discount_rule` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `promotion_individual_code`
---
-
-DROP TABLE IF EXISTS `promotion_individual_code`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `promotion_individual_code` (
-  `id` binary(16) NOT NULL,
-  `promotion_id` binary(16) NOT NULL,
-  `code` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `payload` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `code` (`code`),
-  KEY `idx.promotion_individual_code.promotion_id` (`promotion_id`),
-  CONSTRAINT `fk.promotion_individual_code.promotion_id` FOREIGN KEY (`promotion_id`) REFERENCES `promotion` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `promotion_individual_code`
---
-
-LOCK TABLES `promotion_individual_code` WRITE;
-/*!40000 ALTER TABLE `promotion_individual_code` DISABLE KEYS */;
-/*!40000 ALTER TABLE `promotion_individual_code` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `promotion_order_rule`
---
-
-DROP TABLE IF EXISTS `promotion_order_rule`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `promotion_order_rule` (
-  `promotion_id` binary(16) NOT NULL,
-  `rule_id` binary(16) NOT NULL,
-  PRIMARY KEY (`promotion_id`,`rule_id`),
-  KEY `fk.promotion_order_rule.rule_id` (`rule_id`),
-  CONSTRAINT `fk.promotion_order_rule.promotion_id` FOREIGN KEY (`promotion_id`) REFERENCES `promotion` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `fk.promotion_order_rule.rule_id` FOREIGN KEY (`rule_id`) REFERENCES `rule` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `promotion_order_rule`
---
-
-LOCK TABLES `promotion_order_rule` WRITE;
-/*!40000 ALTER TABLE `promotion_order_rule` DISABLE KEYS */;
-/*!40000 ALTER TABLE `promotion_order_rule` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `promotion_persona_customer`
---
-
-DROP TABLE IF EXISTS `promotion_persona_customer`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `promotion_persona_customer` (
-  `promotion_id` binary(16) NOT NULL,
-  `customer_id` binary(16) NOT NULL,
-  PRIMARY KEY (`promotion_id`,`customer_id`),
-  KEY `fk.promotion_persona_customer.customer_id` (`customer_id`),
-  CONSTRAINT `fk.promotion_persona_customer.customer_id` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `fk.promotion_persona_customer.promotion_id` FOREIGN KEY (`promotion_id`) REFERENCES `promotion` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `promotion_persona_customer`
---
-
-LOCK TABLES `promotion_persona_customer` WRITE;
-/*!40000 ALTER TABLE `promotion_persona_customer` DISABLE KEYS */;
-/*!40000 ALTER TABLE `promotion_persona_customer` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `promotion_persona_rule`
---
-
-DROP TABLE IF EXISTS `promotion_persona_rule`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `promotion_persona_rule` (
-  `promotion_id` binary(16) NOT NULL,
-  `rule_id` binary(16) NOT NULL,
-  PRIMARY KEY (`promotion_id`,`rule_id`),
-  KEY `fk.promotion_persona_rule.rule_id` (`rule_id`),
-  CONSTRAINT `fk.promotion_persona_rule.promotion_id` FOREIGN KEY (`promotion_id`) REFERENCES `promotion` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `fk.promotion_persona_rule.rule_id` FOREIGN KEY (`rule_id`) REFERENCES `rule` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `promotion_persona_rule`
---
-
-LOCK TABLES `promotion_persona_rule` WRITE;
-/*!40000 ALTER TABLE `promotion_persona_rule` DISABLE KEYS */;
-/*!40000 ALTER TABLE `promotion_persona_rule` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `promotion_sales_channel`
---
-
-DROP TABLE IF EXISTS `promotion_sales_channel`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `promotion_sales_channel` (
-  `id` binary(16) NOT NULL,
-  `promotion_id` binary(16) NOT NULL,
-  `sales_channel_id` binary(16) NOT NULL,
-  `priority` int(11) NOT NULL DEFAULT 0,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `idx.promotion_sales_channel.sales_channel_id` (`sales_channel_id`),
-  KEY `idx.promotion_sales_channel.promotion_id` (`promotion_id`),
-  CONSTRAINT `fk.promotion_sales_channel.promotion_id` FOREIGN KEY (`promotion_id`) REFERENCES `promotion` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.promotion_sales_channel.sales_channel_id` FOREIGN KEY (`sales_channel_id`) REFERENCES `sales_channel` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `promotion_sales_channel`
---
-
-LOCK TABLES `promotion_sales_channel` WRITE;
-/*!40000 ALTER TABLE `promotion_sales_channel` DISABLE KEYS */;
-/*!40000 ALTER TABLE `promotion_sales_channel` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `promotion_setgroup`
---
-
-DROP TABLE IF EXISTS `promotion_setgroup`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `promotion_setgroup` (
-  `id` binary(16) NOT NULL,
-  `promotion_id` binary(16) NOT NULL,
-  `packager_key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `sorter_key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `value` double NOT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `idx.promotion_setgroup.promotion_id` (`promotion_id`),
-  CONSTRAINT `fk.promotion_setgroup.promotion_id` FOREIGN KEY (`promotion_id`) REFERENCES `promotion` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `promotion_setgroup`
---
-
-LOCK TABLES `promotion_setgroup` WRITE;
-/*!40000 ALTER TABLE `promotion_setgroup` DISABLE KEYS */;
-/*!40000 ALTER TABLE `promotion_setgroup` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `promotion_setgroup_rule`
---
-
-DROP TABLE IF EXISTS `promotion_setgroup_rule`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `promotion_setgroup_rule` (
-  `setgroup_id` binary(16) NOT NULL,
-  `rule_id` binary(16) NOT NULL,
-  PRIMARY KEY (`setgroup_id`,`rule_id`),
-  KEY `fk.promotion_setgroup_rule.rule_id` (`rule_id`),
-  CONSTRAINT `fk.promotion_setgroup_rule.rule_id` FOREIGN KEY (`rule_id`) REFERENCES `rule` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `fk.promotion_setgroup_rule.setgroup_id` FOREIGN KEY (`setgroup_id`) REFERENCES `promotion_setgroup` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `promotion_setgroup_rule`
---
-
-LOCK TABLES `promotion_setgroup_rule` WRITE;
-/*!40000 ALTER TABLE `promotion_setgroup_rule` DISABLE KEYS */;
-/*!40000 ALTER TABLE `promotion_setgroup_rule` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `promotion_translation`
---
-
-DROP TABLE IF EXISTS `promotion_translation`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `promotion_translation` (
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `promotion_id` binary(16) NOT NULL,
-  `language_id` binary(16) NOT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`promotion_id`,`language_id`),
-  KEY `fk.promotion_translation.promotion_id` (`promotion_id`),
-  KEY `fk.promotion_translation.language_id` (`language_id`),
-  CONSTRAINT `fk.promotion_translation.language_id` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.promotion_translation.promotion_id` FOREIGN KEY (`promotion_id`) REFERENCES `promotion` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `promotion_translation`
---
-
-LOCK TABLES `promotion_translation` WRITE;
-/*!40000 ALTER TABLE `promotion_translation` DISABLE KEYS */;
-/*!40000 ALTER TABLE `promotion_translation` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `property_group`
---
-
-DROP TABLE IF EXISTS `property_group`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `property_group` (
-  `id` binary(16) NOT NULL,
-  `sorting_type` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'alphanumeric',
-  `display_type` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'text',
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `property_group`
---
-
-LOCK TABLES `property_group` WRITE;
-/*!40000 ALTER TABLE `property_group` DISABLE KEYS */;
-INSERT INTO `property_group` VALUES ('W»0şdHÈŠÓ1Ïmú','alphanumeric','text','2020-04-04 21:05:18.511',NULL),('&œ~@¥JF.ˆNÛ\0L_{È','alphanumeric','color','2020-04-04 21:05:18.539',NULL),('D=r€?JÈ¯ÀÁ‡9İô','alphanumeric','text','2020-04-04 21:05:18.567',NULL),('uóSµ‰ĞKôŠš±õB+','alphanumeric','text','2020-04-04 21:05:18.595',NULL),('¦|İ–\'ËH‹´Í‘óèÖn2','alphanumeric','text','2020-04-04 21:05:18.623',NULL);
-/*!40000 ALTER TABLE `property_group` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `property_group_option`
---
-
-DROP TABLE IF EXISTS `property_group_option`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `property_group_option` (
-  `id` binary(16) NOT NULL,
-  `property_group_id` binary(16) NOT NULL,
-  `color_hex_code` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `media_id` binary(16) DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk.property_group_option.property_group_id` (`property_group_id`),
-  KEY `fk.property_group_option.media_id` (`media_id`),
-  CONSTRAINT `fk.property_group_option.media_id` FOREIGN KEY (`media_id`) REFERENCES `media` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `fk.property_group_option.property_group_id` FOREIGN KEY (`property_group_id`) REFERENCES `property_group` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `property_group_option`
---
-
-LOCK TABLES `property_group_option` WRITE;
-/*!40000 ALTER TABLE `property_group_option` DISABLE KEYS */;
-INSERT INTO `property_group_option` VALUES ('\"½®çU€L€™ÀÓin…,','D=r€?JÈ¯ÀÁ‡9İô',NULL,NULL,'2020-04-04 21:05:18.558',NULL),('+ı\'‡ H¨ÚJ>İ','&œ~@¥JF.ˆNÛ\0L_{È','#0000ffff',NULL,'2020-04-04 21:05:18.533',NULL),('2}l&M{´yîëf«#','D=r€?JÈ¯ÀÁ‡9İô',NULL,NULL,'2020-04-04 21:05:18.560',NULL),('4oÅ°CFLª¬¥±ìZ¢3','D=r€?JÈ¯ÀÁ‡9İô',NULL,NULL,'2020-04-04 21:05:18.562',NULL),('Aå;gÖM:’·¢uÚŠôA','uóSµ‰ĞKôŠš±õB+',NULL,NULL,'2020-04-04 21:05:18.588',NULL),('Q“ÿ¥Ş†H¡¼û¡úŠ&À+','¦|İ–\'ËH‹´Í‘óèÖn2',NULL,NULL,'2020-04-04 21:05:18.612',NULL),('REM²­ùB²¬š)oEJ','&œ~@¥JF.ˆNÛ\0L_{È','#ff0000ff',NULL,'2020-04-04 21:05:18.536',NULL),('Tv’ËûCAšmâl­DÜ','uóSµ‰ĞKôŠš±õB+',NULL,NULL,'2020-04-04 21:05:18.593',NULL),('Y—ÙÀxI—½ïhßÅ ‰','uóSµ‰ĞKôŠš±õB+',NULL,NULL,'2020-04-04 21:05:18.590',NULL),('g<—$j­G°¾Î!¹;','D=r€?JÈ¯ÀÁ‡9İô',NULL,NULL,'2020-04-04 21:05:18.563',NULL),('o“Y#œ™KH·Ş(.ášqM','W»0şdHÈŠÓ1Ïmú',NULL,NULL,'2020-04-04 21:05:18.511',NULL),('wBOu¯@È¥vWÍÂ­I¢','D=r€?JÈ¯ÀÁ‡9İô',NULL,NULL,'2020-04-04 21:05:18.565',NULL),('xÅ??mÑN´’yxA[ûtÛ','W»0şdHÈŠÓ1Ïmú',NULL,NULL,'2020-04-04 21:05:18.507',NULL),('|«ˆZåB’2Qn}','W»0şdHÈŠÓ1Ïmú',NULL,NULL,'2020-04-04 21:05:18.509',NULL),('–cŠz¸G»³Êdz³\n>','¦|İ–\'ËH‹´Í‘óèÖn2',NULL,NULL,'2020-04-04 21:05:18.614',NULL),('¬ÚvñwI`§øùoõV?','¦|İ–\'ËH‹´Í‘óèÖn2',NULL,NULL,'2020-04-04 21:05:18.615',NULL),('¬ıu†Ğ(Hñ¬€Gvï¤','uóSµ‰ĞKôŠš±õB+',NULL,NULL,'2020-04-04 21:05:18.595',NULL),('­sZñëûB“ä°sÄ¨š','&œ~@¥JF.ˆNÛ\0L_{È','#ffffffff',NULL,'2020-04-04 21:05:18.539',NULL),('Ãmh¾|ÀCÉŒx7X‘êÄ\n','¦|İ–\'ËH‹´Í‘óèÖn2',NULL,NULL,'2020-04-04 21:05:18.616',NULL),('Å?£\r°J„´QokÀ.','¦|İ–\'ËH‹´Í‘óèÖn2',NULL,NULL,'2020-04-04 21:05:18.619',NULL),('Õ×˜¢lv@³¥ø7 +“ ‹','D=r€?JÈ¯ÀÁ‡9İô',NULL,NULL,'2020-04-04 21:05:18.567',NULL),('Üo˜¾ì¤HR¾°x©èâ}','¦|İ–\'ËH‹´Í‘óèÖn2',NULL,NULL,'2020-04-04 21:05:18.621',NULL),('ß«½RMz½ğ¯ËÓr','¦|İ–\'ËH‹´Í‘óèÖn2',NULL,NULL,'2020-04-04 21:05:18.623',NULL);
-/*!40000 ALTER TABLE `property_group_option` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `property_group_option_translation`
---
-
-DROP TABLE IF EXISTS `property_group_option_translation`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `property_group_option_translation` (
-  `property_group_option_id` binary(16) NOT NULL,
-  `language_id` binary(16) NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `position` int(11) NOT NULL DEFAULT 1,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`property_group_option_id`,`language_id`),
-  KEY `fk.property_group_option_translation.language_id` (`language_id`),
-  CONSTRAINT `fk.property_group_option_translation.language_id` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.property_group_option_translation.prop_group_option_id` FOREIGN KEY (`property_group_option_id`) REFERENCES `property_group_option` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `json.property_group_option_translation.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `property_group_option_translation`
---
-
-LOCK TABLES `property_group_option_translation` WRITE;
-/*!40000 ALTER TABLE `property_group_option_translation` DISABLE KEYS */;
-INSERT INTO `property_group_option_translation` VALUES ('\"½®çU€L€™ÀÓin…,','/»_ââšMpªXTÎ|ãâ','Sugar',1,NULL,'2020-04-04 21:05:18.558',NULL),('\"½®çU€L€™ÀÓin…,','‹/pó¡L†…Mã4Ó8','Zucker',1,NULL,'2020-04-04 21:05:18.558',NULL),('+ı\'‡ H¨ÚJ>İ','/»_ââšMpªXTÎ|ãâ','Blue',1,NULL,'2020-04-04 21:05:18.533',NULL),('+ı\'‡ H¨ÚJ>İ','‹/pó¡L†…Mã4Ó8','Blau',1,NULL,'2020-04-04 21:05:18.532',NULL),('2}l&M{´yîëf«#','/»_ââšMpªXTÎ|ãâ','Fish',1,NULL,'2020-04-04 21:05:18.560',NULL),('2}l&M{´yîëf«#','‹/pó¡L†…Mã4Ó8','Fisch',1,NULL,'2020-04-04 21:05:18.560',NULL),('4oÅ°CFLª¬¥±ìZ¢3','/»_ââšMpªXTÎ|ãâ','Wheat',1,NULL,'2020-04-04 21:05:18.562',NULL),('4oÅ°CFLª¬¥±ìZ¢3','‹/pó¡L†…Mã4Ó8','Weizen',1,NULL,'2020-04-04 21:05:18.561',NULL),('Aå;gÖM:’·¢uÚŠôA','/»_ââšMpªXTÎ|ãâ','S',1,NULL,'2020-04-04 21:05:18.587',NULL),('Aå;gÖM:’·¢uÚŠôA','‹/pó¡L†…Mã4Ó8','S',1,NULL,'2020-04-04 21:05:18.586',NULL),('Q“ÿ¥Ş†H¡¼û¡úŠ&À+','/»_ââšMpªXTÎ|ãâ','Polyester',1,NULL,'2020-04-04 21:05:18.612',NULL),('Q“ÿ¥Ş†H¡¼û¡úŠ&À+','‹/pó¡L†…Mã4Ó8','Polyester',1,NULL,'2020-04-04 21:05:18.612',NULL),('REM²­ùB²¬š)oEJ','/»_ââšMpªXTÎ|ãâ','Red',1,NULL,'2020-04-04 21:05:18.535',NULL),('REM²­ùB²¬š)oEJ','‹/pó¡L†…Mã4Ó8','Rot',1,NULL,'2020-04-04 21:05:18.534',NULL),('Tv’ËûCAšmâl­DÜ','/»_ââšMpªXTÎ|ãâ','L',1,NULL,'2020-04-04 21:05:18.592',NULL),('Tv’ËûCAšmâl­DÜ','‹/pó¡L†…Mã4Ó8','L',1,NULL,'2020-04-04 21:05:18.592',NULL),('Y—ÙÀxI—½ïhßÅ ‰','/»_ââšMpªXTÎ|ãâ','M',1,NULL,'2020-04-04 21:05:18.590',NULL),('Y—ÙÀxI—½ïhßÅ ‰','‹/pó¡L†…Mã4Ó8','M',1,NULL,'2020-04-04 21:05:18.589',NULL),('g<—$j­G°¾Î!¹;','/»_ââšMpªXTÎ|ãâ','Salt',1,NULL,'2020-04-04 21:05:18.563',NULL),('g<—$j­G°¾Î!¹;','‹/pó¡L†…Mã4Ó8','Salz',1,NULL,'2020-04-04 21:05:18.563',NULL),('o“Y#œ™KH·Ş(.ášqM','/»_ââšMpªXTÎ|ãâ','Children',1,NULL,'2020-04-04 21:05:18.511',NULL),('o“Y#œ™KH·Ş(.ášqM','‹/pó¡L†…Mã4Ó8','Kinder',1,NULL,'2020-04-04 21:05:18.510',NULL),('wBOu¯@È¥vWÍÂ­I¢','/»_ââšMpªXTÎ|ãâ','Milk',1,NULL,'2020-04-04 21:05:18.565',NULL),('wBOu¯@È¥vWÍÂ­I¢','‹/pó¡L†…Mã4Ó8','Milch',1,NULL,'2020-04-04 21:05:18.564',NULL),('xÅ??mÑN´’yxA[ûtÛ','/»_ââšMpªXTÎ|ãâ','Man',1,NULL,'2020-04-04 21:05:18.507',NULL),('xÅ??mÑN´’yxA[ûtÛ','‹/pó¡L†…Mã4Ó8','Mann',1,NULL,'2020-04-04 21:05:18.506',NULL),('|«ˆZåB’2Qn}','/»_ââšMpªXTÎ|ãâ','Woman',1,NULL,'2020-04-04 21:05:18.509',NULL),('|«ˆZåB’2Qn}','‹/pó¡L†…Mã4Ó8','Frau',1,NULL,'2020-04-04 21:05:18.508',NULL),('–cŠz¸G»³Êdz³\n>','/»_ââšMpªXTÎ|ãâ','Cotton',1,NULL,'2020-04-04 21:05:18.614',NULL),('–cŠz¸G»³Êdz³\n>','‹/pó¡L†…Mã4Ó8','Baumwolle',1,NULL,'2020-04-04 21:05:18.613',NULL),('¬ÚvñwI`§øùoõV?','/»_ââšMpªXTÎ|ãâ','Silk',1,NULL,'2020-04-04 21:05:18.615',NULL),('¬ÚvñwI`§øùoõV?','‹/pó¡L†…Mã4Ó8','Seide',1,NULL,'2020-04-04 21:05:18.614',NULL),('¬ıu†Ğ(Hñ¬€Gvï¤','/»_ââšMpªXTÎ|ãâ','XL',1,NULL,'2020-04-04 21:05:18.595',NULL),('¬ıu†Ğ(Hñ¬€Gvï¤','‹/pó¡L†…Mã4Ó8','XL',1,NULL,'2020-04-04 21:05:18.594',NULL),('­sZñëûB“ä°sÄ¨š','/»_ââšMpªXTÎ|ãâ','White',1,NULL,'2020-04-04 21:05:18.538',NULL),('­sZñëûB“ä°sÄ¨š','‹/pó¡L†…Mã4Ó8','WeiÃŸ',1,NULL,'2020-04-04 21:05:18.537',NULL),('Ãmh¾|ÀCÉŒx7X‘êÄ\n','/»_ââšMpªXTÎ|ãâ','Stainless steel',1,NULL,'2020-04-04 21:05:18.616',NULL),('Ãmh¾|ÀCÉŒx7X‘êÄ\n','‹/pó¡L†…Mã4Ó8','Edelstahl',1,NULL,'2020-04-04 21:05:18.615',NULL),('Å?£\r°J„´QokÀ.','/»_ââšMpªXTÎ|ãâ','Leather',1,NULL,'2020-04-04 21:05:18.618',NULL),('Å?£\r°J„´QokÀ.','‹/pó¡L†…Mã4Ó8','Leder',1,NULL,'2020-04-04 21:05:18.618',NULL),('Õ×˜¢lv@³¥ø7 +“ ‹','/»_ââšMpªXTÎ|ãâ','Pepper',1,NULL,'2020-04-04 21:05:18.566',NULL),('Õ×˜¢lv@³¥ø7 +“ ‹','‹/pó¡L†…Mã4Ó8','Pfeffer',1,NULL,'2020-04-04 21:05:18.566',NULL),('Üo˜¾ì¤HR¾°x©èâ}','/»_ââšMpªXTÎ|ãâ','Plastic',1,NULL,'2020-04-04 21:05:18.621',NULL),('Üo˜¾ì¤HR¾°x©èâ}','‹/pó¡L†…Mã4Ó8','Kunstoff',1,NULL,'2020-04-04 21:05:18.620',NULL),('ß«½RMz½ğ¯ËÓr','/»_ââšMpªXTÎ|ãâ','Nylon',1,NULL,'2020-04-04 21:05:18.623',NULL),('ß«½RMz½ğ¯ËÓr','‹/pó¡L†…Mã4Ó8','Nylon',1,NULL,'2020-04-04 21:05:18.622',NULL);
-/*!40000 ALTER TABLE `property_group_option_translation` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `property_group_translation`
---
-
-DROP TABLE IF EXISTS `property_group_translation`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `property_group_translation` (
-  `property_group_id` binary(16) NOT NULL,
-  `language_id` binary(16) NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `description` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`property_group_id`,`language_id`),
-  KEY `fk.property_group_translation.language_id` (`language_id`),
-  CONSTRAINT `fk.property_group_translation.language_id` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.property_group_translation.property_group_id` FOREIGN KEY (`property_group_id`) REFERENCES `property_group` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `json.property_group_translation.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `property_group_translation`
---
-
-LOCK TABLES `property_group_translation` WRITE;
-/*!40000 ALTER TABLE `property_group_translation` DISABLE KEYS */;
-INSERT INTO `property_group_translation` VALUES ('W»0şdHÈŠÓ1Ïmú','/»_ââšMpªXTÎ|ãâ','Target group',NULL,NULL,'2020-04-04 21:05:18.504',NULL),('W»0şdHÈŠÓ1Ïmú','‹/pó¡L†…Mã4Ó8','Zielgruppe',NULL,NULL,'2020-04-04 21:05:18.503',NULL),('&œ~@¥JF.ˆNÛ\0L_{È','/»_ââšMpªXTÎ|ãâ','Colour',NULL,NULL,'2020-04-04 21:05:18.531',NULL),('&œ~@¥JF.ˆNÛ\0L_{È','‹/pó¡L†…Mã4Ó8','Farbe',NULL,NULL,'2020-04-04 21:05:18.531',NULL),('D=r€?JÈ¯ÀÁ‡9İô','/»_ââšMpªXTÎ|ãâ','Ingredients',NULL,NULL,'2020-04-04 21:05:18.556',NULL),('D=r€?JÈ¯ÀÁ‡9İô','‹/pó¡L†…Mã4Ó8','Zutaten',NULL,NULL,'2020-04-04 21:05:18.555',NULL),('uóSµ‰ĞKôŠš±õB+','/»_ââšMpªXTÎ|ãâ','Size',NULL,NULL,'2020-04-04 21:05:18.584',NULL),('uóSµ‰ĞKôŠš±õB+','‹/pó¡L†…Mã4Ó8','GrÃ¶ÃŸe',NULL,NULL,'2020-04-04 21:05:18.583',NULL),('¦|İ–\'ËH‹´Í‘óèÖn2','/»_ââšMpªXTÎ|ãâ','Material',NULL,NULL,'2020-04-04 21:05:18.610',NULL),('¦|İ–\'ËH‹´Í‘óèÖn2','‹/pó¡L†…Mã4Ó8','Material',NULL,NULL,'2020-04-04 21:05:18.610',NULL);
-/*!40000 ALTER TABLE `property_group_translation` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `rule`
---
-
-DROP TABLE IF EXISTS `rule`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `rule` (
-  `id` binary(16) NOT NULL,
-  `name` varchar(500) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `priority` int(11) NOT NULL,
-  `payload` longblob DEFAULT NULL,
-  `invalid` tinyint(1) NOT NULL DEFAULT 0,
-  `module_types` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  CONSTRAINT `json.rule.module_types` CHECK (json_valid(`module_types`)),
-  CONSTRAINT `json.rule.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `rule`
---
-
-LOCK TABLES `rule` WRITE;
-/*!40000 ALTER TABLE `rule` DISABLE KEYS */;
-INSERT INTO `rule` VALUES ('\"n*nŸXL–±^k–ØÇ˜','Cart >= 0 (Payment)',NULL,100,'O:46:\"Shopware\\Core\\Framework\\Rule\\Container\\AndRule\":3:{s:8:\"\0*\0rules\";a:1:{i:0;O:47:\"Shopware\\Core\\Checkout\\Cart\\Rule\\CartAmountRule\":4:{s:9:\"\0*\0amount\";i:0;s:11:\"\0*\0operator\";s:2:\">=\";s:8:\"\0*\0_name\";s:14:\"cartCartAmount\";s:13:\"\0*\0extensions\";a:0:{}}}s:8:\"\0*\0_name\";s:12:\"andContainer\";s:13:\"\0*\0extensions\";a:0:{}}',0,NULL,NULL,'2020-04-04 21:03:14.383',NULL),('(Ê®u¥bO\r˜Z½³*¡`','Alle Kunden der Standard-Kundengruppe',NULL,1,'O:46:\"Shopware\\Core\\Framework\\Rule\\Container\\AndRule\":3:{s:8:\"\0*\0rules\";a:1:{i:0;O:45:\"Shopware\\Core\\Framework\\Rule\\Container\\OrRule\":3:{s:8:\"\0*\0rules\";a:1:{i:0;O:46:\"Shopware\\Core\\Framework\\Rule\\Container\\AndRule\":3:{s:8:\"\0*\0rules\";a:1:{i:0;O:54:\"Shopware\\Core\\Checkout\\Customer\\Rule\\CustomerGroupRule\":4:{s:19:\"\0*\0customerGroupIds\";a:1:{i:0;s:32:\"cfbd5018d38d41d8adca10d94fc8bdd6\";}s:11:\"\0*\0operator\";s:1:\"=\";s:8:\"\0*\0_name\";s:21:\"customerCustomerGroup\";s:13:\"\0*\0extensions\";a:0:{}}}s:8:\"\0*\0_name\";s:12:\"andContainer\";s:13:\"\0*\0extensions\";a:0:{}}}s:8:\"\0*\0_name\";s:11:\"orContainer\";s:13:\"\0*\0extensions\";a:0:{}}}s:8:\"\0*\0_name\";s:12:\"andContainer\";s:13:\"\0*\0extensions\";a:0:{}}',0,NULL,NULL,'2020-04-04 21:05:18.418',NULL),('8X•pdMä®HÀPóÌÈ','Warenkorbwert grÃ¶ÃŸer/gleich 0 (Zahlungsarten)',NULL,100,'O:46:\"Shopware\\Core\\Framework\\Rule\\Container\\AndRule\":3:{s:8:\"\0*\0rules\";a:1:{i:0;O:45:\"Shopware\\Core\\Framework\\Rule\\Container\\OrRule\":3:{s:8:\"\0*\0rules\";a:1:{i:0;O:46:\"Shopware\\Core\\Framework\\Rule\\Container\\AndRule\":3:{s:8:\"\0*\0rules\";a:1:{i:0;O:47:\"Shopware\\Core\\Checkout\\Cart\\Rule\\CartAmountRule\":4:{s:9:\"\0*\0amount\";i:0;s:11:\"\0*\0operator\";s:2:\">=\";s:8:\"\0*\0_name\";s:14:\"cartCartAmount\";s:13:\"\0*\0extensions\";a:0:{}}}s:8:\"\0*\0_name\";s:12:\"andContainer\";s:13:\"\0*\0extensions\";a:0:{}}}s:8:\"\0*\0_name\";s:11:\"orContainer\";s:13:\"\0*\0extensions\";a:0:{}}}s:8:\"\0*\0_name\";s:12:\"andContainer\";s:13:\"\0*\0extensions\";a:0:{}}',0,NULL,NULL,'2020-04-04 21:05:18.430',NULL),('<õA6mJ/§\n¨hzeü-','Ist Sonntag',NULL,2,'O:46:\"Shopware\\Core\\Framework\\Rule\\Container\\AndRule\":3:{s:8:\"\0*\0rules\";a:1:{i:0;O:45:\"Shopware\\Core\\Framework\\Rule\\Container\\OrRule\":3:{s:8:\"\0*\0rules\";a:1:{i:0;O:46:\"Shopware\\Core\\Framework\\Rule\\Container\\AndRule\":3:{s:8:\"\0*\0rules\";a:1:{i:0;O:40:\"Shopware\\Core\\Framework\\Rule\\WeekdayRule\":4:{s:11:\"\0*\0operator\";s:1:\"=\";s:12:\"\0*\0dayOfWeek\";i:7;s:8:\"\0*\0_name\";s:9:\"dayOfWeek\";s:13:\"\0*\0extensions\";a:0:{}}}s:8:\"\0*\0_name\";s:12:\"andContainer\";s:13:\"\0*\0extensions\";a:0:{}}}s:8:\"\0*\0_name\";s:11:\"orContainer\";s:13:\"\0*\0extensions\";a:0:{}}}s:8:\"\0*\0_name\";s:12:\"andContainer\";s:13:\"\0*\0extensions\";a:0:{}}',0,NULL,NULL,'2020-04-04 21:05:18.460',NULL),('R5¡±3ÖOS¡«.¹Œ¢³','Sunday sales',NULL,2,'O:46:\"Shopware\\Core\\Framework\\Rule\\Container\\AndRule\":3:{s:8:\"\0*\0rules\";a:1:{i:0;O:40:\"Shopware\\Core\\Framework\\Rule\\WeekdayRule\":4:{s:11:\"\0*\0operator\";s:1:\"=\";s:12:\"\0*\0dayOfWeek\";i:7;s:8:\"\0*\0_name\";s:9:\"dayOfWeek\";s:13:\"\0*\0extensions\";a:0:{}}}s:8:\"\0*\0_name\";s:12:\"andContainer\";s:13:\"\0*\0extensions\";a:0:{}}',0,NULL,NULL,'2020-04-04 21:03:14.404',NULL),('¦.j\ZE¯@bp£qI','Kunden aus den USA',NULL,100,'O:46:\"Shopware\\Core\\Framework\\Rule\\Container\\AndRule\":3:{s:8:\"\0*\0rules\";a:1:{i:0;O:45:\"Shopware\\Core\\Framework\\Rule\\Container\\OrRule\":3:{s:8:\"\0*\0rules\";a:1:{i:0;O:46:\"Shopware\\Core\\Framework\\Rule\\Container\\AndRule\":3:{s:8:\"\0*\0rules\";a:1:{i:0;O:55:\"Shopware\\Core\\Checkout\\Customer\\Rule\\BillingCountryRule\":4:{s:13:\"\0*\0countryIds\";a:1:{i:0;s:32:\"ba07768a515746af9d33ed0d4ba836cd\";}s:11:\"\0*\0operator\";s:1:\"=\";s:8:\"\0*\0_name\";s:22:\"customerBillingCountry\";s:13:\"\0*\0extensions\";a:0:{}}}s:8:\"\0*\0_name\";s:12:\"andContainer\";s:13:\"\0*\0extensions\";a:0:{}}}s:8:\"\0*\0_name\";s:11:\"orContainer\";s:13:\"\0*\0extensions\";a:0:{}}}s:8:\"\0*\0_name\";s:12:\"andContainer\";s:13:\"\0*\0extensions\";a:0:{}}',0,NULL,NULL,'2020-04-04 21:05:18.476',NULL),('²e£«ËA ’TÓş$Øè','PayPalPuiAvailabilityRule','Determines whether or not the PayPal - Pay upon invoice payment method is available for the given rule context.',1,'O:46:\"Shopware\\Core\\Framework\\Rule\\Container\\AndRule\":3:{s:8:\"\0*\0rules\";a:1:{i:0;O:46:\"Shopware\\Core\\Framework\\Rule\\Container\\AndRule\":3:{s:8:\"\0*\0rules\";a:4:{i:0;O:47:\"Shopware\\Core\\Checkout\\Cart\\Rule\\CartAmountRule\":4:{s:9:\"\0*\0amount\";d:2;s:11:\"\0*\0operator\";s:2:\">=\";s:8:\"\0*\0_name\";s:14:\"cartCartAmount\";s:13:\"\0*\0extensions\";a:0:{}}i:1;O:55:\"Shopware\\Core\\Checkout\\Customer\\Rule\\BillingCountryRule\":4:{s:13:\"\0*\0countryIds\";a:1:{i:0;s:32:\"851f0cf33e2c4ab2987fbe23d8ff6112\";}s:11:\"\0*\0operator\";s:1:\"=\";s:8:\"\0*\0_name\";s:22:\"customerBillingCountry\";s:13:\"\0*\0extensions\";a:0:{}}i:2;O:47:\"Shopware\\Core\\Checkout\\Cart\\Rule\\CartAmountRule\":4:{s:9:\"\0*\0amount\";d:1470;s:11:\"\0*\0operator\";s:2:\"<=\";s:8:\"\0*\0_name\";s:14:\"cartCartAmount\";s:13:\"\0*\0extensions\";a:0:{}}i:3;O:50:\"Shopware\\Core\\Checkout\\Customer\\Rule\\IsCompanyRule\":3:{s:12:\"\0*\0isCompany\";b:0;s:8:\"\0*\0_name\";s:17:\"customerIsCompany\";s:13:\"\0*\0extensions\";a:0:{}}}s:8:\"\0*\0_name\";s:12:\"andContainer\";s:13:\"\0*\0extensions\";a:0:{}}}s:8:\"\0*\0_name\";s:12:\"andContainer\";s:13:\"\0*\0extensions\";a:0:{}}',0,NULL,NULL,'2020-04-04 21:05:47.365',NULL),('µ©=EænEF¥\0,•\rtóê','All customers',NULL,1,'O:46:\"Shopware\\Core\\Framework\\Rule\\Container\\AndRule\":3:{s:8:\"\0*\0rules\";a:1:{i:0;O:54:\"Shopware\\Core\\Checkout\\Customer\\Rule\\CustomerGroupRule\":4:{s:19:\"\0*\0customerGroupIds\";a:1:{i:0;s:32:\"cfbd5018d38d41d8adca10d94fc8bdd6\";}s:11:\"\0*\0operator\";s:1:\"=\";s:8:\"\0*\0_name\";s:21:\"customerCustomerGroup\";s:13:\"\0*\0extensions\";a:0:{}}}s:8:\"\0*\0_name\";s:12:\"andContainer\";s:13:\"\0*\0extensions\";a:0:{}}',0,NULL,NULL,'2020-04-04 21:03:14.404',NULL),('×³£™¡JÈ¯ó?MØm€','Customers from USA',NULL,100,'O:46:\"Shopware\\Core\\Framework\\Rule\\Container\\AndRule\":3:{s:8:\"\0*\0rules\";a:1:{i:0;O:55:\"Shopware\\Core\\Checkout\\Customer\\Rule\\BillingCountryRule\":4:{s:13:\"\0*\0countryIds\";a:1:{i:0;s:32:\"ba07768a515746af9d33ed0d4ba836cd\";}s:11:\"\0*\0operator\";s:1:\"=\";s:8:\"\0*\0_name\";s:22:\"customerBillingCountry\";s:13:\"\0*\0extensions\";a:0:{}}}s:8:\"\0*\0_name\";s:12:\"andContainer\";s:13:\"\0*\0extensions\";a:0:{}}',0,NULL,NULL,'2020-04-04 21:03:14.405',NULL),('İXlßÚ£Cf¨‹lı8¢€','Cart >= 0',NULL,100,'O:46:\"Shopware\\Core\\Framework\\Rule\\Container\\AndRule\":3:{s:8:\"\0*\0rules\";a:1:{i:0;O:47:\"Shopware\\Core\\Checkout\\Cart\\Rule\\CartAmountRule\":4:{s:9:\"\0*\0amount\";i:0;s:11:\"\0*\0operator\";s:2:\">=\";s:8:\"\0*\0_name\";s:14:\"cartCartAmount\";s:13:\"\0*\0extensions\";a:0:{}}}s:8:\"\0*\0_name\";s:12:\"andContainer\";s:13:\"\0*\0extensions\";a:0:{}}',0,NULL,NULL,'2020-04-04 21:03:14.389',NULL),('á7·€ŠG‘\rt\r]l\Z','Warenkorbwert grÃ¶ÃŸer/gleich 0',NULL,100,'O:46:\"Shopware\\Core\\Framework\\Rule\\Container\\AndRule\":3:{s:8:\"\0*\0rules\";a:1:{i:0;O:45:\"Shopware\\Core\\Framework\\Rule\\Container\\OrRule\":3:{s:8:\"\0*\0rules\";a:1:{i:0;O:46:\"Shopware\\Core\\Framework\\Rule\\Container\\AndRule\":3:{s:8:\"\0*\0rules\";a:1:{i:0;O:47:\"Shopware\\Core\\Checkout\\Cart\\Rule\\CartAmountRule\":4:{s:9:\"\0*\0amount\";i:0;s:11:\"\0*\0operator\";s:2:\">=\";s:8:\"\0*\0_name\";s:14:\"cartCartAmount\";s:13:\"\0*\0extensions\";a:0:{}}}s:8:\"\0*\0_name\";s:12:\"andContainer\";s:13:\"\0*\0extensions\";a:0:{}}}s:8:\"\0*\0_name\";s:11:\"orContainer\";s:13:\"\0*\0extensions\";a:0:{}}}s:8:\"\0*\0_name\";s:12:\"andContainer\";s:13:\"\0*\0extensions\";a:0:{}}',0,NULL,NULL,'2020-04-04 21:05:18.487',NULL);
-/*!40000 ALTER TABLE `rule` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `rule_condition`
---
-
-DROP TABLE IF EXISTS `rule_condition`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `rule_condition` (
-  `id` binary(16) NOT NULL,
-  `type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `rule_id` binary(16) NOT NULL,
-  `parent_id` binary(16) DEFAULT NULL,
-  `value` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `position` int(11) NOT NULL DEFAULT 0,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk.rule_condition.rule_id` (`rule_id`),
-  KEY `fk.rule_condition.parent_id` (`parent_id`),
-  CONSTRAINT `fk.rule_condition.parent_id` FOREIGN KEY (`parent_id`) REFERENCES `rule_condition` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.rule_condition.rule_id` FOREIGN KEY (`rule_id`) REFERENCES `rule` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `json.rule_condition.value` CHECK (json_valid(`value`)),
-  CONSTRAINT `json.rule_condition.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `rule_condition`
---
-
-LOCK TABLES `rule_condition` WRITE;
-/*!40000 ALTER TABLE `rule_condition` DISABLE KEYS */;
-INSERT INTO `rule_condition` VALUES ('­.Ûå@ıŒ›¡Ì–ãDè','orContainer','8X•pdMä®HÀPóÌÈ',NULL,NULL,0,NULL,'2020-04-04 21:05:18.429',NULL),(':¼¯âxN1“¤BY.½£','cartCartAmount','²e£«ËA ’TÓş$Øè','[:¬I]¨•\nH?','{\"operator\":\">=\",\"amount\":2.0}',0,NULL,'2020-04-04 21:05:47.364',NULL),('Ğù¬J°AÃ¥ş¹Õ{şG','customerBillingCountry','¦.j\ZE¯@bp£qI','cQ,EİLï¸NàŞT@ó','{\"operator\":\"=\",\"countryIds\":[\"ba07768a515746af9d33ed0d4ba836cd\"]}',0,NULL,'2020-04-04 21:05:18.476',NULL),('G¸4†Ft¬+Ñxï0','andContainer','á7·€ŠG‘\rt\r]l\Z','÷¹’gCˆˆ˜(Õ†êäƒ',NULL,0,NULL,'2020-04-04 21:05:18.486',NULL),('÷¹’gCˆˆ˜(Õ†êäƒ','orContainer','á7·€ŠG‘\rt\r]l\Z',NULL,NULL,0,NULL,'2020-04-04 21:05:18.486',NULL),('(\Zà*NµœTÎ9gíb','cartCartAmount','á7·€ŠG‘\rt\r]l\Z','G¸4†Ft¬+Ñxï0','{\"operator\":\">=\",\"amount\":0}',0,NULL,'2020-04-04 21:05:18.487',NULL),('9o§&¤FK¦Ú8ïXÿ]','orContainer','(Ê®u¥bO\r˜Z½³*¡`',NULL,NULL,0,NULL,'2020-04-04 21:05:18.416',NULL),('B)„ŒF:‡¦¥öcR„','customerCustomerGroup','(Ê®u¥bO\r˜Z½³*¡`','S5y5Hk±íÀÏ*Ê!I','{\"operator\":\"=\",\"customerGroupIds\":[\"cfbd5018d38d41d8adca10d94fc8bdd6\"]}',0,NULL,'2020-04-04 21:05:18.418',NULL),('J~VvK¹”  ©F_ö','orContainer','¦.j\ZE¯@bp£qI',NULL,NULL,0,NULL,'2020-04-04 21:05:18.474',NULL),('L•µë’A5«<…k!aË)','customerBillingCountry','²e£«ËA ’TÓş$Øè','[:¬I]¨•\nH?','{\"operator\":\"=\",\"countryIds\":[\"851f0cf33e2c4ab2987fbe23d8ff6112\"]}',0,NULL,'2020-04-04 21:05:47.363',NULL),('S5y5Hk±íÀÏ*Ê!I','andContainer','(Ê®u¥bO\r˜Z½³*¡`','9o§&¤FK¦Ú8ïXÿ]',NULL,0,NULL,'2020-04-04 21:05:18.417',NULL),('[:¬I]¨•\nH?','andContainer','²e£«ËA ’TÓş$Øè',NULL,NULL,0,NULL,'2020-04-04 21:05:47.363',NULL),('cQ,EİLï¸NàŞT@ó','andContainer','¦.j\ZE¯@bp£qI','J~VvK¹”  ©F_ö',NULL,0,NULL,'2020-04-04 21:05:18.475',NULL),('nLŒÃC\n’2–ø¶lJC','cartCartAmount','İXlßÚ£Cf¨‹lı8¢€',NULL,'{\"operator\":\">=\",\"amount\":0}',0,NULL,'2020-04-04 21:03:14.389',NULL),('tÊZ+ÂG	¹ TÊ…şŠÃ','cartCartAmount','²e£«ËA ’TÓş$Øè','[:¬I]¨•\nH?','{\"operator\":\"<=\",\"amount\":1470.0}',0,NULL,'2020-04-04 21:05:47.365',NULL),('z=¥xÃCÛ‹±6;C#Ca','cartCartAmount','\"n*nŸXL–±^k–ØÇ˜',NULL,'{\"operator\":\">=\",\"amount\":0}',0,NULL,'2020-04-04 21:03:14.384',NULL),('z&ù»ÀM„‹[> HOî','dayOfWeek','<õA6mJ/§\n¨hzeü-','Ä7D^œ`F0¢ğê*œ½åX','{\"operator\":\"=\",\"dayOfWeek\":7}',0,NULL,'2020-04-04 21:05:18.460',NULL),('¹÷v2C#¿W\\‹æuOË','orContainer','<õA6mJ/§\n¨hzeü-',NULL,NULL,0,NULL,'2020-04-04 21:05:18.458',NULL),('Ä7D^œ`F0¢ğê*œ½åX','andContainer','<õA6mJ/§\n¨hzeü-','¹÷v2C#¿W\\‹æuOË',NULL,0,NULL,'2020-04-04 21:05:18.459',NULL),('Æq¤_{CQ®KíSîˆF','customerIsCompany','²e£«ËA ’TÓş$Øè','[:¬I]¨•\nH?','{\"isCompany\":false}',0,NULL,'2020-04-04 21:05:47.364',NULL),('È|Ø©¬7DÊ©\ZZpÉa—l','customerCustomerGroup','µ©=EænEF¥\0,•\rtóê',NULL,'{\"operator\":\"=\",\"customerGroupIds\":[\"cfbd5018d38d41d8adca10d94fc8bdd6\"]}',0,NULL,'2020-04-04 21:03:14.405',NULL),('Ô‰9I\"‘Gg şqL','dayOfWeek','R5¡±3ÖOS¡«.¹Œ¢³',NULL,'{\"operator\":\"=\",\"dayOfWeek\":7}',0,NULL,'2020-04-04 21:03:14.404',NULL),('ëkâ/¹L­­¼óÎÌƒkä','customerBillingCountry','×³£™¡JÈ¯ó?MØm€',NULL,'{\"operator\":\"=\",\"countryIds\":[\"ba07768a515746af9d33ed0d4ba836cd\"]}',0,NULL,'2020-04-04 21:03:14.405',NULL),('íXßqOT³º°¬?œö<','andContainer','8X•pdMä®HÀPóÌÈ','­.Ûå@ıŒ›¡Ì–ãDè',NULL,0,NULL,'2020-04-04 21:05:18.429',NULL),('ñ`H ïWOW¥[<œNYÅ¼','cartCartAmount','8X•pdMä®HÀPóÌÈ','íXßqOT³º°¬?œö<','{\"operator\":\">=\",\"amount\":0}',0,NULL,'2020-04-04 21:05:18.430',NULL);
-/*!40000 ALTER TABLE `rule_condition` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `sales_channel`
---
-
-DROP TABLE IF EXISTS `sales_channel`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `sales_channel` (
-  `id` binary(16) NOT NULL,
-  `type_id` binary(16) NOT NULL,
-  `short_name` varchar(45) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `configuration` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `access_key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `language_id` binary(16) NOT NULL,
-  `currency_id` binary(16) NOT NULL,
-  `payment_method_id` binary(16) NOT NULL,
-  `shipping_method_id` binary(16) NOT NULL,
-  `country_id` binary(16) NOT NULL,
-  `navigation_category_id` binary(16) NOT NULL,
-  `navigation_category_version_id` binary(16) NOT NULL,
-  `navigation_category_depth` int(11) NOT NULL DEFAULT 2,
-  `footer_category_id` binary(16) DEFAULT NULL,
-  `footer_category_version_id` binary(16) DEFAULT NULL,
-  `service_category_id` binary(16) DEFAULT NULL,
-  `service_category_version_id` binary(16) DEFAULT NULL,
-  `active` tinyint(1) NOT NULL DEFAULT 1,
-  `maintenance` tinyint(1) NOT NULL DEFAULT 0,
-  `maintenance_ip_whitelist` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `customer_group_id` binary(16) NOT NULL,
-  `mail_header_footer_id` binary(16) DEFAULT NULL,
-  `payment_method_ids` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uniq.access_key` (`access_key`),
-  KEY `fk.sales_channel.country_id` (`country_id`),
-  KEY `fk.sales_channel.currency_id` (`currency_id`),
-  KEY `fk.sales_channel.language_id` (`language_id`),
-  KEY `fk.sales_channel.payment_method_id` (`payment_method_id`),
-  KEY `fk.sales_channel.shipping_method_id` (`shipping_method_id`),
-  KEY `fk.sales_channel.type_id` (`type_id`),
-  KEY `fk.sales_channel.navigation_category_id` (`navigation_category_id`,`navigation_category_version_id`),
-  KEY `fk.sales_channel.footer_category_id` (`footer_category_id`,`footer_category_version_id`),
-  KEY `fk.sales_channel.service_category_id` (`service_category_id`,`service_category_version_id`),
-  KEY `fk.sales_channel.customer_group_id` (`customer_group_id`),
-  KEY `fk.sales_channel.header_footer_id` (`mail_header_footer_id`),
-  CONSTRAINT `fk.sales_channel.country_id` FOREIGN KEY (`country_id`) REFERENCES `country` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `fk.sales_channel.currency_id` FOREIGN KEY (`currency_id`) REFERENCES `currency` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `fk.sales_channel.customer_group_id` FOREIGN KEY (`customer_group_id`) REFERENCES `customer_group` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `fk.sales_channel.footer_category_id` FOREIGN KEY (`footer_category_id`, `footer_category_version_id`) REFERENCES `category` (`id`, `version_id`) ON UPDATE CASCADE,
-  CONSTRAINT `fk.sales_channel.header_footer_id` FOREIGN KEY (`mail_header_footer_id`) REFERENCES `mail_header_footer` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.sales_channel.language_id` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `fk.sales_channel.navigation_category_id` FOREIGN KEY (`navigation_category_id`, `navigation_category_version_id`) REFERENCES `category` (`id`, `version_id`) ON UPDATE CASCADE,
-  CONSTRAINT `fk.sales_channel.payment_method_id` FOREIGN KEY (`payment_method_id`) REFERENCES `payment_method` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `fk.sales_channel.service_category_id` FOREIGN KEY (`service_category_id`, `service_category_version_id`) REFERENCES `category` (`id`, `version_id`) ON UPDATE CASCADE,
-  CONSTRAINT `fk.sales_channel.shipping_method_id` FOREIGN KEY (`shipping_method_id`) REFERENCES `shipping_method` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `fk.sales_channel.type_id` FOREIGN KEY (`type_id`) REFERENCES `sales_channel_type` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `json.sales_channel.configuration` CHECK (json_valid(`configuration`)),
-  CONSTRAINT `json.sales_channel.payment_method_ids` CHECK (json_valid(`payment_method_ids`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `sales_channel`
---
-
-LOCK TABLES `sales_channel` WRITE;
-/*!40000 ALTER TABLE `sales_channel` DISABLE KEYS */;
-INSERT INTO `sales_channel` VALUES ('7ë>–RÙKŞš¤Ãt±\"Ã°','Š$0€ù.Lq•F1KW|ø+',NULL,NULL,'SWSCDGZNMMI0DDBTOWPHBEHXMW','/»_ââšMpªXTÎ|ãâ','·ÒUKèGÍ‚ó¬›ÑÀßÊ','à—Œÿ8B„•èú–ıö','\\Å\\Hv tùy­Å¿','…ó>,J²˜¾#Øÿa','ƒ¼¢ÀA‚2ÛNŸ(','©ãéjKÂ¾KÙÎu,4%',2,NULL,NULL,NULL,NULL,1,0,NULL,'Ï½PÓAØ­ÊÙOÈ½Ö',NULL,'[\"10bd91fd16a14953a6ed43828b45f6b5\",\"869fa8dfaab744518a0ac23f86c0f152\",\"da954b4434b74c13b5beb1e4b644518f\",\"e0978c8fff38421b840c95e8fa96fdf6\"]','2020-04-04 21:03:25.346',NULL),('˜C-ï9üF$³2¥kŒ”M','ñƒîVPÏKÛŠwC7WPg¦',NULL,NULL,'SWSCSLPZWJL1N3C0RLE5VHF4TW','/»_ââšMpªXTÎ|ãâ','·ÒUKèGÍ‚ó¬›ÑÀßÊ','à—Œÿ8B„•èú–ıö','\\Å\\Hv tùy­Å¿','…ó>,J²˜¾#Øÿa','ƒ¼¢ÀA‚2ÛNŸ(','©ãéjKÂ¾KÙÎu,4%',2,NULL,NULL,NULL,NULL,1,0,NULL,'Ï½PÓAØ­ÊÙOÈ½Ö',NULL,'[\"10bd91fd16a14953a6ed43828b45f6b5\",\"869fa8dfaab744518a0ac23f86c0f152\",\"da954b4434b74c13b5beb1e4b644518f\",\"e0978c8fff38421b840c95e8fa96fdf6\"]','2020-04-04 21:03:14.395',NULL);
-/*!40000 ALTER TABLE `sales_channel` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `sales_channel_api_context`
---
-
-DROP TABLE IF EXISTS `sales_channel_api_context`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `sales_channel_api_context` (
-  `token` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `payload` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  PRIMARY KEY (`token`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `sales_channel_api_context`
---
-
-LOCK TABLES `sales_channel_api_context` WRITE;
-/*!40000 ALTER TABLE `sales_channel_api_context` DISABLE KEYS */;
-/*!40000 ALTER TABLE `sales_channel_api_context` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `sales_channel_country`
---
-
-DROP TABLE IF EXISTS `sales_channel_country`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `sales_channel_country` (
-  `sales_channel_id` binary(16) NOT NULL,
-  `country_id` binary(16) NOT NULL,
-  PRIMARY KEY (`sales_channel_id`,`country_id`),
-  KEY `fk.sales_channel_country.country_id` (`country_id`),
-  CONSTRAINT `fk.sales_channel_country.country_id` FOREIGN KEY (`country_id`) REFERENCES `country` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.sales_channel_country.sales_channel_id` FOREIGN KEY (`sales_channel_id`) REFERENCES `sales_channel` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `sales_channel_country`
---
-
-LOCK TABLES `sales_channel_country` WRITE;
-/*!40000 ALTER TABLE `sales_channel_country` DISABLE KEYS */;
-INSERT INTO `sales_channel_country` VALUES ('7ë>–RÙKŞš¤Ãt±\"Ã°','\0j†>¿NY†cI·H%Ù¢'),('7ë>–RÙKŞš¤Ãt±\"Ã°','\r™¬Zµ#N†5Bäì¤ùw'),('7ë>–RÙKŞš¤Ãt±\"Ã°','VäŠ\Zd@È¢MÇ´qÆŞ'),('7ë>–RÙKŞš¤Ãt±\"Ã°','\Z!~äK’ˆ³?ä÷}“'),('7ë>–RÙKŞš¤Ãt±\"Ã°','\Zrpá”ÈH5ª3\\=¹\"«˜'),('7ë>–RÙKŞš¤Ãt±\"Ã°','\"fœJöèBF´DÙ3a®cH'),('7ë>–RÙKŞš¤Ãt±\"Ã°','&>3	BAõ¶Ûƒé+¶'),('7ë>–RÙKŞš¤Ãt±\"Ã°','.R)fMT„ïş.…(½'),('7ë>–RÙKŞš¤Ãt±\"Ã°','3PpâiGæ«4Á‘=G:ø'),('7ë>–RÙKŞš¤Ãt±\"Ã°',';[çÄ$Jüº\Z\n,–ƒ«9'),('7ë>–RÙKŞš¤Ãt±\"Ã°','Hv¡ş¯Gœ”²;Ì¸tú¸'),('7ë>–RÙKŞš¤Ãt±\"Ã°','LM\Z×Hr–é$lsZ‘¬'),('7ë>–RÙKŞš¤Ãt±\"Ã°','PÌ¯Ó[í@Õ¡A!\rÔ¬'),('7ë>–RÙKŞš¤Ãt±\"Ã°','bEîÛ¢ BfÈ\\ûßÛ'),('7ë>–RÙKŞš¤Ãt±\"Ã°','oÍ9?s™F‹­­÷´™]'),('7ë>–RÙKŞš¤Ãt±\"Ã°','…ó>,J²˜¾#Øÿa'),('7ë>–RÙKŞš¤Ãt±\"Ã°','‰‹G“‰A*’¢èMX;'),('7ë>–RÙKŞš¤Ãt±\"Ã°','¸\n˜ÌN°Pd(é'),('7ë>–RÙKŞš¤Ãt±\"Ã°','¸±oÇÙOæ–9|-¥¥f'),('7ë>–RÙKŞš¤Ãt±\"Ã°','¸aÓÑpºG3ˆ,˜ÜZ·ã'),('7ë>–RÙKŞš¤Ãt±\"Ã°','ºvŠQWF¯3í\rK¨6Í'),('7ë>–RÙKŞš¤Ãt±\"Ã°','Ãp®ğæB£·Y’`Â6'),('7ë>–RÙKŞš¤Ãt±\"Ã°','Æ·­äœìH?D‚\n@¿o'),('7ë>–RÙKŞš¤Ãt±\"Ã°','ÆÅÆr\'Fn¹eÁ|Ps¿µ'),('7ë>–RÙKŞš¤Ãt±\"Ã°','ÇæòÇ@ë‡ôbt§L$ó'),('7ë>–RÙKŞš¤Ãt±\"Ã°','Ñk‘§ßC„¤:ˆÿ¶L¢'),('7ë>–RÙKŞš¤Ãt±\"Ã°','Ø9RÙdmGº¼á¦è‹,­'),('7ë>–RÙKŞš¤Ãt±\"Ã°','ámNÒ†ü@e¬ÎR*¦bP\r'),('7ë>–RÙKŞš¤Ãt±\"Ã°','éÅFmCe¡ÜåÃRÆ'),('7ë>–RÙKŞš¤Ãt±\"Ã°','ôÂ¼¥òßLG›ñfˆX'),('7ë>–RÙKŞš¤Ãt±\"Ã°','ö)È8€Di‡”:¹tìäù'),('7ë>–RÙKŞš¤Ãt±\"Ã°','úU‹O!¶t\ZK˜¿'),('7ë>–RÙKŞš¤Ãt±\"Ã°','ıÕ^klCœQµ–7È'),('˜C-ï9üF$³2¥kŒ”M','\Z!~äK’ˆ³?ä÷}“'),('˜C-ï9üF$³2¥kŒ”M','…ó>,J²˜¾#Øÿa');
-/*!40000 ALTER TABLE `sales_channel_country` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `sales_channel_currency`
---
-
-DROP TABLE IF EXISTS `sales_channel_currency`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `sales_channel_currency` (
-  `sales_channel_id` binary(16) NOT NULL,
-  `currency_id` binary(16) NOT NULL,
-  PRIMARY KEY (`sales_channel_id`,`currency_id`),
-  KEY `fk.sales_channel_currency.currency_id` (`currency_id`),
-  CONSTRAINT `fk.sales_channel_currency.currency_id` FOREIGN KEY (`currency_id`) REFERENCES `currency` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.sales_channel_currency.sales_channel_id` FOREIGN KEY (`sales_channel_id`) REFERENCES `sales_channel` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `sales_channel_currency`
---
-
-LOCK TABLES `sales_channel_currency` WRITE;
-/*!40000 ALTER TABLE `sales_channel_currency` DISABLE KEYS */;
-INSERT INTO `sales_channel_currency` VALUES ('7ë>–RÙKŞš¤Ãt±\"Ã°','&íÉĞiOS·Ë(]Wäñ'),('7ë>–RÙKŞš¤Ãt±\"Ã°','‚š&È,O³ LÇñ-\0°'),('7ë>–RÙKŞš¤Ãt±\"Ã°','‡w¢×K”OğÛR×Ö/İ'),('7ë>–RÙKŞš¤Ãt±\"Ã°','ÀKg7>Dg‹»À^g˜F'),('7ë>–RÙKŞš¤Ãt±\"Ã°','¨Ÿ,nADä²\nìiÕ^È'),('7ë>–RÙKŞš¤Ãt±\"Ã°','·ÒUKèGÍ‚ó¬›ÑÀßÊ'),('7ë>–RÙKŞš¤Ãt±\"Ã°','ºD“Nš±Hàˆ…û~óâ¡'),('7ë>–RÙKŞš¤Ãt±\"Ã°','Ü’ñ£IÂ·!¿ıBÏ'),('˜C-ï9üF$³2¥kŒ”M','ÀKg7>Dg‹»À^g˜F'),('˜C-ï9üF$³2¥kŒ”M','·ÒUKèGÍ‚ó¬›ÑÀßÊ'),('˜C-ï9üF$³2¥kŒ”M','Ü’ñ£IÂ·!¿ıBÏ');
-/*!40000 ALTER TABLE `sales_channel_currency` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `sales_channel_domain`
---
-
-DROP TABLE IF EXISTS `sales_channel_domain`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `sales_channel_domain` (
-  `id` binary(16) NOT NULL,
-  `sales_channel_id` binary(16) NOT NULL,
-  `language_id` binary(16) NOT NULL,
-  `url` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `currency_id` binary(16) NOT NULL,
-  `snippet_set_id` binary(16) NOT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uniq.sales_channel_domain.url` (`url`),
-  KEY `fk.sales_channel_domain.currency_id` (`currency_id`),
-  KEY `fk.sales_channel_domain.snippet_set_id` (`snippet_set_id`),
-  KEY `fk.sales_channel_domain.language_id` (`language_id`),
-  KEY `fk.sales_channel_domain.sales_channel_id` (`sales_channel_id`),
-  CONSTRAINT `fk.sales_channel_domain.currency_id` FOREIGN KEY (`currency_id`) REFERENCES `currency` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `fk.sales_channel_domain.language_id` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `fk.sales_channel_domain.sales_channel_id` FOREIGN KEY (`sales_channel_id`) REFERENCES `sales_channel` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.sales_channel_domain.snippet_set_id` FOREIGN KEY (`snippet_set_id`) REFERENCES `snippet_set` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `json.sales_channel_domain.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `sales_channel_domain`
---
-
-LOCK TABLES `sales_channel_domain` WRITE;
-/*!40000 ALTER TABLE `sales_channel_domain` DISABLE KEYS */;
-INSERT INTO `sales_channel_domain` VALUES ('#ZSW˜N¤Á\ZáÒ1Ø','7ë>–RÙKŞš¤Ãt±\"Ã°','/»_ââšMpªXTÎ|ãâ','https://sw614.ddev.site','·ÒUKèGÍ‚ó¬›ÑÀßÊ','\nI4s¬ÒFé¡ÎNàtÔ²',NULL,'2020-04-04 21:03:25.346',NULL);
-/*!40000 ALTER TABLE `sales_channel_domain` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `sales_channel_language`
---
-
-DROP TABLE IF EXISTS `sales_channel_language`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `sales_channel_language` (
-  `sales_channel_id` binary(16) NOT NULL,
-  `language_id` binary(16) NOT NULL,
-  PRIMARY KEY (`sales_channel_id`,`language_id`),
-  KEY `fk.sales_channel_language.language_id` (`language_id`),
-  CONSTRAINT `fk.sales_channel_language.language_id` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.sales_channel_language.sales_channel_id` FOREIGN KEY (`sales_channel_id`) REFERENCES `sales_channel` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `sales_channel_language`
---
-
-LOCK TABLES `sales_channel_language` WRITE;
-/*!40000 ALTER TABLE `sales_channel_language` DISABLE KEYS */;
-INSERT INTO `sales_channel_language` VALUES ('7ë>–RÙKŞš¤Ãt±\"Ã°','/»_ââšMpªXTÎ|ãâ'),('7ë>–RÙKŞš¤Ãt±\"Ã°','‹/pó¡L†…Mã4Ó8'),('˜C-ï9üF$³2¥kŒ”M','/»_ââšMpªXTÎ|ãâ'),('˜C-ï9üF$³2¥kŒ”M','‹/pó¡L†…Mã4Ó8');
-/*!40000 ALTER TABLE `sales_channel_language` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `sales_channel_payment_method`
---
-
-DROP TABLE IF EXISTS `sales_channel_payment_method`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `sales_channel_payment_method` (
-  `sales_channel_id` binary(16) NOT NULL,
-  `payment_method_id` binary(16) NOT NULL,
-  PRIMARY KEY (`sales_channel_id`,`payment_method_id`),
-  KEY `fk.sales_channel_payment_method.payment_method_id` (`payment_method_id`),
-  CONSTRAINT `fk.sales_channel_payment_method.payment_method_id` FOREIGN KEY (`payment_method_id`) REFERENCES `payment_method` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.sales_channel_payment_method.sales_channel_id` FOREIGN KEY (`sales_channel_id`) REFERENCES `sales_channel` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `sales_channel_payment_method`
---
-
-LOCK TABLES `sales_channel_payment_method` WRITE;
-/*!40000 ALTER TABLE `sales_channel_payment_method` DISABLE KEYS */;
-INSERT INTO `sales_channel_payment_method` VALUES ('7ë>–RÙKŞš¤Ãt±\"Ã°','½‘ı¡IS¦íC‚‹Eöµ'),('7ë>–RÙKŞš¤Ãt±\"Ã°','†Ÿ¨ßª·DQŠ\nÂ?†ÀñR'),('7ë>–RÙKŞš¤Ãt±\"Ã°','Ú•KD4·Lµ¾±ä¶DQ'),('7ë>–RÙKŞš¤Ãt±\"Ã°','à—Œÿ8B„•èú–ıö'),('˜C-ï9üF$³2¥kŒ”M','½‘ı¡IS¦íC‚‹Eöµ'),('˜C-ï9üF$³2¥kŒ”M','†Ÿ¨ßª·DQŠ\nÂ?†ÀñR'),('˜C-ï9üF$³2¥kŒ”M','Ú•KD4·Lµ¾±ä¶DQ'),('˜C-ï9üF$³2¥kŒ”M','à—Œÿ8B„•èú–ıö');
-/*!40000 ALTER TABLE `sales_channel_payment_method` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `sales_channel_shipping_method`
---
-
-DROP TABLE IF EXISTS `sales_channel_shipping_method`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `sales_channel_shipping_method` (
-  `sales_channel_id` binary(16) NOT NULL,
-  `shipping_method_id` binary(16) NOT NULL,
-  PRIMARY KEY (`sales_channel_id`,`shipping_method_id`),
-  KEY `fk.sales_channel_shipping_method.shipping_method_id` (`shipping_method_id`),
-  CONSTRAINT `fk.sales_channel_shipping_method.sales_channel_id` FOREIGN KEY (`sales_channel_id`) REFERENCES `sales_channel` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.sales_channel_shipping_method.shipping_method_id` FOREIGN KEY (`shipping_method_id`) REFERENCES `shipping_method` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `sales_channel_shipping_method`
---
-
-LOCK TABLES `sales_channel_shipping_method` WRITE;
-/*!40000 ALTER TABLE `sales_channel_shipping_method` DISABLE KEYS */;
-INSERT INTO `sales_channel_shipping_method` VALUES ('7ë>–RÙKŞš¤Ãt±\"Ã°','\\Å\\Hv tùy­Å¿'),('7ë>–RÙKŞš¤Ãt±\"Ã°','†&–¦šHœ‡hØiCÖª'),('˜C-ï9üF$³2¥kŒ”M','\\Å\\Hv tùy­Å¿'),('˜C-ï9üF$³2¥kŒ”M','†&–¦šHœ‡hØiCÖª');
-/*!40000 ALTER TABLE `sales_channel_shipping_method` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `sales_channel_translation`
---
-
-DROP TABLE IF EXISTS `sales_channel_translation`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `sales_channel_translation` (
-  `sales_channel_id` binary(16) NOT NULL,
-  `language_id` binary(16) NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`sales_channel_id`,`language_id`),
-  KEY `fk.sales_channel_translation.language_id` (`language_id`),
-  CONSTRAINT `fk.sales_channel_translation.language_id` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.sales_channel_translation.sales_channel_id` FOREIGN KEY (`sales_channel_id`) REFERENCES `sales_channel` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `json.sales_channel_translation.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `sales_channel_translation`
---
-
-LOCK TABLES `sales_channel_translation` WRITE;
-/*!40000 ALTER TABLE `sales_channel_translation` DISABLE KEYS */;
-INSERT INTO `sales_channel_translation` VALUES ('7ë>–RÙKŞš¤Ãt±\"Ã°','/»_ââšMpªXTÎ|ãâ','Storefront',NULL,'2020-04-04 21:03:25.338',NULL),('˜C-ï9üF$³2¥kŒ”M','/»_ââšMpªXTÎ|ãâ','Headless',NULL,'2020-04-04 21:03:14.396',NULL),('˜C-ï9üF$³2¥kŒ”M','‹/pó¡L†…Mã4Ó8','Headless',NULL,'2020-04-04 21:03:14.396',NULL);
-/*!40000 ALTER TABLE `sales_channel_translation` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `sales_channel_type`
---
-
-DROP TABLE IF EXISTS `sales_channel_type`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `sales_channel_type` (
-  `id` binary(16) NOT NULL,
-  `cover_url` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `icon_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `screenshot_urls` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  CONSTRAINT `json.sales_channel_type.screenshot_urls` CHECK (json_valid(`screenshot_urls`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `sales_channel_type`
---
-
-LOCK TABLES `sales_channel_type` WRITE;
-/*!40000 ALTER TABLE `sales_channel_type` DISABLE KEYS */;
-INSERT INTO `sales_channel_type` VALUES ('Š$0€ù.Lq•F1KW|ø+',NULL,'default-building-shop',NULL,'2020-04-04 21:03:14.393',NULL),('íS^W\"JÁªe$÷>&ˆ',NULL,'default-object-rocket',NULL,'2020-04-04 21:03:17.766',NULL),('ñƒîVPÏKÛŠwC7WPg¦',NULL,'default-shopping-basket',NULL,'2020-04-04 21:03:14.393',NULL);
-/*!40000 ALTER TABLE `sales_channel_type` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `sales_channel_type_translation`
---
-
-DROP TABLE IF EXISTS `sales_channel_type_translation`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `sales_channel_type_translation` (
-  `sales_channel_type_id` binary(16) NOT NULL,
-  `language_id` binary(16) NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `manufacturer` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `description_long` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`sales_channel_type_id`,`language_id`),
-  KEY `fk.sales_channel_type_translation.language_id` (`language_id`),
-  CONSTRAINT `fk.sales_channel_type_translation.language_id` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.sales_channel_type_translation.sales_channel_type_id` FOREIGN KEY (`sales_channel_type_id`) REFERENCES `sales_channel_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `json.sales_channel_type_translation.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `sales_channel_type_translation`
---
-
-LOCK TABLES `sales_channel_type_translation` WRITE;
-/*!40000 ALTER TABLE `sales_channel_type_translation` DISABLE KEYS */;
-INSERT INTO `sales_channel_type_translation` VALUES ('Š$0€ù.Lq•F1KW|ø+','/»_ââšMpªXTÎ|ãâ','Storefront','shopware AG','Sales channel with HTML storefront',NULL,NULL,'2020-04-04 21:03:14.393',NULL),('Š$0€ù.Lq•F1KW|ø+','‹/pó¡L†…Mã4Ó8','Storefront','shopware AG','Sales channel mit HTML storefront',NULL,NULL,'2020-04-04 21:03:14.393',NULL),('íS^W\"JÁªe$÷>&ˆ','/»_ââšMpªXTÎ|ãâ','Product comparison','shopware AG','Sales channel for product comparison platforms',NULL,NULL,'2020-04-04 21:03:17.767',NULL),('íS^W\"JÁªe$÷>&ˆ','‹/pó¡L†…Mã4Ó8','Produktvergleich','shopware AG','Verkaufskanal fÃ¼r Produktvergleichsportale',NULL,NULL,'2020-04-04 21:03:17.768',NULL),('ñƒîVPÏKÛŠwC7WPg¦','/»_ââšMpªXTÎ|ãâ','Headless','shopware AG','API only sales channel',NULL,NULL,'2020-04-04 21:03:14.393',NULL),('ñƒîVPÏKÛŠwC7WPg¦','‹/pó¡L†…Mã4Ó8','Headless','shopware AG','API only sales channel',NULL,NULL,'2020-04-04 21:03:14.394',NULL);
-/*!40000 ALTER TABLE `sales_channel_type_translation` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `salutation`
---
-
-DROP TABLE IF EXISTS `salutation`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `salutation` (
-  `id` binary(16) NOT NULL,
-  `salutation_key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uniq.salutation_key` (`salutation_key`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `salutation`
---
-
-LOCK TABLES `salutation` WRITE;
-/*!40000 ALTER TABLE `salutation` DISABLE KEYS */;
-INSERT INTO `salutation` VALUES ('€Ø©ÁL{½§~ãYã±','mrs','2020-04-04 21:03:14.260',NULL),('½CC4­ØİXkÍ','not_specified','2020-04-04 21:03:14.262',NULL),('Æ‘nËçAÛc½¼¼Ø3‘','mr','2020-04-04 21:03:14.257',NULL);
-/*!40000 ALTER TABLE `salutation` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `salutation_translation`
---
-
-DROP TABLE IF EXISTS `salutation_translation`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `salutation_translation` (
-  `salutation_id` binary(16) NOT NULL,
-  `language_id` binary(16) NOT NULL,
-  `display_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `letter_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`salutation_id`,`language_id`),
-  KEY `fk.salutation_translation.language_id` (`language_id`),
-  CONSTRAINT `fk.salutation_translation.language_id` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.salutation_translation.salutation_id` FOREIGN KEY (`salutation_id`) REFERENCES `salutation` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `salutation_translation`
---
-
-LOCK TABLES `salutation_translation` WRITE;
-/*!40000 ALTER TABLE `salutation_translation` DISABLE KEYS */;
-INSERT INTO `salutation_translation` VALUES ('€Ø©ÁL{½§~ãYã±','/»_ââšMpªXTÎ|ãâ','Mrs.','Dear Mrs.','2020-04-04 21:03:14.261',NULL),('€Ø©ÁL{½§~ãYã±','‹/pó¡L†…Mã4Ó8','Frau','Sehr geehrte Frau','2020-04-04 21:03:14.261',NULL),('½CC4­ØİXkÍ','/»_ââšMpªXTÎ|ãâ','Not specified',' ','2020-04-04 21:03:14.262',NULL),('½CC4­ØİXkÍ','‹/pó¡L†…Mã4Ó8','Keine Angabe',' ','2020-04-04 21:03:14.263',NULL),('Æ‘nËçAÛc½¼¼Ø3‘','/»_ââšMpªXTÎ|ãâ','Mr.','Dear Mr.','2020-04-04 21:03:14.259',NULL),('Æ‘nËçAÛc½¼¼Ø3‘','‹/pó¡L†…Mã4Ó8','Herr','Sehr geehrter Herr','2020-04-04 21:03:14.260',NULL);
-/*!40000 ALTER TABLE `salutation_translation` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `scheduled_task`
---
-
-DROP TABLE IF EXISTS `scheduled_task`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `scheduled_task` (
-  `id` binary(16) NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `scheduled_task_class` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `run_interval` int(11) NOT NULL,
-  `status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `last_execution_time` datetime(3) DEFAULT NULL,
-  `next_execution_time` datetime(3) NOT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uniq.scheduled_task.scheduled_task_class` (`scheduled_task_class`),
-  CONSTRAINT `check.scheduled_task.run_interval` CHECK (`run_interval` >= 1)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `scheduled_task`
---
-
-LOCK TABLES `scheduled_task` WRITE;
-/*!40000 ALTER TABLE `scheduled_task` DISABLE KEYS */;
-INSERT INTO `scheduled_task` VALUES ('(Vñ£ØTB†‹€zô\"I´«','delete_newsletter_recipient_task','Shopware\\Core\\Content\\Newsletter\\ScheduledTask\\NewsletterRecipientTask',86400,'scheduled','2020-04-04 21:05:53.685','2020-04-05 21:05:53.685','2020-04-04 21:05:19.450','2020-04-04 21:05:53.686'),('*\\RîÜD@×….6.o¸','requeue_dead_messages','Shopware\\Core\\Framework\\MessageQueue\\ScheduledTask\\RequeueDeadMessagesTask',300,'scheduled','2020-04-04 21:05:53.704','2020-04-04 21:10:53.704','2020-04-04 21:05:19.445','2020-04-04 21:05:53.704'),('|kLŸ¿O bôei8Bš','product_export_generate_task','Shopware\\Core\\Content\\ProductExport\\ScheduledTask\\ProductExportGenerateTask',86400,'scheduled','2020-04-04 21:05:53.767','2020-04-05 21:05:53.767','2020-04-04 21:05:19.457','2020-04-04 21:05:53.767'),('¨	âœşF&˜ğ	5aš','shopware.sitemap_generate','Shopware\\Core\\Content\\Sitemap\\ScheduledTask\\SitemapGenerateTask',86400,'scheduled','2020-04-04 21:05:53.784','2020-04-05 21:05:53.784','2020-04-04 21:05:19.463','2020-04-04 21:05:53.784'),('ü&šB¡{DİŸÍc	MÂ3','shopware.elasticsearch.create.alias','Shopware\\Elasticsearch\\Framework\\Indexing\\CreateAliasTask',300,'scheduled','2020-04-04 21:05:53.793','2020-04-04 21:10:53.793','2020-04-04 21:05:19.468','2020-04-04 21:05:53.794');
-/*!40000 ALTER TABLE `scheduled_task` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `seo_url`
---
-
-DROP TABLE IF EXISTS `seo_url`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `seo_url` (
-  `id` binary(16) NOT NULL,
-  `language_id` binary(16) NOT NULL,
-  `sales_channel_id` binary(16) DEFAULT NULL,
-  `foreign_key` binary(16) NOT NULL,
-  `route_name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `path_info` varchar(750) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `seo_path_info` varchar(750) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `is_canonical` tinyint(1) DEFAULT NULL,
-  `is_modified` tinyint(1) NOT NULL DEFAULT 0,
-  `is_deleted` tinyint(1) NOT NULL DEFAULT 0,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uniq.seo_url.seo_path_info` (`language_id`,`sales_channel_id`,`seo_path_info`),
-  UNIQUE KEY `uniq.seo_url.foreign_key` (`language_id`,`sales_channel_id`,`foreign_key`,`route_name`,`is_canonical`),
-  KEY `idx.foreign_key` (`language_id`,`foreign_key`,`sales_channel_id`,`is_canonical`),
-  KEY `fk.seo_url.sales_channel_id` (`sales_channel_id`),
-  KEY `idx.path_info` (`language_id`,`sales_channel_id`,`is_canonical`,`path_info`),
-  CONSTRAINT `fk.seo_url.language_id` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.seo_url.sales_channel_id` FOREIGN KEY (`sales_channel_id`) REFERENCES `sales_channel` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `json.seo_url.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `seo_url`
---
-
-LOCK TABLES `seo_url` WRITE;
-/*!40000 ALTER TABLE `seo_url` DISABLE KEYS */;
-INSERT INTO `seo_url` VALUES ('p@ZÕ§A‘„g¨	ğqª[','/»_ââšMpªXTÎ|ãâ','7ë>–RÙKŞš¤Ãt±\"Ã°','m3—AÊåG¼—||¸ş|6­','frontend.detail.page','/detail/6d339741cae547bc977c7cb8fe7c36ad','Variant-product/SWDEMO10005.3',1,0,0,NULL,'2020-04-04 21:05:19.189',NULL),('\"¶ıW}§E@²{§„´å+','/»_ââšMpªXTÎ|ãâ','7ë>–RÙKŞš¤Ãt±\"Ã°','Ê@WÿOªÈÅ™Ô1xh','frontend.navigation.page','/navigation/19ca405790ff4f07aac8c599d4317868','Food/Bakery-products/',1,0,0,NULL,'2020-04-04 21:05:17.778',NULL),('>^$W‘€D‚-a\0ìâV¿','/»_ââšMpªXTÎ|ãâ','7ë>–RÙKŞš¤Ãt±\"Ã°','˜X°Èì O£»ÏŒü†…','frontend.detail.page','/detail/9858b0c8ec204fa3bb11cf8cfc860285','Variant-product/SWDEMO10005.6',1,0,0,NULL,'2020-04-04 21:05:19.189',NULL),('A[UívêO™ˆÿè‡jö·œ','/»_ââšMpªXTÎ|ãâ','7ë>–RÙKŞš¤Ãt±\"Ã°','8!ÜªlVKŸíRFyš,','frontend.detail.page','/detail/3821dcaa6c564b179f8eed5246799a2c','Variant-product/SWDEMO10005.5',1,0,0,NULL,'2020-04-04 21:05:19.189',NULL),('B4ª	Ì‰K¡¨U”qÓu','/»_ââšMpªXTÎ|ãâ','7ë>–RÙKŞš¤Ãt±\"Ã°','!…,»ÔF.¨D«ë*C‹3','frontend.navigation.page','/navigation/2185182cbbd4462ea844abeb2a438b33','Clothing/Men/',1,0,0,NULL,'2020-04-04 21:05:17.778',NULL),('KfÌù\rE¶®YÌ¹	ĞB','/»_ââšMpªXTÎ|ãâ','7ë>–RÙKŞš¤Ãt±\"Ã°','Ç¼¢\'SÈM¶ŠP+AF','frontend.detail.page','/detail/c7bca22753c84d08b6178a50052b4146','Main-product-with-properties/SWDEMO10007',1,0,0,NULL,'2020-04-04 21:05:19.349',NULL),('K˜l«ÛA8“2T¡’|\"$','/»_ââšMpªXTÎ|ãâ','7ë>–RÙKŞš¤Ãt±\"Ã°',':Àó)ˆKW¢Ìå¢Ÿ4wœ','frontend.detail.page','/detail/3ac014f329884b57a2cce5a29f34779c','Main-product-free-shipping-with-highlighting/SWDEMO10006',1,0,0,NULL,'2020-04-04 21:05:19.037',NULL),('vN ÎíK[²Úˆ‰Ó¤´','/»_ââšMpªXTÎ|ãâ','7ë>–RÙKŞš¤Ãt±\"Ã°','–€meqOq³RHĞ71>','frontend.detail.page','/detail/96806d658f714f71b35248d03707313e','Variant-product/SWDEMO10005.4',1,0,0,NULL,'2020-04-04 21:05:19.189',NULL),('‚\r\"Ò…E…ŠêÅæ,f','/»_ââšMpªXTÎ|ãâ','7ë>–RÙKŞš¤Ãt±\"Ã°','Üh@°OFœË£TËğ¹g','frontend.detail.page','/detail/11dc680240b04f469ccba354cbf0b967','Main-product-with-advanced-prices/SWDEMO10002',1,0,0,NULL,'2020-04-04 21:05:18.723',NULL),('ÖP«XJMé•ƒµHTíĞÌ','/»_ââšMpªXTÎ|ãâ','7ë>–RÙKŞš¤Ãt±\"Ã°','!FqGÂ€µä–´¯I\0','frontend.detail.page','/detail/1221467f711947c280b5e496b4af4900','Variant-product/SWDEMO10005.2',1,0,0,NULL,'2020-04-04 21:05:19.189',NULL),('ò/Îc¥KÏŸˆ9jÍ§iR','/»_ââšMpªXTÎ|ãâ','7ë>–RÙKŞš¤Ãt±\"Ã°','¥®&#Fo7G\'d','frontend.navigation.page','/navigation/a515ae260223466f8e37471d279e6406','Clothing/',1,0,0,NULL,'2020-04-04 21:05:17.778',NULL),('“}¿m˜Oh…ö«è\Zæ1O','/»_ââšMpªXTÎ|ãâ','7ë>–RÙKŞš¤Ãt±\"Ã°','$kÀ. KèŒKXÔKM¿\n','frontend.detail.page','/detail/1d246bc02e204be88c4b58d44b4dbf0a','Variant-product/SWDEMO10005.1',1,0,0,NULL,'2020-04-04 21:05:19.189',NULL),('”¹œ†p…H` ÚßRøqN','/»_ââšMpªXTÎ|ãâ','7ë>–RÙKŞš¤Ãt±\"Ã°','©„õì¨ªL¼êÈë±\nÊ','frontend.detail.page','/detail/a984f5eca8aa4c81bc9eeac8ebb10aca','Main-product-with-properties/SWDEMO10007.1',1,0,0,NULL,'2020-04-04 21:05:19.349',NULL),('4NJ@^š]|\'×lì¥','/»_ââšMpªXTÎ|ãâ','7ë>–RÙKŞš¤Ãt±\"Ã°','*ˆÙµGL~†€qd›ä<','frontend.detail.page','/detail/2a88d9b59d474c7e869d8071649be43c','Main-product/SWDEMO10001',1,0,0,NULL,'2020-04-04 21:05:18.932',NULL),(' Ãz¦æèHè‰µ‚£°','/»_ââšMpªXTÎ|ãâ','7ë>–RÙKŞš¤Ãt±\"Ã°','C¢>¿Lê¼`U¢_ª‡','frontend.detail.page','/detail/43a23e0c03bf4ceabc6055a2185faa87','Variant-product/SWDEMO10005',1,0,0,NULL,'2020-04-04 21:05:19.189',NULL),('±EÛ“IO¤ ï$F›U','/»_ââšMpªXTÎ|ãâ','7ë>–RÙKŞš¤Ãt±\"Ã°','é´„ÅOD‰Gtåõ~H\\','frontend.navigation.page','/navigation/8de9b484c54f441c894774e5f57e485c','Clothing/Women/',1,0,0,NULL,'2020-04-04 21:05:17.778',NULL),('¸û\'Ü¸åNÖ¶ö$Æ3´IJ','/»_ââšMpªXTÎ|ãâ','7ë>–RÙKŞš¤Ãt±\"Ã°','òZI‰’ C¸Ÿ\r4E¥®-','frontend.detail.page','/detail/f25a498992a043b89f0d3445a5ae2d7f','Main-product-with-properties/SWDEMO10007.4',1,0,0,NULL,'2020-04-04 21:05:19.349',NULL),('¹Ğ|›Ø_L&ˆvÎi÷CÏ','/»_ââšMpªXTÎ|ãâ','7ë>–RÙKŞš¤Ãt±\"Ã°','p¹´f*qCñ¨¸íM','frontend.detail.page','/detail/70b9b4662a7143f1a80cb8ed151b4d8d','Main-product-with-properties/SWDEMO10007.2',1,0,0,NULL,'2020-04-04 21:05:19.349',NULL),('¾ßîÄ¿`BÛ¨¿À“ãà','/»_ââšMpªXTÎ|ãâ','7ë>–RÙKŞš¤Ãt±\"Ã°','Ü^ˆK¤Œ,_\0U@','frontend.detail.page','/detail/1901dc5e888f4b1ea4168c2c5f005540','Main-product-with-reviews/SWDEMO100013',1,0,0,NULL,'2020-04-04 21:05:18.840',NULL),('Ô`	ãâCa—_ZönµN','/»_ââšMpªXTÎ|ãâ','7ë>–RÙKŞš¤Ãt±\"Ã°','HùC/ĞA8‹&0A9Ï','frontend.navigation.page','/navigation/48f97f432fd041388b2630184139cf0e','Food/Fish/',1,0,0,NULL,'2020-04-04 21:05:17.778',NULL),('åñqÿ2Mˆé`€/d¸','/»_ââšMpªXTÎ|ãâ','7ë>–RÙKŞš¤Ãt±\"Ã°','†—V\Z|êJÎŠjµß™1¾','frontend.detail.page','/detail/8697561a7cea4ace8a6ab59ddf9931be','Main-product-with-properties/SWDEMO10007.3',1,0,0,NULL,'2020-04-04 21:05:19.349',NULL),('çú¨HßDNŒ¼glz‰!„š','/»_ââšMpªXTÎ|ãâ','7ë>–RÙKŞš¤Ãt±\"Ã°','%H¹ÇBŞ…d?_ÌØQ','frontend.navigation.page','/navigation/251448b91bc742de85643f5fccd89051','Free-time-electronics/',1,0,0,NULL,'2020-04-04 21:05:17.778',NULL),('õŠFüZšC§˜ïSÎÿ¶\Z','/»_ââšMpªXTÎ|ãâ','7ë>–RÙKŞš¤Ãt±\"Ã°','»\"°[ÿ‘@ó€‹ÿ—[uë','frontend.navigation.page','/navigation/bb22b05bff9140f3808b1cff975b75eb','Food/Sweets/',1,0,0,NULL,'2020-04-04 21:05:17.778',NULL);
-/*!40000 ALTER TABLE `seo_url` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `seo_url_template`
---
-
-DROP TABLE IF EXISTS `seo_url_template`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `seo_url_template` (
-  `id` binary(16) NOT NULL,
-  `sales_channel_id` binary(16) DEFAULT NULL,
-  `route_name` varchar(255) COLLATE utf8mb4_bin NOT NULL,
-  `entity_name` varchar(64) COLLATE utf8mb4_bin NOT NULL,
-  `template` varchar(750) COLLATE utf8mb4_bin NOT NULL,
-  `is_valid` tinyint(1) NOT NULL DEFAULT 1,
-  `custom_fields` longtext COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uniq.seo_url_template.route_name` (`sales_channel_id`,`route_name`),
-  CONSTRAINT `fk.seo_url_template.sales_channel_id` FOREIGN KEY (`sales_channel_id`) REFERENCES `sales_channel` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `json.seo_url_template.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `seo_url_template`
---
-
-LOCK TABLES `seo_url_template` WRITE;
-/*!40000 ALTER TABLE `seo_url_template` DISABLE KEYS */;
-INSERT INTO `seo_url_template` VALUES ('e¸OnM7Ao²ˆØ#Š¥C',NULL,'frontend.navigation.page','category','{% for part in category.seoBreadcrumb %}{{ part }}/{% endfor %}',1,NULL,'2020-04-04 21:03:14.526',NULL),('†õÆµ‰ÒOUº|cÅ‹sè¶',NULL,'frontend.detail.page','product','{{ product.translated.name }}/{{ product.productNumber }}',1,NULL,'2020-04-04 21:03:14.525',NULL);
-/*!40000 ALTER TABLE `seo_url_template` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `shipping_method`
---
-
-DROP TABLE IF EXISTS `shipping_method`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `shipping_method` (
-  `id` binary(16) NOT NULL,
-  `active` tinyint(1) unsigned NOT NULL DEFAULT 1,
-  `availability_rule_id` binary(16) NOT NULL,
-  `media_id` binary(16) DEFAULT NULL,
-  `delivery_time_id` binary(16) NOT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk.shipping_method.media_id` (`media_id`),
-  KEY `fk.shipping_method.availability_rule_id` (`availability_rule_id`),
-  KEY `fk.shipping_method.delivery_time_id` (`delivery_time_id`),
-  CONSTRAINT `fk.shipping_method.availability_rule_id` FOREIGN KEY (`availability_rule_id`) REFERENCES `rule` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `fk.shipping_method.delivery_time_id` FOREIGN KEY (`delivery_time_id`) REFERENCES `delivery_time` (`id`),
-  CONSTRAINT `fk.shipping_method.media_id` FOREIGN KEY (`media_id`) REFERENCES `media` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `shipping_method`
---
-
-LOCK TABLES `shipping_method` WRITE;
-/*!40000 ALTER TABLE `shipping_method` DISABLE KEYS */;
-INSERT INTO `shipping_method` VALUES ('\\Å\\Hv tùy­Å¿',1,'\"n*nŸXL–±^k–ØÇ˜',NULL,'æ-°™j|B:¤6bl(Ã','2020-04-04 21:03:14.389','2020-04-04 21:05:19.424'),('†&–¦šHœ‡hØiCÖª',1,'\"n*nŸXL–±^k–ØÇ˜',NULL,'æ-°™j|B:¤6bl(Ã','2020-04-04 21:03:14.390','2020-04-04 21:05:19.429');
-/*!40000 ALTER TABLE `shipping_method` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `shipping_method_price`
---
-
-DROP TABLE IF EXISTS `shipping_method_price`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `shipping_method_price` (
-  `id` binary(16) NOT NULL,
-  `shipping_method_id` binary(16) NOT NULL,
-  `calculation` int(1) unsigned DEFAULT NULL,
-  `rule_id` binary(16) DEFAULT NULL,
-  `currency_id` binary(16) NOT NULL,
-  `calculation_rule_id` binary(16) DEFAULT NULL,
-  `price` double NOT NULL,
-  `quantity_start` double DEFAULT NULL,
-  `quantity_end` double DEFAULT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uniq.shipping_method_quantity_start` (`shipping_method_id`,`rule_id`,`currency_id`,`quantity_start`),
-  KEY `fk.shipping_method_price.currency_id` (`currency_id`),
-  KEY `fk.shipping_method_price.rule_id` (`rule_id`),
-  KEY `fk.shipping_method_price.calculation_rule_id` (`calculation_rule_id`),
-  CONSTRAINT `fk.shipping_method_price.calculation_rule_id` FOREIGN KEY (`calculation_rule_id`) REFERENCES `rule` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.shipping_method_price.currency_id` FOREIGN KEY (`currency_id`) REFERENCES `currency` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.shipping_method_price.rule_id` FOREIGN KEY (`rule_id`) REFERENCES `rule` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.shipping_method_price.shipping_method_id` FOREIGN KEY (`shipping_method_id`) REFERENCES `shipping_method` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `json.shipping_method_price.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `shipping_method_price`
---
-
-LOCK TABLES `shipping_method_price` WRITE;
-/*!40000 ALTER TABLE `shipping_method_price` DISABLE KEYS */;
-INSERT INTO `shipping_method_price` VALUES ('\r~şELƒ¯U°mVÑ1s','\\Å\\Hv tùy­Å¿',1,NULL,'·ÒUKèGÍ‚ó¬›ÑÀßÊ',NULL,0,0,NULL,NULL,'2020-04-04 21:03:14.390',NULL),('_…&@âvKñ¨UUxNÈı8','†&–¦šHœ‡hØiCÖª',1,NULL,'·ÒUKèGÍ‚ó¬›ÑÀßÊ',NULL,0,0,NULL,NULL,'2020-04-04 21:03:14.391',NULL);
-/*!40000 ALTER TABLE `shipping_method_price` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `shipping_method_tag`
---
-
-DROP TABLE IF EXISTS `shipping_method_tag`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `shipping_method_tag` (
-  `shipping_method_id` binary(16) NOT NULL,
-  `tag_id` binary(16) NOT NULL,
-  PRIMARY KEY (`shipping_method_id`,`tag_id`),
-  KEY `fk.shipping_method_tag.tag_id` (`tag_id`),
-  CONSTRAINT `fk.shipping_method_tag.shipping_method_id` FOREIGN KEY (`shipping_method_id`) REFERENCES `shipping_method` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.shipping_method_tag.tag_id` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `shipping_method_tag`
---
-
-LOCK TABLES `shipping_method_tag` WRITE;
-/*!40000 ALTER TABLE `shipping_method_tag` DISABLE KEYS */;
-/*!40000 ALTER TABLE `shipping_method_tag` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `shipping_method_translation`
---
-
-DROP TABLE IF EXISTS `shipping_method_translation`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `shipping_method_translation` (
-  `shipping_method_id` binary(16) NOT NULL,
-  `language_id` binary(16) NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `description` mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`shipping_method_id`,`language_id`),
-  KEY `fk.shipping_method_translation.language_id` (`language_id`),
-  CONSTRAINT `fk.shipping_method_translation.language_id` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.shipping_method_translation.shipping_method_id` FOREIGN KEY (`shipping_method_id`) REFERENCES `shipping_method` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `json.shipping_method_translation.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `shipping_method_translation`
---
-
-LOCK TABLES `shipping_method_translation` WRITE;
-/*!40000 ALTER TABLE `shipping_method_translation` DISABLE KEYS */;
-INSERT INTO `shipping_method_translation` VALUES ('\\Å\\Hv tùy­Å¿','/»_ââšMpªXTÎ|ãâ','Standard',NULL,NULL,'2020-04-04 21:03:14.390',NULL),('\\Å\\Hv tùy­Å¿','‹/pó¡L†…Mã4Ó8','Standard',NULL,NULL,'2020-04-04 21:03:14.390',NULL),('†&–¦šHœ‡hØiCÖª','/»_ââšMpªXTÎ|ãâ','Express',NULL,NULL,'2020-04-04 21:03:14.390',NULL),('†&–¦šHœ‡hØiCÖª','‹/pó¡L†…Mã4Ó8','Express',NULL,NULL,'2020-04-04 21:03:14.391',NULL);
-/*!40000 ALTER TABLE `shipping_method_translation` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `snippet`
---
-
-DROP TABLE IF EXISTS `snippet`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `snippet` (
-  `id` binary(16) NOT NULL,
-  `translation_key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `value` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `author` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `snippet_set_id` binary(16) NOT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uniq.snippet_set_id_translation_key` (`snippet_set_id`,`translation_key`),
-  CONSTRAINT `fk.snippet.snippet_set_id` FOREIGN KEY (`snippet_set_id`) REFERENCES `snippet_set` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `json.snippet.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `snippet`
---
-
-LOCK TABLES `snippet` WRITE;
-/*!40000 ALTER TABLE `snippet` DISABLE KEYS */;
-/*!40000 ALTER TABLE `snippet` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `snippet_set`
---
-
-DROP TABLE IF EXISTS `snippet_set`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `snippet_set` (
-  `id` binary(16) NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `base_file` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `iso` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  CONSTRAINT `json.snippet_set.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `snippet_set`
---
-
-LOCK TABLES `snippet_set` WRITE;
-/*!40000 ALTER TABLE `snippet_set` DISABLE KEYS */;
-INSERT INTO `snippet_set` VALUES ('\nI4s¬ÒFé¡ÎNàtÔ²','BASE en-GB','messages.en-GB','en-GB',NULL,'2020-04-04 21:03:14.399',NULL),('\'‚6SjúIï´†¢õä','BASE de-DE','messages.de-DE','de-DE',NULL,'2020-04-04 21:03:14.399',NULL);
-/*!40000 ALTER TABLE `snippet_set` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `state_machine`
---
-
-DROP TABLE IF EXISTS `state_machine`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `state_machine` (
-  `id` binary(16) NOT NULL,
-  `technical_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `initial_state_id` binary(16) DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uniq.state_machine.technical_name` (`technical_name`),
-  KEY `fk.state_machine.initial_state_id` (`initial_state_id`),
-  CONSTRAINT `fk.state_machine.initial_state_id` FOREIGN KEY (`initial_state_id`) REFERENCES `state_machine_state` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `state_machine`
---
-
-LOCK TABLES `state_machine` WRITE;
-/*!40000 ALTER TABLE `state_machine` DISABLE KEYS */;
-INSERT INTO `state_machine` VALUES ('	ÍVY½Â@ª³¢]½@27','order_transaction.state','•‰é-sDpºPØèÄïÓ','2020-04-04 21:03:14.478',NULL),('¥\"4©dÃNwœ„Íûe›','order.state','Y¥aß­ÄL5°‰*KLln´','2020-04-04 21:03:14.453',NULL),('ÖkjéäåNs™R²şrï','order_delivery.state','èo‘V‚IŸ«3ÇŠ7	×¤','2020-04-04 21:03:14.473',NULL);
-/*!40000 ALTER TABLE `state_machine` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `state_machine_history`
---
-
-DROP TABLE IF EXISTS `state_machine_history`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `state_machine_history` (
-  `id` binary(16) NOT NULL,
-  `state_machine_id` binary(16) NOT NULL,
-  `entity_name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `entity_id` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `from_state_id` binary(16) NOT NULL,
-  `to_state_id` binary(16) NOT NULL,
-  `action_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `user_id` binary(16) DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk.state_machine_history.state_machine_id` (`state_machine_id`),
-  KEY `fk.state_machine_history.from_state_id` (`from_state_id`),
-  KEY `fk.state_machine_history.to_state_id` (`to_state_id`),
-  KEY `fk.state_machine_history.user_id` (`user_id`),
-  CONSTRAINT `fk.state_machine_history.from_state_id` FOREIGN KEY (`from_state_id`) REFERENCES `state_machine_state` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
-  CONSTRAINT `fk.state_machine_history.state_machine_id` FOREIGN KEY (`state_machine_id`) REFERENCES `state_machine` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
-  CONSTRAINT `fk.state_machine_history.to_state_id` FOREIGN KEY (`to_state_id`) REFERENCES `state_machine_state` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
-  CONSTRAINT `fk.state_machine_history.user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
-  CONSTRAINT `json.state_machine_history.entity_id` CHECK (json_valid(`entity_id`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `state_machine_history`
---
-
-LOCK TABLES `state_machine_history` WRITE;
-/*!40000 ALTER TABLE `state_machine_history` DISABLE KEYS */;
-/*!40000 ALTER TABLE `state_machine_history` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `state_machine_state`
---
-
-DROP TABLE IF EXISTS `state_machine_state`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `state_machine_state` (
-  `id` binary(16) NOT NULL,
-  `technical_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `state_machine_id` binary(16) NOT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uniq.technical_name_state_machine` (`technical_name`,`state_machine_id`),
-  KEY `idx.state_machine_state.state_machine_id` (`state_machine_id`),
-  CONSTRAINT `fk.state_machine_state.state_machine_id` FOREIGN KEY (`state_machine_id`) REFERENCES `state_machine` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `state_machine_state`
---
-
-LOCK TABLES `state_machine_state` WRITE;
-/*!40000 ALTER TABLE `state_machine_state` DISABLE KEYS */;
-INSERT INTO `state_machine_state` VALUES ('|ûŸC¯¾^™¨Ye','cancelled','¥\"4©dÃNwœ„Íûe›','2020-04-04 21:03:14.459',NULL),('jçIÏ›FºÈ{y;šX9','paid','	ÍVY½Â@ª³¢]½@27','2020-04-04 21:03:14.479',NULL),('\r/–P˜xBrº¬ıÀHˆC','shipped_partially','ÖkjéäåNs™R²şrï','2020-04-04 21:03:14.475',NULL),('\r…\0>äÚC0•+Éßø','completed','¥\"4©dÃNwœ„Íûe›','2020-04-04 21:03:14.457',NULL),('•‰é-sDpºPØèÄïÓ','open','	ÍVY½Â@ª³¢]½@27','2020-04-04 21:03:14.479',NULL),('Jşû@Š7K«¬@§\rvŠƒ~','refunded','	ÍVY½Â@ª³¢]½@27','2020-04-04 21:03:14.480',NULL),('Y¥aß­ÄL5°‰*KLln´','open','¥\"4©dÃNwœ„Íûe›','2020-04-04 21:03:14.456',NULL),('rğŒdD5D·l0ãÇØ','cancelled','	ÍVY½Â@ª³¢]½@27','2020-04-04 21:03:14.481',NULL),('y3(Î\"ÿA|°9µÄ|Ã·','returned','ÖkjéäåNs™R²şrï','2020-04-04 21:03:14.475',NULL),('K°åDµ<°²gc+ë','reminded','	ÍVY½Â@ª³¢]½@27','2020-04-04 21:03:14.481',NULL),('¥¸NËˆM‹º#¢Ì…?','paid_partially','	ÍVY½Â@ª³¢]½@27','2020-04-04 21:03:14.480',NULL),('¿[{IµNÇŠ9)Ë¼?â','returned_partially','ÖkjéäåNs™R²şrï','2020-04-04 21:03:14.476',NULL),('Æé\r…*C–ŸVİ–U÷','refunded_partially','	ÍVY½Â@ª³¢]½@27','2020-04-04 21:03:14.480',NULL),('ß!ı“ŠN‚¨C•\reD','cancelled','ÖkjéäåNs™R²şrï','2020-04-04 21:03:14.476',NULL),('ã¿xNİFk«¨D´êær','shipped','ÖkjéäåNs™R²şrï','2020-04-04 21:03:14.474',NULL),('èo‘V‚IŸ«3ÇŠ7	×¤','open','ÖkjéäåNs™R²şrï','2020-04-04 21:03:14.474',NULL),('şÆê-ñHÒ¸íu\0ƒTv','in_progress','¥\"4©dÃNwœ„Íûe›','2020-04-04 21:03:14.458',NULL);
-/*!40000 ALTER TABLE `state_machine_state` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `state_machine_state_translation`
---
-
-DROP TABLE IF EXISTS `state_machine_state_translation`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `state_machine_state_translation` (
-  `language_id` binary(16) NOT NULL,
-  `state_machine_state_id` binary(16) NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`language_id`,`state_machine_state_id`),
-  KEY `idx.language` (`language_id`),
-  KEY `idx.state_machine` (`state_machine_state_id`),
-  CONSTRAINT `fk.state_machine_state_translation.language_id` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.state_machine_state_translation.state_machine_state_id` FOREIGN KEY (`state_machine_state_id`) REFERENCES `state_machine_state` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `json.state_machine_state_translation.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `state_machine_state_translation`
---
-
-LOCK TABLES `state_machine_state_translation` WRITE;
-/*!40000 ALTER TABLE `state_machine_state_translation` DISABLE KEYS */;
-INSERT INTO `state_machine_state_translation` VALUES ('/»_ââšMpªXTÎ|ãâ','|ûŸC¯¾^™¨Ye','Cancelled',NULL,'2020-04-04 21:03:14.453',NULL),('/»_ââšMpªXTÎ|ãâ','jçIÏ›FºÈ{y;šX9','Paid',NULL,'2020-04-04 21:03:14.478',NULL),('/»_ââšMpªXTÎ|ãâ','\r/–P˜xBrº¬ıÀHˆC','Shipped (partially)',NULL,'2020-04-04 21:03:14.473',NULL),('/»_ââšMpªXTÎ|ãâ','\r…\0>äÚC0•+Éßø','Done',NULL,'2020-04-04 21:03:14.453',NULL),('/»_ââšMpªXTÎ|ãâ','•‰é-sDpºPØèÄïÓ','Open',NULL,'2020-04-04 21:03:14.478',NULL),('/»_ââšMpªXTÎ|ãâ','Jşû@Š7K«¬@§\rvŠƒ~','Refunded',NULL,'2020-04-04 21:03:14.478',NULL),('/»_ââšMpªXTÎ|ãâ','Y¥aß­ÄL5°‰*KLln´','Open',NULL,'2020-04-04 21:03:14.453',NULL),('/»_ââšMpªXTÎ|ãâ','rğŒdD5D·l0ãÇØ','Cancelled',NULL,'2020-04-04 21:03:14.478',NULL),('/»_ââšMpªXTÎ|ãâ','y3(Î\"ÿA|°9µÄ|Ã·','Returned',NULL,'2020-04-04 21:03:14.473',NULL),('/»_ââšMpªXTÎ|ãâ','K°åDµ<°²gc+ë','Reminded',NULL,'2020-04-04 21:03:14.478',NULL),('/»_ââšMpªXTÎ|ãâ','¥¸NËˆM‹º#¢Ì…?','Paid (partially)',NULL,'2020-04-04 21:03:14.478',NULL),('/»_ââšMpªXTÎ|ãâ','¿[{IµNÇŠ9)Ë¼?â','Returned (partially)',NULL,'2020-04-04 21:03:14.473',NULL),('/»_ââšMpªXTÎ|ãâ','Æé\r…*C–ŸVİ–U÷','Refunded (partially)',NULL,'2020-04-04 21:03:14.478',NULL),('/»_ââšMpªXTÎ|ãâ','ß!ı“ŠN‚¨C•\reD','Cancelled',NULL,'2020-04-04 21:03:14.473',NULL),('/»_ââšMpªXTÎ|ãâ','ã¿xNİFk«¨D´êær','Shipped',NULL,'2020-04-04 21:03:14.473',NULL),('/»_ââšMpªXTÎ|ãâ','èo‘V‚IŸ«3ÇŠ7	×¤','Open',NULL,'2020-04-04 21:03:14.473',NULL),('/»_ââšMpªXTÎ|ãâ','şÆê-ñHÒ¸íu\0ƒTv','In progress',NULL,'2020-04-04 21:03:14.453',NULL),('‹/pó¡L†…Mã4Ó8','|ûŸC¯¾^™¨Ye','Abgebrochen',NULL,'2020-04-04 21:03:14.453',NULL),('‹/pó¡L†…Mã4Ó8','jçIÏ›FºÈ{y;šX9','Bezahlt',NULL,'2020-04-04 21:03:14.478',NULL),('‹/pó¡L†…Mã4Ó8','\r/–P˜xBrº¬ıÀHˆC','Teilweise versandt',NULL,'2020-04-04 21:03:14.473',NULL),('‹/pó¡L†…Mã4Ó8','\r…\0>äÚC0•+Éßø','Abgeschlossen',NULL,'2020-04-04 21:03:14.453',NULL),('‹/pó¡L†…Mã4Ó8','•‰é-sDpºPØèÄïÓ','Offen',NULL,'2020-04-04 21:03:14.478',NULL),('‹/pó¡L†…Mã4Ó8','Jşû@Š7K«¬@§\rvŠƒ~','Erstattet',NULL,'2020-04-04 21:03:14.478',NULL),('‹/pó¡L†…Mã4Ó8','Y¥aß­ÄL5°‰*KLln´','Offen',NULL,'2020-04-04 21:03:14.453',NULL),('‹/pó¡L†…Mã4Ó8','rğŒdD5D·l0ãÇØ','Abgebrochen',NULL,'2020-04-04 21:03:14.478',NULL),('‹/pó¡L†…Mã4Ó8','y3(Î\"ÿA|°9µÄ|Ã·','Retour',NULL,'2020-04-04 21:03:14.473',NULL),('‹/pó¡L†…Mã4Ó8','K°åDµ<°²gc+ë','Erinnert',NULL,'2020-04-04 21:03:14.478',NULL),('‹/pó¡L†…Mã4Ó8','¥¸NËˆM‹º#¢Ì…?','Teilweise bezahlt',NULL,'2020-04-04 21:03:14.478',NULL),('‹/pó¡L†…Mã4Ó8','¿[{IµNÇŠ9)Ë¼?â','Teilretour',NULL,'2020-04-04 21:03:14.473',NULL),('‹/pó¡L†…Mã4Ó8','Æé\r…*C–ŸVİ–U÷','Teilweise erstattet',NULL,'2020-04-04 21:03:14.478',NULL),('‹/pó¡L†…Mã4Ó8','ß!ı“ŠN‚¨C•\reD','Abgebrochen',NULL,'2020-04-04 21:03:14.473',NULL),('‹/pó¡L†…Mã4Ó8','ã¿xNİFk«¨D´êær','Versandt',NULL,'2020-04-04 21:03:14.473',NULL),('‹/pó¡L†…Mã4Ó8','èo‘V‚IŸ«3ÇŠ7	×¤','Offen',NULL,'2020-04-04 21:03:14.473',NULL),('‹/pó¡L†…Mã4Ó8','şÆê-ñHÒ¸íu\0ƒTv','In Bearbeitung',NULL,'2020-04-04 21:03:14.453',NULL);
-/*!40000 ALTER TABLE `state_machine_state_translation` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `state_machine_transition`
---
-
-DROP TABLE IF EXISTS `state_machine_transition`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `state_machine_transition` (
-  `id` binary(16) NOT NULL,
-  `action_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `state_machine_id` binary(16) NOT NULL,
-  `from_state_id` binary(16) NOT NULL,
-  `to_state_id` binary(16) NOT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uniq.state_machine_transition.action_name_state_machine` (`action_name`,`state_machine_id`,`from_state_id`,`to_state_id`),
-  KEY `idx.state_machine_transition.state_machine_id` (`state_machine_id`),
-  KEY `idx.state_machine_transition.from_state_id` (`from_state_id`),
-  KEY `idx.state_machine_transition.to_state_id` (`to_state_id`),
-  CONSTRAINT `fk.state_machine_transition.from_state_id` FOREIGN KEY (`from_state_id`) REFERENCES `state_machine_state` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `fk.state_machine_transition.state_machine_id` FOREIGN KEY (`state_machine_id`) REFERENCES `state_machine` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.state_machine_transition.to_state_id` FOREIGN KEY (`to_state_id`) REFERENCES `state_machine_state` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `json.state_machine_transition.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `state_machine_transition`
---
-
-LOCK TABLES `state_machine_transition` WRITE;
-/*!40000 ALTER TABLE `state_machine_transition` DISABLE KEYS */;
-INSERT INTO `state_machine_transition` VALUES ('\0›åR]¼O©å»ù*ca','pay','	ÍVY½Â@ª³¢]½@27','K°åDµ<°²gc+ë','jçIÏ›FºÈ{y;šX9',NULL,'2020-04-04 21:03:14.482',NULL),('0]~‰H„@ÉùÁ*HÔ','cancel','ÖkjéäåNs™R²şrï','\r/–P˜xBrº¬ıÀHˆC','ß!ı“ŠN‚¨C•\reD',NULL,'2020-04-04 21:03:14.478',NULL),('\n®‰N\rN5¼€ÓöË­r','reopen','¥\"4©dÃNwœ„Íûe›','|ûŸC¯¾^™¨Ye','Y¥aß­ÄL5°‰*KLln´',NULL,'2020-04-04 21:03:14.462',NULL),('UŸ›‰¦K0®*Î|wLÒ','retour','ÖkjéäåNs™R²şrï','\r/–P˜xBrº¬ıÀHˆC','y3(Î\"ÿA|°9µÄ|Ã·',NULL,'2020-04-04 21:03:14.477',NULL),('\Z@S¿àC\'š·®ı\\','process','¥\"4©dÃNwœ„Íûe›','Y¥aß­ÄL5°‰*KLln´','şÆê-ñHÒ¸íu\0ƒTv',NULL,'2020-04-04 21:03:14.460',NULL),('\'¿ŒJ#¨\0ª6\r­','cancel','	ÍVY½Â@ª³¢]½@27','¥¸NËˆM‹º#¢Ì…?','rğŒdD5D·l0ãÇØ',NULL,'2020-04-04 21:03:14.483',NULL),('*W§‚vF™®/³_Û³iú','refund','	ÍVY½Â@ª³¢]½@27','¥¸NËˆM‹º#¢Ì…?','Jşû@Š7K«¬@§\rvŠƒ~',NULL,'2020-04-04 21:03:14.483',NULL),(',Ê¢?ÎdA>‚@zWë’','cancel','¥\"4©dÃNwœ„Íûe›','Y¥aß­ÄL5°‰*KLln´','|ûŸC¯¾^™¨Ye',NULL,'2020-04-04 21:03:14.460',NULL),('7(Õà6SNv‘cR	$ß@','pay_partially','	ÍVY½Â@ª³¢]½@27','K°åDµ<°²gc+ë','¥¸NËˆM‹º#¢Ì…?',NULL,'2020-04-04 21:03:14.482',NULL),('8¦@< JŸ–ámGÜiNo','cancel','	ÍVY½Â@ª³¢]½@27','jçIÏ›FºÈ{y;šX9','rğŒdD5D·l0ãÇØ',NULL,'2020-04-04 21:03:14.483',NULL),(';LÄ)sdI^®Í	Î¨ĞB','refund','	ÍVY½Â@ª³¢]½@27','rğŒdD5D·l0ãÇØ','Jşû@Š7K«¬@§\rvŠƒ~',NULL,'2020-04-04 21:03:14.484',NULL),('<K­t\Z÷N¾¡œV¬=L‹¬','pay','	ÍVY½Â@ª³¢]½@27','•‰é-sDpºPØèÄïÓ','jçIÏ›FºÈ{y;šX9',NULL,'2020-04-04 21:03:14.481',NULL),('>$œ9xE—!]\'fş','complete','¥\"4©dÃNwœ„Íûe›','şÆê-ñHÒ¸íu\0ƒTv','\r…\0>äÚC0•+Éßø',NULL,'2020-04-04 21:03:14.461',NULL),('GİL…ŞrO\"­£Má‹í`¦','reopen','ÖkjéäåNs™R²şrï','ß!ı“ŠN‚¨C•\reD','èo‘V‚IŸ«3ÇŠ7	×¤',NULL,'2020-04-04 21:03:20.170',NULL),('Ksœ—š¸G,•¸Ás3C¦Ï','retour_partially','ÖkjéäåNs™R²şrï','\r/–P˜xBrº¬ıÀHˆC','¿[{IµNÇŠ9)Ë¼?â',NULL,'2020-04-04 21:03:14.478',NULL),('e”Z•¿¨JÖŒ\0ÛK4Û^','refund','	ÍVY½Â@ª³¢]½@27','Æé\r…*C–ŸVİ–U÷','Jşû@Š7K«¬@§\rvŠƒ~',NULL,'2020-04-04 21:03:14.483',NULL),('jâv_àI¢‹Z# ½‹Â','refund_partially','	ÍVY½Â@ª³¢]½@27','rğŒdD5D·l0ãÇØ','Æé\r…*C–ŸVİ–U÷',NULL,'2020-04-04 21:03:14.484',NULL),('u—\ZXC®œíaQtÂaé','retour','ÖkjéäåNs™R²şrï','ã¿xNİFk«¨D´êær','y3(Î\"ÿA|°9µÄ|Ã·',NULL,'2020-04-04 21:03:14.477',NULL),('x·¥ u@ûÄÖé‰”¯ò','pay','	ÍVY½Â@ª³¢]½@27','¥¸NËˆM‹º#¢Ì…?','jçIÏ›FºÈ{y;šX9',NULL,'2020-04-04 21:03:14.482',NULL),('yuÈ…Öö@Â·™¨ÒœbÁÆ','refund_partially','	ÍVY½Â@ª³¢]½@27','¥¸NËˆM‹º#¢Ì…?','Æé\r…*C–ŸVİ–U÷',NULL,'2020-04-04 21:03:14.482',NULL),('{÷¢kçHƒ°¦_”í¥','remind','	ÍVY½Â@ª³¢]½@27','¥¸NËˆM‹º#¢Ì…?','K°åDµ<°²gc+ë',NULL,'2020-04-04 21:03:14.482',NULL),('‘j¥Œ¸7I2”ó ½iÀãr','retour_partially','ÖkjéäåNs™R²şrï','ã¿xNİFk«¨D´êær','¿[{IµNÇŠ9)Ë¼?â',NULL,'2020-04-04 21:03:14.477',NULL),('‘úM-±LÇ±´3şáË','reopen','¥\"4©dÃNwœ„Íûe›','\r…\0>äÚC0•+Éßø','Y¥aß­ÄL5°‰*KLln´',NULL,'2020-04-04 21:03:14.462',NULL),('›ÅİV	ïJ$šP×AçÂkì','reopen','	ÍVY½Â@ª³¢]½@27','rğŒdD5D·l0ãÇØ','•‰é-sDpºPØèÄïÓ',NULL,'2020-04-04 21:03:14.484',NULL),('›É.®şvB«ƒ$zòDs','cancel','¥\"4©dÃNwœ„Íûe›','şÆê-ñHÒ¸íu\0ƒTv','|ûŸC¯¾^™¨Ye',NULL,'2020-04-04 21:03:14.461',NULL),('¶²™îjJ…WŒ‡ıGKG','cancel','	ÍVY½Â@ª³¢]½@27','Æé\r…*C–ŸVİ–U÷','rğŒdD5D·l0ãÇØ',NULL,'2020-04-04 21:03:14.483',NULL),('¸‡Æ·ìG¯‹ÑLÂmÂc','pay_partially','	ÍVY½Â@ª³¢]½@27','•‰é-sDpºPØèÄïÓ','¥¸NËˆM‹º#¢Ì…?',NULL,'2020-04-04 21:03:14.481',NULL),('Æ1©FzEˆµ¤k’º~/ß','cancel','ÖkjéäåNs™R²şrï','èo‘V‚IŸ«3ÇŠ7	×¤','ß!ı“ŠN‚¨C•\reD',NULL,'2020-04-04 21:03:14.477',NULL),('Éî.qí}B~¤†#DD','remind','	ÍVY½Â@ª³¢]½@27','•‰é-sDpºPØèÄïÓ','K°åDµ<°²gc+ë',NULL,'2020-04-04 21:03:14.482',NULL),('Õµ—F&Š‡\nî§±¡ä','cancel','	ÍVY½Â@ª³¢]½@27','•‰é-sDpºPØèÄïÓ','rğŒdD5D·l0ãÇØ',NULL,'2020-04-04 21:03:14.482',NULL),('Ö&ş,‘0N´—‘“\rû ¨','refund','	ÍVY½Â@ª³¢]½@27','jçIÏ›FºÈ{y;šX9','Jşû@Š7K«¬@§\rvŠƒ~',NULL,'2020-04-04 21:03:14.483',NULL),('Ûe60ÀìL\Zµp>[5Ö\n','ship','ÖkjéäåNs™R²şrï','èo‘V‚IŸ«3ÇŠ7	×¤','ã¿xNİFk«¨D´êær',NULL,'2020-04-04 21:03:14.476',NULL),('àÕ¢6Û€Cş°WÊ¸6\\L','refund_partially','	ÍVY½Â@ª³¢]½@27','jçIÏ›FºÈ{y;šX9','Æé\r…*C–ŸVİ–U÷',NULL,'2020-04-04 21:03:14.483',NULL),('é¤ç%iRH»j?£ÖŒ>','cancel','ÖkjéäåNs™R²şrï','ã¿xNİFk«¨D´êær','ß!ı“ŠN‚¨C•\reD',NULL,'2020-04-04 21:03:14.477',NULL),('ï´Ì‘ŸCƒ¬-ÇÆ·P','cancel','	ÍVY½Â@ª³¢]½@27','K°åDµ<°²gc+ë','rğŒdD5D·l0ãÇØ',NULL,'2020-04-04 21:03:14.482',NULL),('ğgClI³¬y¨D]óüD','ship_partially','ÖkjéäåNs™R²şrï','èo‘V‚IŸ«3ÇŠ7	×¤','\r/–P˜xBrº¬ıÀHˆC',NULL,'2020-04-04 21:03:14.477',NULL),('û€;Œ¨8Iá¾HĞÜèK','ship','ÖkjéäåNs™R²şrï','\r/–P˜xBrº¬ıÀHˆC','ã¿xNİFk«¨D´êær',NULL,'2020-04-04 21:03:14.478',NULL);
-/*!40000 ALTER TABLE `state_machine_transition` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `state_machine_translation`
---
-
-DROP TABLE IF EXISTS `state_machine_translation`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `state_machine_translation` (
-  `language_id` binary(16) NOT NULL,
-  `state_machine_id` binary(16) NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`language_id`,`state_machine_id`),
-  KEY `idx.state_machine_translation.language` (`language_id`),
-  KEY `idx.state_machine_translation.state_machine` (`state_machine_id`),
-  CONSTRAINT `fk.state_machine_translation.language_id` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.state_machine_translation.state_machine_id` FOREIGN KEY (`state_machine_id`) REFERENCES `state_machine` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `json.state_machine_translation.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `state_machine_translation`
---
-
-LOCK TABLES `state_machine_translation` WRITE;
-/*!40000 ALTER TABLE `state_machine_translation` DISABLE KEYS */;
-INSERT INTO `state_machine_translation` VALUES ('/»_ââšMpªXTÎ|ãâ','	ÍVY½Â@ª³¢]½@27','Payment state',NULL,'2020-04-04 21:03:14.479',NULL),('/»_ââšMpªXTÎ|ãâ','¥\"4©dÃNwœ„Íûe›','Order state',NULL,'2020-04-04 21:03:14.455',NULL),('/»_ââšMpªXTÎ|ãâ','ÖkjéäåNs™R²şrï','Order state',NULL,'2020-04-04 21:03:14.474',NULL),('‹/pó¡L†…Mã4Ó8','	ÍVY½Â@ª³¢]½@27','Zahlungsstatus',NULL,'2020-04-04 21:03:14.478',NULL),('‹/pó¡L†…Mã4Ó8','¥\"4©dÃNwœ„Íûe›','Bestellstatus',NULL,'2020-04-04 21:03:14.455',NULL),('‹/pó¡L†…Mã4Ó8','ÖkjéäåNs™R²şrï','Bestellstatus',NULL,'2020-04-04 21:03:14.473',NULL);
-/*!40000 ALTER TABLE `state_machine_translation` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `system_config`
---
-
-DROP TABLE IF EXISTS `system_config`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `system_config` (
-  `id` binary(16) NOT NULL,
-  `configuration_key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `configuration_value` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `sales_channel_id` binary(16) DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uniq.system_config.configuration_key__sales_channel_id` (`configuration_key`,`sales_channel_id`),
-  CONSTRAINT `json.system_config.configuration_value` CHECK (json_valid(`configuration_value`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `system_config`
---
-
-LOCK TABLES `system_config` WRITE;
-/*!40000 ALTER TABLE `system_config` DISABLE KEYS */;
-INSERT INTO `system_config` VALUES ('GÿÓLßAZ¶ Ş¾k×','SwagPayPal.settings.ecsSubmitCart','{\"_value\":true}',NULL,'2020-04-04 21:05:47.328',NULL),('hÈÛ#o@»·¨êïÃ¡','SwagPayPal.settings.spbCheckoutEnabled','{\"_value\":true}',NULL,'2020-04-04 21:05:47.332',NULL),('ÂüªŠºKğëÎW{lÆ','SwagPayPal.settings.intent','{\"_value\":\"sale\"}',NULL,'2020-04-04 21:05:47.277',NULL),('	İÇÛCJCÀ›Dqè“lÌ','SwagPayPal.settings.ecsLoginEnabled','{\"_value\":true}',NULL,'2020-04-04 21:05:47.312',NULL),('.€Ì†Br•WÍ`sóP','core.basicInformation.privacyPage','{\"_value\": \"b0dc71887ed94674b20f103f6f2c703d\"}',NULL,'2020-04-04 21:03:23.082',NULL),('&b5-Hy¨P[èX+Ÿ%','core.basicInformation.tosPage','{\"_value\": \"2461db19f8fd434f8650c911814e677c\"}',NULL,'2020-04-04 21:03:23.064',NULL),('W¯Q/HôÎşFğz…','core.sitemap.sitemapRefreshStrategy','{\"_value\": \"2\"}',NULL,'2020-04-04 21:03:20.189',NULL),('’:/î~NÖ”‚¹RÚ‡³','core.basicInformation.contactPage','{\"_value\": \"fa9b50f509ed49b9b78b195e2ea2c932\"}',NULL,'2020-04-04 21:03:23.043',NULL),('”&àˆXGd®¹1SP×Ğk','SwagPayPal.settings.ecsDetailEnabled','{\"_value\":true}',NULL,'2020-04-04 21:05:47.299',NULL),('+PghğdA¿†åÖ;Ö6','SwagPayPal.settings.spbAlternativePaymentMethodsEnabled','{\"_value\":true}',NULL,'2020-04-04 21:05:47.336',NULL),('1TMRë°N‚Dê/XVO','core.listing.allowBuyInListing','{\"_value\": true}',NULL,'2020-04-04 21:03:16.022',NULL),(':iäDa˜@…µKƒ:1ú`','SwagPayPal.settings.submitCart','{\"_value\":true}',NULL,'2020-04-04 21:05:47.281',NULL),('<ÆöáÅ\ZH<’äi@µ•','SwagPayPal.settings.sandbox','{\"_value\":false}',NULL,'2020-04-04 21:05:47.249',NULL),('>Ø_Sş§L[º¢\Z¼9ƒ','core.logging.cleanupInterval','{\"_value\": \"86400\"}',NULL,'2020-04-04 21:03:15.346',NULL),('?•óßÕM©hŸ4İ]«Õ','core.basicInformation.shopName','{\"_value\": \"Demostore\"}',NULL,'2020-04-04 21:03:16.021',NULL),('Du¸~<LO‹®/¨Ş)Û‡','SwagPayPal.settings.spbButtonColor','{\"_value\":\"gold\"}',NULL,'2020-04-04 21:05:47.340',NULL),('GÕƒ,TG<‹€—\0z”÷','core.frw.completedAt','{\"_value\":\"2020-04-04T21:05:54+00:00\"}',NULL,'2020-04-04 21:05:54.697',NULL),('Uæ_ÊÔIy“É˜kÉ\ne®','SwagPayPal.settings.ecsButtonShape','{\"_value\":\"rect\"}',NULL,'2020-04-04 21:05:47.324',NULL),('XaŠŸBé›­·`SèC','SwagPayPal.settings.ecsOffCanvasEnabled','{\"_value\":true}',NULL,'2020-04-04 21:05:47.307',NULL),('a¼K\nI.·ÒQHy’|)','core.basicInformation.revocationPage','{\"_value\": \"db266e42646c40b29a6715ea99036925\"}',NULL,'2020-04-04 21:03:23.073',NULL),('h\0¸’ÔsEu…Nùè|\r¸','core.basicInformation.imprintPage','{\"_value\": \"7dd556f1fa5a4f6d985ec9de0f7ef62a\"}',NULL,'2020-04-04 21:03:23.092',NULL),('nûdfyE©’ìk‹’¸','SwagPayPal.settings.installmentBannerEnabled','{\"_value\":true}',NULL,'2020-04-04 21:05:47.353',NULL),('wpçTêNIE¦Që†@LtÂ','core.logging.entryLimit','{\"_value\": \"10000000\"}',NULL,'2020-04-04 21:03:15.347',NULL),('z ƒ÷(lOı··Êİæ8-}','SwagPayPal.settings.ecsCartEnabled','{\"_value\":true}',NULL,'2020-04-04 21:05:47.303',NULL),('ƒ°Rã N–?GŒø„Éï','core.address.showZipcodeInFrontOfCity','{\"_value\": true}',NULL,'2020-04-04 21:03:16.019',NULL),('“í[åmM§°?;Ú­8$ø','SwagPayPal.settings.landingPage','{\"_value\":\"Login\"}',NULL,'2020-04-04 21:05:47.286',NULL),('œí-ëŒDL²éÎ~}`¹','core.sitemap.sitemapRefreshTime','{\"_value\": 3600}',NULL,'2020-04-04 21:03:20.188',NULL),('¥Í1BÄ¹gN\n$n\\v','core.register.minPasswordLength','{\"_value\": 8}',NULL,'2020-04-04 21:03:14.485',NULL),('¦£	aoÌM×¨ÜbNâ®é','core.basicInformation.shippingPaymentInfoPage','{\"_value\": \"053a2a2051f64e10ac1c91cce095e7d6\"}',NULL,'2020-04-04 21:03:23.054',NULL),('¦¨Íú§NJn¢Û˜ÊX^fş','core.listing.markAsNew','{\"_value\": \"30\"}',NULL,'2020-04-04 21:03:16.783',NULL),('­\"”o¨ÕLä¼‹—Oè- ','SwagPayPal.settings.plusCheckoutEnabled','{\"_value\":true}',NULL,'2020-04-04 21:05:47.349',NULL),('²íÌ8X¹B×\'¯—á]æ÷','SwagPayPal.settings.spbButtonShape','{\"_value\":\"rect\"}',NULL,'2020-04-04 21:05:47.345',NULL),('¸Ğÿ%zJ…€1y±¤§İ','core.update.channel','{\"_value\":\"stable\"}',NULL,'2020-04-04 21:03:16.013',NULL),('ÉF}0ãM=±.\Z\\Ã5Éú','core.basicInformation.email','{\"_value\": \"doNotReply@localhost\"}',NULL,'2020-04-04 21:03:14.484',NULL),('ËaÈI9îJ‘8Ñw@\r','core.cart.maxQuantity','{\"_value\": \"100\"}',NULL,'2020-04-04 21:03:16.016',NULL),('Ò‹\\æ(L3ÓóÁêEü','SwagPayPal.settings.merchantLocation','{\"_value\":\"germany\"}',NULL,'2020-04-04 21:05:47.294',NULL),('×>ÃKy£De*;™XR','core.mailerSettings.emailAgent','{\"_value\":\"local\"}',NULL,'2020-04-04 21:05:45.726',NULL),('ØŞ³fB¯¹0?ò:/)V','core.store.apiUri','{\"_value\": \"https://api.shopware.com\"}',NULL,'2020-04-04 21:03:14.484',NULL),('Ü,ÈÓêMä‡WıÿÍ{÷','core.update.apiUri','{\"_value\": \"https://update-api.shopware.com\"}',NULL,'2020-04-04 21:03:16.012',NULL),('äşoºS†N™¯ƒ\'Ô&™D','core.mailerSettings.sendMailOptions','{\"_value\":\"-t\"}',NULL,'2020-04-04 21:05:45.732',NULL),('êö$˜´POe“¢ÔS¸iú<','core.logging.entryLifetimeSeconds','{\"_value\": \"2678400\"}',NULL,'2020-04-04 21:03:15.348',NULL),('ìÇ7Ö¬ßGô‚“ƒV>Ö÷Ú','SwagPayPal.settings.ecsButtonColor','{\"_value\":\"gold\"}',NULL,'2020-04-04 21:05:47.320',NULL),('î©|UHÃ‘§÷ª×J¯','SwagPayPal.settings.ecsListingEnabled','{\"_value\":true}',NULL,'2020-04-04 21:05:47.316',NULL),('òñ®óCÇ½ò¨\rï¦Zu','core.loginRegistration.passwordMinLength','{\"_value\": \"8\"}',NULL,'2020-04-04 21:03:16.017',NULL),('÷·,´êAf‘êˆZ !r','SwagPayPal.settings.sendOrderNumber','{\"_value\":true}',NULL,'2020-04-04 21:05:47.290',NULL),('ùèqG+ËOe‚85àÚ:„','core.newsletter.doubleOptIn','{\"_value\": true}',NULL,'2020-04-04 21:03:14.485',NULL),('ûâ&‰Û•LÉ°S¦j»ù','core.update.code','{\"_value\": \"\"}',NULL,'2020-04-04 21:03:16.014',NULL),('üÛÖıîIw”0iò^í1','core.newsletter.subscribeDomain','{\"_value\": \"http://localhost\"}','˜C-ï9üF$³2¥kŒ”M','2020-04-04 21:03:14.485',NULL);
-/*!40000 ALTER TABLE `system_config` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `tag`
---
-
-DROP TABLE IF EXISTS `tag`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tag` (
-  `id` binary(16) NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `tag`
---
-
-LOCK TABLES `tag` WRITE;
-/*!40000 ALTER TABLE `tag` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tag` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `tax`
---
-
-DROP TABLE IF EXISTS `tax`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tax` (
-  `id` binary(16) NOT NULL,
-  `tax_rate` decimal(10,2) NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `idx.tax.tax` (`tax_rate`),
-  CONSTRAINT `json.tax.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `tax`
---
-
-LOCK TABLES `tax` WRITE;
-/*!40000 ALTER TABLE `tax` DISABLE KEYS */;
-INSERT INTO `tax` VALUES ('Õ rÃO\0Ié©>ÚŞm',7.00,'7%',NULL,'2020-04-04 21:03:14.391',NULL),('ÙH0Ã´FŒ‚€Â®E¬gt',19.00,'19%',NULL,'2020-04-04 21:03:14.391',NULL);
-/*!40000 ALTER TABLE `tax` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `tax_rule`
---
-
-DROP TABLE IF EXISTS `tax_rule`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tax_rule` (
-  `id` binary(16) NOT NULL,
-  `tax_id` binary(16) NOT NULL,
-  `tax_rule_type_id` binary(16) NOT NULL,
-  `country_id` binary(16) NOT NULL,
-  `tax_rate` double(10,2) NOT NULL,
-  `data` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk.tax_rule.tax_id` (`tax_id`),
-  KEY `fk.tax_rule.tax_area_rule_type_id` (`tax_rule_type_id`),
-  KEY `fk.tax_rule.country_id` (`country_id`),
-  CONSTRAINT `fk.tax_rule.country_id` FOREIGN KEY (`country_id`) REFERENCES `country` (`id`),
-  CONSTRAINT `fk.tax_rule.tax_area_rule_type_id` FOREIGN KEY (`tax_rule_type_id`) REFERENCES `tax_rule_type` (`id`),
-  CONSTRAINT `fk.tax_rule.tax_id` FOREIGN KEY (`tax_id`) REFERENCES `tax` (`id`),
-  CONSTRAINT `json.tax_rule.data` CHECK (json_valid(`data`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `tax_rule`
---
-
-LOCK TABLES `tax_rule` WRITE;
-/*!40000 ALTER TABLE `tax_rule` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tax_rule` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `tax_rule_type`
---
-
-DROP TABLE IF EXISTS `tax_rule_type`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tax_rule_type` (
-  `id` binary(16) NOT NULL,
-  `technical_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `position` int(11) NOT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uniq.technical_name` (`technical_name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `tax_rule_type`
---
-
-LOCK TABLES `tax_rule_type` WRITE;
-/*!40000 ALTER TABLE `tax_rule_type` DISABLE KEYS */;
-INSERT INTO `tax_rule_type` VALUES ('ÂÙª‘KÄ®u-ùoø[','entire_country',3,'2020-04-04 21:03:19.749',NULL),(')	°Ï^H™ŸòœghÑ&','zip_code',0,'2020-04-04 21:03:19.739',NULL),('4e‡w‹J‰¹·œcØ|È¤','zip_code_range',1,'2020-04-04 21:03:19.743',NULL),('§ÂÆFh„ı<I3ª¬','individual_states',2,'2020-04-04 21:03:19.746',NULL);
-/*!40000 ALTER TABLE `tax_rule_type` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `tax_rule_type_translation`
---
-
-DROP TABLE IF EXISTS `tax_rule_type_translation`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tax_rule_type_translation` (
-  `tax_rule_type_id` binary(16) NOT NULL,
-  `language_id` binary(16) NOT NULL,
-  `type_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`tax_rule_type_id`,`language_id`),
-  KEY `fk.tax_rule_type_translation.language_id` (`language_id`),
-  CONSTRAINT `fk.tax_rule_type_translation.language_id` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.tax_rule_type_translation.tax_rule_type_id` FOREIGN KEY (`tax_rule_type_id`) REFERENCES `tax_rule_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `tax_rule_type_translation`
---
-
-LOCK TABLES `tax_rule_type_translation` WRITE;
-/*!40000 ALTER TABLE `tax_rule_type_translation` DISABLE KEYS */;
-INSERT INTO `tax_rule_type_translation` VALUES ('ÂÙª‘KÄ®u-ùoø[','/»_ââšMpªXTÎ|ãâ','Entire Country','2020-04-04 21:03:19.750',NULL),('ÂÙª‘KÄ®u-ùoø[','‹/pó¡L†…Mã4Ó8','Gesamte Land','2020-04-04 21:03:19.750',NULL),(')	°Ï^H™ŸòœghÑ&','/»_ââšMpªXTÎ|ãâ','Zip Code','2020-04-04 21:03:19.741',NULL),(')	°Ï^H™ŸòœghÑ&','‹/pó¡L†…Mã4Ó8','Postleitzahl','2020-04-04 21:03:19.742',NULL),('4e‡w‹J‰¹·œcØ|È¤','/»_ââšMpªXTÎ|ãâ','Zip Code Range','2020-04-04 21:03:19.745',NULL),('4e‡w‹J‰¹·œcØ|È¤','‹/pó¡L†…Mã4Ó8','Postleitzahl Bereich','2020-04-04 21:03:19.745',NULL),('§ÂÆFh„ı<I3ª¬','/»_ââšMpªXTÎ|ãâ','Individual States','2020-04-04 21:03:19.747',NULL),('§ÂÆFh„ı<I3ª¬','‹/pó¡L†…Mã4Ó8','Individuelle BundeslÃ¤nder','2020-04-04 21:03:19.748',NULL);
-/*!40000 ALTER TABLE `tax_rule_type_translation` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `theme`
---
-
-DROP TABLE IF EXISTS `theme`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `theme` (
-  `id` binary(16) NOT NULL,
-  `technical_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `author` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `preview_media_id` binary(16) DEFAULT NULL,
-  `parent_theme_id` binary(16) DEFAULT NULL,
-  `base_config` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `config_values` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `active` tinyint(1) NOT NULL DEFAULT 1,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uniq.theme.technical_name` (`technical_name`),
-  CONSTRAINT `json.theme.base_config` CHECK (json_valid(`base_config`)),
-  CONSTRAINT `json.theme.config_values` CHECK (json_valid(`config_values`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `theme`
---
-
-LOCK TABLES `theme` WRITE;
-/*!40000 ALTER TABLE `theme` DISABLE KEYS */;
-INSERT INTO `theme` VALUES ('Ğ\0*•G€LªÖxå5û7','Storefront','Shopware default theme','shopware AG','÷TØLĞ¥š]4›L›Z',NULL,'{\"blocks\":{\"themeColors\":{\"label\":{\"en-GB\":\"Theme colours\",\"de-DE\":\"Theme-Farben\"}},\"typography\":{\"label\":{\"en-GB\":\"Typography\",\"de-DE\":\"Typografie\"}},\"eCommerce\":{\"label\":{\"en-GB\":\"E-Commerce\",\"de-DE\":\"E-Commerce\"}},\"statusColors\":{\"label\":{\"en-GB\":\"Status messages\",\"de-DE\":\"Status-Ausgaben\"}},\"media\":{\"label\":{\"en-GB\":\"Media\",\"de-DE\":\"Medien\"}},\"unordered\":{\"label\":{\"en-GB\":\"Misc\",\"de-DE\":\"Sonstige\"}}},\"fields\":{\"sw-color-brand-primary\":{\"label\":{\"en-GB\":\"Primary colour\",\"de-DE\":\"PrimÃ¤rfarbe\"},\"type\":\"color\",\"value\":\"#008490\",\"editable\":true,\"block\":\"themeColors\",\"order\":100},\"sw-color-brand-secondary\":{\"label\":{\"en-GB\":\"Secondary colour\",\"de-DE\":\"SekundÃ¤rfarbe\"},\"type\":\"color\",\"value\":\"#526e7f\",\"editable\":true,\"block\":\"themeColors\",\"order\":200},\"sw-border-color\":{\"label\":{\"en-GB\":\"Border\",\"de-DE\":\"Rahmen\"},\"type\":\"color\",\"value\":\"#bcc1c7\",\"editable\":true,\"block\":\"themeColors\",\"order\":300},\"sw-background-color\":{\"label\":{\"en-GB\":\"Background\",\"de-DE\":\"Hintergrund\"},\"type\":\"color\",\"value\":\"#fff\",\"editable\":true,\"block\":\"themeColors\",\"order\":400},\"sw-color-success\":{\"label\":{\"en-GB\":\"Success\",\"de-DE\":\"Erfolg\"},\"type\":\"color\",\"value\":\"#3cc261\",\"editable\":true,\"block\":\"statusColors\",\"order\":100},\"sw-color-info\":{\"label\":{\"en-GB\":\"Information\",\"de-DE\":\"Information\"},\"type\":\"color\",\"value\":\"#26b6cf\",\"editable\":true,\"block\":\"statusColors\",\"order\":200},\"sw-color-warning\":{\"label\":{\"en-GB\":\"Notice\",\"de-DE\":\"Hinweis\"},\"type\":\"color\",\"value\":\"#ffbd5d\",\"editable\":true,\"block\":\"statusColors\",\"order\":300},\"sw-color-danger\":{\"label\":{\"en-GB\":\"Error\",\"de-DE\":\"Fehler\"},\"type\":\"color\",\"value\":\"#e52427\",\"editable\":true,\"block\":\"statusColors\",\"order\":400},\"sw-font-family-base\":{\"label\":{\"en-GB\":\"Fonttype text\",\"de-DE\":\"Schriftart Text\"},\"type\":\"fontFamily\",\"value\":\"\'Inter\', sans-serif\",\"editable\":true,\"block\":\"typography\",\"order\":100},\"sw-text-color\":{\"label\":{\"en-GB\":\"Text colour\",\"de-DE\":\"Textfarbe\"},\"type\":\"color\",\"value\":\"#4a545b\",\"editable\":true,\"block\":\"typography\",\"order\":200},\"sw-font-family-headline\":{\"label\":{\"en-GB\":\"Fonttype headline\",\"de-DE\":\"Schriftart Ãœberschrift\"},\"type\":\"fontFamily\",\"value\":\"\'Inter\', sans-serif\",\"editable\":true,\"block\":\"typography\",\"order\":300},\"sw-headline-color\":{\"label\":{\"en-GB\":\"Headline colour\",\"de-DE\":\"Ãœberschriftfarbe\"},\"type\":\"color\",\"value\":\"#4a545b\",\"editable\":true,\"block\":\"typography\",\"order\":400},\"sw-color-price\":{\"label\":{\"en-GB\":\"Price\",\"de-DE\":\"Preis\"},\"type\":\"color\",\"value\":\"#4a545b\",\"editable\":true,\"block\":\"eCommerce\",\"order\":100},\"sw-color-buy-button\":{\"label\":{\"en-GB\":\"Buy button\",\"de-DE\":\"Kaufen-Button\"},\"type\":\"color\",\"value\":\"#008490\",\"editable\":true,\"block\":\"eCommerce\",\"order\":200},\"sw-color-buy-button-text\":{\"label\":{\"en-GB\":\"Buy button text\",\"de-DE\":\"Kaufen-Button Text\"},\"type\":\"color\",\"value\":\"#fff\",\"editable\":true,\"block\":\"eCommerce\",\"order\":300},\"sw-logo-desktop\":{\"label\":{\"en-GB\":\"Desktop\",\"de-DE\":\"Desktop\"},\"helpText\":{\"en-GB\":\"Displayed for viewports of above 991px\",\"de-DE\":\"Wird Ã¼ber einem Viewport von 991px angezeigt\"},\"type\":\"media\",\"value\":\"dae61626e5a247b0bdbb681b2256c7ae\",\"editable\":true,\"block\":\"media\",\"order\":100},\"sw-logo-tablet\":{\"label\":{\"en-GB\":\"Tablet\",\"de-DE\":\"Tablet\"},\"helpText\":{\"en-GB\":\"Displayed between a viewport of 767px to 991px\",\"de-DE\":\"Wird zwischen einem viewport von 767px bis 991px angezeigt\"},\"type\":\"media\",\"value\":\"dae61626e5a247b0bdbb681b2256c7ae\",\"editable\":true,\"block\":\"media\",\"order\":200},\"sw-logo-mobile\":{\"label\":{\"en-GB\":\"Mobile\",\"de-DE\":\"Mobil\"},\"helpText\":{\"en-GB\":\"Displayed up to a viewport of 767px\",\"de-DE\":\"Wird bis zu einem Viewport von 767px angezeigt\"},\"type\":\"media\",\"value\":\"dae61626e5a247b0bdbb681b2256c7ae\",\"editable\":true,\"block\":\"media\",\"order\":300},\"sw-logo-share\":{\"label\":{\"en-GB\":\"App & share icon\",\"de-DE\":\"App- & Share-Icon\"},\"type\":\"media\",\"value\":\"\",\"editable\":true,\"block\":\"media\",\"order\":400},\"sw-logo-favicon\":{\"label\":{\"en-GB\":\"Favicon\",\"de-DE\":\"Favicon\"},\"type\":\"media\",\"value\":\"1b503cc18dc3457bb1af95f74a0a8749\",\"editable\":true,\"block\":\"media\",\"order\":500}}}',NULL,1,'2020-04-04 21:03:25.171','2020-04-05 17:38:29.789');
-/*!40000 ALTER TABLE `theme` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `theme_media`
---
-
-DROP TABLE IF EXISTS `theme_media`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `theme_media` (
-  `theme_id` binary(16) NOT NULL,
-  `media_id` binary(16) NOT NULL,
-  PRIMARY KEY (`theme_id`,`media_id`),
-  KEY `fk.theme_media.media_id` (`media_id`),
-  CONSTRAINT `fk.theme_media.media_id` FOREIGN KEY (`media_id`) REFERENCES `media` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `fk.theme_media.theme_id` FOREIGN KEY (`theme_id`) REFERENCES `theme` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `theme_media`
---
-
-LOCK TABLES `theme_media` WRITE;
-/*!40000 ALTER TABLE `theme_media` DISABLE KEYS */;
-INSERT INTO `theme_media` VALUES ('Ğ\0*•G€LªÖxå5û7','÷TØLĞ¥š]4›L›Z'),('Ğ\0*•G€LªÖxå5û7','P<ÁÃE{±¯•÷J\n‡I'),('Ğ\0*•G€LªÖxå5û7','Úæ&å¢G°½»h\"VÇ®');
-/*!40000 ALTER TABLE `theme_media` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `theme_sales_channel`
---
-
-DROP TABLE IF EXISTS `theme_sales_channel`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `theme_sales_channel` (
-  `theme_id` binary(16) NOT NULL,
-  `sales_channel_id` binary(16) NOT NULL,
-  PRIMARY KEY (`sales_channel_id`),
-  KEY `fk.theme_sales_channel.theme_id` (`theme_id`),
-  CONSTRAINT `fk.theme_sales_channel.sales_channel_id` FOREIGN KEY (`sales_channel_id`) REFERENCES `sales_channel` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.theme_sales_channel.theme_id` FOREIGN KEY (`theme_id`) REFERENCES `theme` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `theme_sales_channel`
---
-
-LOCK TABLES `theme_sales_channel` WRITE;
-/*!40000 ALTER TABLE `theme_sales_channel` DISABLE KEYS */;
-INSERT INTO `theme_sales_channel` VALUES ('Ğ\0*•G€LªÖxå5û7','7ë>–RÙKŞš¤Ãt±\"Ã°'),('Ğ\0*•G€LªÖxå5û7','˜C-ï9üF$³2¥kŒ”M');
-/*!40000 ALTER TABLE `theme_sales_channel` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `theme_translation`
---
-
-DROP TABLE IF EXISTS `theme_translation`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `theme_translation` (
-  `theme_id` binary(16) NOT NULL,
-  `language_id` binary(16) NOT NULL,
-  `description` mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `labels` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `help_texts` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`theme_id`,`language_id`),
-  KEY `fk.theme_translation.language_id` (`language_id`),
-  CONSTRAINT `fk.theme_translation.language_id` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.theme_translation.theme_id` FOREIGN KEY (`theme_id`) REFERENCES `theme` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `json.theme_translation.labels` CHECK (json_valid(`labels`)),
-  CONSTRAINT `json.theme_translation.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `theme_translation`
---
-
-LOCK TABLES `theme_translation` WRITE;
-/*!40000 ALTER TABLE `theme_translation` DISABLE KEYS */;
-INSERT INTO `theme_translation` VALUES ('Ğ\0*•G€LªÖxå5û7','/»_ââšMpªXTÎ|ãâ',NULL,'{\"blocks.themeColors\":\"Theme colours\",\"blocks.typography\":\"Typography\",\"blocks.eCommerce\":\"E-Commerce\",\"blocks.statusColors\":\"Status messages\",\"blocks.media\":\"Media\",\"blocks.unordered\":\"Misc\",\"fields.sw-color-brand-primary\":\"Primary colour\",\"fields.sw-color-brand-secondary\":\"Secondary colour\",\"fields.sw-border-color\":\"Border\",\"fields.sw-background-color\":\"Background\",\"fields.sw-color-success\":\"Success\",\"fields.sw-color-info\":\"Information\",\"fields.sw-color-warning\":\"Notice\",\"fields.sw-color-danger\":\"Error\",\"fields.sw-font-family-base\":\"Fonttype text\",\"fields.sw-text-color\":\"Text colour\",\"fields.sw-font-family-headline\":\"Fonttype headline\",\"fields.sw-headline-color\":\"Headline colour\",\"fields.sw-color-price\":\"Price\",\"fields.sw-color-buy-button\":\"Buy button\",\"fields.sw-color-buy-button-text\":\"Buy button text\",\"fields.sw-logo-desktop\":\"Desktop\",\"fields.sw-logo-tablet\":\"Tablet\",\"fields.sw-logo-mobile\":\"Mobile\",\"fields.sw-logo-share\":\"App & share icon\",\"fields.sw-logo-favicon\":\"Favicon\"}','{\"fields.sw-logo-desktop\":\"Displayed for viewports of above 991px\",\"fields.sw-logo-tablet\":\"Displayed between a viewport of 767px to 991px\",\"fields.sw-logo-mobile\":\"Displayed up to a viewport of 767px\"}',NULL,'2020-04-04 21:03:25.169','2020-04-05 17:38:29.787'),('Ğ\0*•G€LªÖxå5û7','‹/pó¡L†…Mã4Ó8',NULL,'{\"blocks.themeColors\":\"Theme-Farben\",\"blocks.typography\":\"Typografie\",\"blocks.eCommerce\":\"E-Commerce\",\"blocks.statusColors\":\"Status-Ausgaben\",\"blocks.media\":\"Medien\",\"blocks.unordered\":\"Sonstige\",\"fields.sw-color-brand-primary\":\"PrimÃ¤rfarbe\",\"fields.sw-color-brand-secondary\":\"SekundÃ¤rfarbe\",\"fields.sw-border-color\":\"Rahmen\",\"fields.sw-background-color\":\"Hintergrund\",\"fields.sw-color-success\":\"Erfolg\",\"fields.sw-color-info\":\"Information\",\"fields.sw-color-warning\":\"Hinweis\",\"fields.sw-color-danger\":\"Fehler\",\"fields.sw-font-family-base\":\"Schriftart Text\",\"fields.sw-text-color\":\"Textfarbe\",\"fields.sw-font-family-headline\":\"Schriftart Ãœberschrift\",\"fields.sw-headline-color\":\"Ãœberschriftfarbe\",\"fields.sw-color-price\":\"Preis\",\"fields.sw-color-buy-button\":\"Kaufen-Button\",\"fields.sw-color-buy-button-text\":\"Kaufen-Button Text\",\"fields.sw-logo-desktop\":\"Desktop\",\"fields.sw-logo-tablet\":\"Tablet\",\"fields.sw-logo-mobile\":\"Mobil\",\"fields.sw-logo-share\":\"App- & Share-Icon\",\"fields.sw-logo-favicon\":\"Favicon\"}','{\"fields.sw-logo-desktop\":\"Wird Ã¼ber einem Viewport von 991px angezeigt\",\"fields.sw-logo-tablet\":\"Wird zwischen einem viewport von 767px bis 991px angezeigt\",\"fields.sw-logo-mobile\":\"Wird bis zu einem Viewport von 767px angezeigt\"}',NULL,'2020-04-04 21:03:25.170','2020-04-05 17:38:29.787');
-/*!40000 ALTER TABLE `theme_translation` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `unit`
---
-
-DROP TABLE IF EXISTS `unit`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `unit` (
-  `id` binary(16) NOT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `unit`
---
-
-LOCK TABLES `unit` WRITE;
-/*!40000 ALTER TABLE `unit` DISABLE KEYS */;
-/*!40000 ALTER TABLE `unit` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `unit_translation`
---
-
-DROP TABLE IF EXISTS `unit_translation`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `unit_translation` (
-  `unit_id` binary(16) NOT NULL,
-  `language_id` binary(16) NOT NULL,
-  `short_code` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`unit_id`,`language_id`),
-  KEY `fk.unit_translation.language_id` (`language_id`),
-  CONSTRAINT `fk.unit_translation.language_id` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk.unit_translation.unit_id` FOREIGN KEY (`unit_id`) REFERENCES `unit` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `json.unit_translation.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `unit_translation`
---
-
-LOCK TABLES `unit_translation` WRITE;
-/*!40000 ALTER TABLE `unit_translation` DISABLE KEYS */;
-/*!40000 ALTER TABLE `unit_translation` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `user`
---
-
-DROP TABLE IF EXISTS `user`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `user` (
-  `id` binary(16) NOT NULL,
-  `username` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `first_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `last_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `active` tinyint(1) NOT NULL DEFAULT 0,
-  `admin` tinyint(1) DEFAULT NULL,
-  `avatar_id` binary(16) DEFAULT NULL,
-  `locale_id` binary(16) NOT NULL,
-  `store_token` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uniq.user.email` (`email`),
-  UNIQUE KEY `uniq.user.username` (`username`),
-  KEY `fk.user.locale_id` (`locale_id`),
-  KEY `fk.user.avatar_id` (`avatar_id`),
-  CONSTRAINT `fk.user.avatar_id` FOREIGN KEY (`avatar_id`) REFERENCES `media` (`id`) ON DELETE SET NULL,
-  CONSTRAINT `fk.user.locale_id` FOREIGN KEY (`locale_id`) REFERENCES `locale` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `json.user.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `user`
---
-
-LOCK TABLES `user` WRITE;
-/*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES ('+BĞ[Bl½Ø5ºà|:Í','admin','$2y$10$917L7e7RiLJTOM80bBzXzuhuqIrcW8bJdK4/kL.G7.mshojxnEj2G','','admin','info@shopware.com',1,1,NULL,'1ÔÄUAMwJ•ÿ@š#',NULL,NULL,'2020-04-04 21:03:25.329','2020-04-04 21:05:54.928');
-/*!40000 ALTER TABLE `user` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `user_access_key`
---
-
-DROP TABLE IF EXISTS `user_access_key`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `user_access_key` (
-  `id` binary(16) NOT NULL,
-  `user_id` binary(16) NOT NULL,
-  `write_access` tinyint(1) NOT NULL,
-  `access_key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `secret_access_key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `last_usage_at` datetime(3) DEFAULT NULL,
-  `custom_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `idx.user_access_key.user_id_` (`user_id`),
-  KEY `idx.user_access_key.access_key` (`access_key`),
-  CONSTRAINT `fk.user_access_key.user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `json.user_access_key.custom_fields` CHECK (json_valid(`custom_fields`))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `user_access_key`
---
-
-LOCK TABLES `user_access_key` WRITE;
-/*!40000 ALTER TABLE `user_access_key` DISABLE KEYS */;
-/*!40000 ALTER TABLE `user_access_key` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `user_recovery`
---
-
-DROP TABLE IF EXISTS `user_recovery`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `user_recovery` (
-  `id` binary(16) NOT NULL,
-  `user_id` binary(16) NOT NULL,
-  `hash` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  UNIQUE KEY `uniq.user_recovery.user_id` (`user_id`),
-  CONSTRAINT `fk.user_recovery.user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `user_recovery`
---
-
-LOCK TABLES `user_recovery` WRITE;
-/*!40000 ALTER TABLE `user_recovery` DISABLE KEYS */;
-/*!40000 ALTER TABLE `user_recovery` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `version`
---
-
-DROP TABLE IF EXISTS `version`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `version` (
-  `id` binary(16) NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `version`
---
-
-LOCK TABLES `version` WRITE;
-/*!40000 ALTER TABLE `version` DISABLE KEYS */;
-/*!40000 ALTER TABLE `version` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `version_commit`
---
-
-DROP TABLE IF EXISTS `version_commit`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `version_commit` (
-  `id` binary(16) NOT NULL,
-  `auto_increment` bigint(20) NOT NULL AUTO_INCREMENT,
-  `is_merge` tinyint(1) NOT NULL DEFAULT 0,
-  `message` varchar(5000) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `user_id` binary(16) DEFAULT NULL,
-  `integration_id` binary(16) DEFAULT NULL,
-  `version_id` binary(16) NOT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `auto_increment` (`auto_increment`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `version_commit`
---
-
-LOCK TABLES `version_commit` WRITE;
-/*!40000 ALTER TABLE `version_commit` DISABLE KEYS */;
-INSERT INTO `version_commit` VALUES ('	¥\\\\v/M—¦	!rd«6',2,0,NULL,'+BĞ[Bl½Ø5ºà|:Í',NULL,'©ãéjKÂ¾KÙÎu,4%','2020-04-04 21:05:17.649',NULL),(')(aí14KÊ¬6µ­Œ6Õ',1,0,NULL,'+BĞ[Bl½Ø5ºà|:Í',NULL,'©ãéjKÂ¾KÙÎu,4%','2020-04-04 21:05:17.596',NULL),('8‘EÆkI\r•ß®ëuæ‰',6,0,NULL,'+BĞ[Bl½Ø5ºà|:Í',NULL,'©ãéjKÂ¾KÙÎu,4%','2020-04-04 21:05:18.991',NULL),('EäÜ´_†B^¨±¾(xq‡9',7,0,NULL,'+BĞ[Bl½Ø5ºà|:Í',NULL,'©ãéjKÂ¾KÙÎu,4%','2020-04-04 21:05:19.114',NULL),('\\Ğ^€F÷›%án7Ü²',8,0,NULL,'+BĞ[Bl½Ø5ºà|:Í',NULL,'©ãéjKÂ¾KÙÎu,4%','2020-04-04 21:05:19.294',NULL),('`	PhDG¶ša|À°‘­',5,0,NULL,'+BĞ[Bl½Ø5ºà|:Í',NULL,'©ãéjKÂ¾KÙÎu,4%','2020-04-04 21:05:18.900',NULL),('uÒƒ)F\\º×\0×$ßã',4,0,NULL,'+BĞ[Bl½Ø5ºà|:Í',NULL,'©ãéjKÂ¾KÙÎu,4%','2020-04-04 21:05:18.798',NULL),('é_+ÿ¢ G’½v¹Y>½×',3,0,NULL,'+BĞ[Bl½Ø5ºà|:Í',NULL,'©ãéjKÂ¾KÙÎu,4%','2020-04-04 21:05:18.662',NULL);
-/*!40000 ALTER TABLE `version_commit` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `version_commit_data`
---
-
-DROP TABLE IF EXISTS `version_commit_data`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `version_commit_data` (
-  `id` binary(16) NOT NULL,
-  `auto_increment` bigint(20) NOT NULL AUTO_INCREMENT,
-  `version_commit_id` binary(16) NOT NULL,
-  `entity_name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `entity_id` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `action` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `payload` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `user_id` binary(16) DEFAULT NULL,
-  `integration_id` binary(16) DEFAULT NULL,
-  `created_at` datetime(3) NOT NULL,
-  `updated_at` datetime(3) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `auto_increment` (`auto_increment`),
-  KEY `fk.version_commit_data.version_commit_id` (`version_commit_id`),
-  CONSTRAINT `fk.version_commit_data.version_commit_id` FOREIGN KEY (`version_commit_id`) REFERENCES `version_commit` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `json.version_commit_data.entity_id` CHECK (json_valid(`entity_id`)),
-  CONSTRAINT `json.version_commit_data.payload` CHECK (json_valid(`payload`))
-) ENGINE=InnoDB AUTO_INCREMENT=91 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `version_commit_data`
---
-
-LOCK TABLES `version_commit_data` WRITE;
-/*!40000 ALTER TABLE `version_commit_data` DISABLE KEYS */;
-INSERT INTO `version_commit_data` VALUES ('ˆ¸;òKº–™õmÂĞ˜',9,'	¥\\\\v/M—¦	!rd«6','category_translation','{\"categoryId\":\"19ca405790ff4f07aac8c599d4317868\",\"languageId\":\"2fbb5fe2e29a4d70aa5854ce7ce3e20b\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"categoryId\":\"19ca405790ff4f07aac8c599d4317868\",\"languageId\":\"2fbb5fe2e29a4d70aa5854ce7ce3e20b\",\"categoryVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"name\":\"Bakery products\",\"createdAt\":{\"date\":\"2020-04-04 21:05:17.625000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:17.649',NULL),('buïŸ)G¤ÉNp”ñÛÚ',57,'8‘EÆkI\r•ß®ëuæ‰','product_translation','{\"productId\":\"3ac014f329884b57a2cce5a29f34779c\",\"languageId\":\"8b112f70f3a14c1086859e4de334d338\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"productId\":\"3ac014f329884b57a2cce5a29f34779c\",\"languageId\":\"8b112f70f3a14c1086859e4de334d338\",\"productVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"name\":\"Hauptprodukt, versandkostenfrei mit Hervorhebung\",\"description\":\"Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\",\"createdAt\":{\"date\":\"2020-04-04 21:05:18.983000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:18.991',NULL),('eD\\^D²¼iœ.åF¯',74,'EäÜ´_†B^¨±¾(xq‡9','product','{\"id\":\"6d339741cae547bc977c7cb8fe7c36ad\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"id\":\"6d339741cae547bc977c7cb8fe7c36ad\",\"parentId\":\"43a23e0c03bf4ceabc6055a2185faa87\",\"parentVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"stock\":50,\"productNumber\":\"SWDEMO10005.3\",\"createdAt\":{\"date\":\"2020-04-04 21:05:19.101000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:19.114',NULL),('ºÌ­•ÅI\"›WöÁ­ ',17,'	¥\\\\v/M—¦	!rd«6','category_translation','{\"categoryId\":\"8de9b484c54f441c894774e5f57e485c\",\"languageId\":\"2fbb5fe2e29a4d70aa5854ce7ce3e20b\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"categoryId\":\"8de9b484c54f441c894774e5f57e485c\",\"languageId\":\"2fbb5fe2e29a4d70aa5854ce7ce3e20b\",\"categoryVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"name\":\"Women\",\"createdAt\":{\"date\":\"2020-04-04 21:05:17.634000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:17.649',NULL),('†•*88Iö†ä+€Ö‡³G',52,'`	PhDG¶ša|À°‘­','product_manufacturer_translation','{\"productManufacturerId\":\"7f24e96676e944b0a0addc20d56728cb\",\"languageId\":\"2fbb5fe2e29a4d70aa5854ce7ce3e20b\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"productManufacturerId\":\"7f24e96676e944b0a0addc20d56728cb\",\"languageId\":\"2fbb5fe2e29a4d70aa5854ce7ce3e20b\",\"productManufacturerVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"name\":\"Shopware Fashion\",\"createdAt\":{\"date\":\"2020-04-04 21:05:18.895000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:18.900',NULL),('šï1wD¨.ñN†!Ñ',90,'\\Ğ^€F÷›%án7Ü²','product','{\"id\":\"f25a498992a043b89f0d3445a5ae2d7f\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"id\":\"f25a498992a043b89f0d3445a5ae2d7f\",\"parentId\":\"c7bca22753c84d08b6178a50052b4146\",\"parentVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"stock\":50,\"productNumber\":\"SWDEMO10007.4\",\"createdAt\":{\"date\":\"2020-04-04 21:05:19.285000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:19.294',NULL),('^¦Q¯x@Ìô­rª4',22,'	¥\\\\v/M—¦	!rd«6','category','{\"id\":\"0c8312bca2c0411d82320304db4e9f28\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','update','{\"cmsPageId\":\"695477e02ef643e5a016b83ed4cdf63a\",\"displayNestedProducts\":true,\"type\":\"page\",\"visible\":true,\"active\":true,\"updatedAt\":{\"date\":\"2020-04-04 21:05:17.619000\",\"timezone_type\":3,\"timezone\":\"UTC\"},\"id\":\"0c8312bca2c0411d82320304db4e9f28\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:17.649',NULL),('£¸}Ñ7A¾Œj¢hÈÒW',45,'uÒƒ)F\\º×\0×$ßã','product_manufacturer','{\"id\":\"2326d67406134c88bcf80e52d9d2ecb7\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"id\":\"2326d67406134c88bcf80e52d9d2ecb7\",\"createdAt\":{\"date\":\"2020-04-04 21:05:18.792000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:18.798',NULL),('_ÂìgÀHö¸Èo!æ',10,'	¥\\\\v/M—¦	!rd«6','category_translation','{\"categoryId\":\"48f97f432fd041388b2630184139cf0e\",\"languageId\":\"8b112f70f3a14c1086859e4de334d338\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"categoryId\":\"48f97f432fd041388b2630184139cf0e\",\"languageId\":\"8b112f70f3a14c1086859e4de334d338\",\"categoryVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"name\":\"Fisch\",\"createdAt\":{\"date\":\"2020-04-04 21:05:17.627000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:17.649',NULL),('\Zr¶2÷K®ÑQ2-²´',59,'8‘EÆkI\r•ß®ëuæ‰','product_media','{\"id\":\"2de02991cd0548a4ac6cc35cb11773a0\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"id\":\"2de02991cd0548a4ac6cc35cb11773a0\",\"productId\":\"3ac014f329884b57a2cce5a29f34779c\",\"productVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"mediaId\":\"2de02991cd0548a4ac6cc35cb11773a0\",\"position\":1,\"createdAt\":{\"date\":\"2020-04-04 21:05:18.987000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:18.991',NULL),('A”ëï@+†&>i§4îì',81,'\\Ğ^€F÷›%án7Ü²','product_category','{\"productId\":\"c7bca22753c84d08b6178a50052b4146\",\"categoryId\":\"2185182cbbd4462ea844abeb2a438b33\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"productId\":\"c7bca22753c84d08b6178a50052b4146\",\"productVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"categoryId\":\"2185182cbbd4462ea844abeb2a438b33\",\"categoryVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:19.294',NULL),('øm”muG\r°2m¬ÉUC',78,'\\Ğ^€F÷›%án7Ü²','product_translation','{\"productId\":\"c7bca22753c84d08b6178a50052b4146\",\"languageId\":\"8b112f70f3a14c1086859e4de334d338\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"productId\":\"c7bca22753c84d08b6178a50052b4146\",\"languageId\":\"8b112f70f3a14c1086859e4de334d338\",\"productVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"name\":\"Hauptprodukt mit Eigenschaften\",\"description\":\"Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\",\"createdAt\":{\"date\":\"2020-04-04 21:05:19.274000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:19.294',NULL),('#*}’@i°ÔLC\'\"ø€',3,')(aí14KÊ¬6µ­Œ6Õ','cms_slot','{\"id\":\"bc4efa92b65a4ef487d666b0ff632fb2\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"id\":\"bc4efa92b65a4ef487d666b0ff632fb2\",\"blockId\":\"8dbb3e89bfa648edb4dbb10d0af20d25\",\"type\":\"image\",\"slot\":\"image\",\"createdAt\":{\"date\":\"2020-04-04 21:05:17.593000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:17.596',NULL),('\'Ï‚¶E¤ğ-ŸŠ/Õ',76,'EäÜ´_†B^¨±¾(xq‡9','product','{\"id\":\"3821dcaa6c564b179f8eed5246799a2c\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"id\":\"3821dcaa6c564b179f8eed5246799a2c\",\"parentId\":\"43a23e0c03bf4ceabc6055a2185faa87\",\"parentVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"stock\":50,\"productNumber\":\"SWDEMO10005.5\",\"createdAt\":{\"date\":\"2020-04-04 21:05:19.105000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:19.114',NULL),('+Ş‰…EæGİ”<?®D?ú',7,'	¥\\\\v/M—¦	!rd«6','category_translation','{\"categoryId\":\"77b959cf66de4c1590c7f9b7da3982f3\",\"languageId\":\"2fbb5fe2e29a4d70aa5854ce7ce3e20b\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"categoryId\":\"77b959cf66de4c1590c7f9b7da3982f3\",\"languageId\":\"2fbb5fe2e29a4d70aa5854ce7ce3e20b\",\"categoryVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"name\":\"Food\",\"createdAt\":{\"date\":\"2020-04-04 21:05:17.622000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:17.649',NULL),('-yû\\kfA´¹]™–r¡:',20,'	¥\\\\v/M—¦	!rd«6','category_translation','{\"categoryId\":\"251448b91bc742de85643f5fccd89051\",\"languageId\":\"8b112f70f3a14c1086859e4de334d338\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"categoryId\":\"251448b91bc742de85643f5fccd89051\",\"languageId\":\"8b112f70f3a14c1086859e4de334d338\",\"categoryVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"name\":\"Freizeit & Elektro\",\"createdAt\":{\"date\":\"2020-04-04 21:05:17.640000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:17.649',NULL),('.–€á’€M- pÿ›é®',25,'	¥\\\\v/M—¦	!rd«6','category','{\"id\":\"48f97f432fd041388b2630184139cf0e\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"id\":\"48f97f432fd041388b2630184139cf0e\",\"parentId\":\"77b959cf66de4c1590c7f9b7da3982f3\",\"parentVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"afterCategoryId\":\"19ca405790ff4f07aac8c599d4317868\",\"afterCategoryVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"cmsPageId\":\"5275dace8efd454281296eaac243a3fd\",\"displayNestedProducts\":true,\"type\":\"page\",\"visible\":true,\"active\":true,\"createdAt\":{\"date\":\"2020-04-04 21:05:17.628000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:17.649',NULL),('/gvAh~D#ƒ¢Ùª|VI',35,'é_+ÿ¢ G’½v¹Y>½×','product_manufacturer','{\"id\":\"cc1c20c365d34cfb88bfab3c3e81d350\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"id\":\"cc1c20c365d34cfb88bfab3c3e81d350\",\"createdAt\":{\"date\":\"2020-04-04 21:05:18.651000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:18.662',NULL),('/Y=|f@Õºı5îÛwNm',80,'\\Ğ^€F÷›%án7Ü²','product_media','{\"id\":\"5808d194947f415495d9782d8fdc92ae\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"id\":\"5808d194947f415495d9782d8fdc92ae\",\"productId\":\"c7bca22753c84d08b6178a50052b4146\",\"productVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"mediaId\":\"5808d194947f415495d9782d8fdc92ae\",\"position\":1,\"createdAt\":{\"date\":\"2020-04-04 21:05:19.277000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:19.294',NULL),('0Åå½A‹±×è„áD‡',12,'	¥\\\\v/M—¦	!rd«6','category_translation','{\"categoryId\":\"bb22b05bff9140f3808b1cff975b75eb\",\"languageId\":\"8b112f70f3a14c1086859e4de334d338\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"categoryId\":\"bb22b05bff9140f3808b1cff975b75eb\",\"languageId\":\"8b112f70f3a14c1086859e4de334d338\",\"categoryVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"name\":\"SÃ¼ÃŸes\",\"createdAt\":{\"date\":\"2020-04-04 21:05:17.629000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:17.649',NULL),('1åi·¬ÅO´¤av6—Ìv',44,'uÒƒ)F\\º×\0×$ßã','product_manufacturer_translation','{\"productManufacturerId\":\"2326d67406134c88bcf80e52d9d2ecb7\",\"languageId\":\"2fbb5fe2e29a4d70aa5854ce7ce3e20b\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"productManufacturerId\":\"2326d67406134c88bcf80e52d9d2ecb7\",\"languageId\":\"2fbb5fe2e29a4d70aa5854ce7ce3e20b\",\"productManufacturerVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"name\":\"Shopware Food\",\"createdAt\":{\"date\":\"2020-04-04 21:05:18.792000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:18.798',NULL),('7(Sªé$@ĞšÛ0¢q0¸',48,'uÒƒ)F\\º×\0×$ßã','product','{\"id\":\"1901dc5e888f4b1ea4168c2c5f005540\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"id\":\"1901dc5e888f4b1ea4168c2c5f005540\",\"parentVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"manufacturerId\":\"2326d67406134c88bcf80e52d9d2ecb7\",\"productManufacturerVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"taxId\":\"d9483081c3b4468c8280c2ae45ac6774\",\"coverId\":\"6968ad64888844679918c638e449ffc5\",\"active\":false,\"stock\":40,\"price\":[{\"currencyId\":\"b7d2554b0ce847cd82f3ac9bd1c0dfca\",\"net\":1.6699999999999999,\"gross\":1.99,\"linked\":true,\"listPrice\":null,\"extensions\":[]}],\"productNumber\":\"SWDEMO100013\",\"isCloseout\":false,\"purchaseSteps\":1,\"minPurchase\":1,\"purchaseUnit\":250.0,\"referenceUnit\":250.0,\"shippingFree\":false,\"purchasePrice\":1.99,\"releaseDate\":{\"date\":\"2020-04-04 21:05:18.643000\",\"timezone_type\":3,\"timezone\":\"UTC\"},\"restockTime\":3,\"createdAt\":{\"date\":\"2020-04-04 21:05:18.795000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:18.798',NULL),(';6¡+­Aí İdÍl¯g',36,'é_+ÿ¢ G’½v¹Y>½×','product_price','{\"id\":\"59ab52a10e6441b699325fc5acae9b59\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"id\":\"59ab52a10e6441b699325fc5acae9b59\",\"productId\":\"11dc680240b04f469ccba354cbf0b967\",\"productVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"ruleId\":\"28caae75a5624f0d985abd0eb32aa160\",\"price\":[{\"currencyId\":\"b7d2554b0ce847cd82f3ac9bd1c0dfca\",\"net\":630.25,\"gross\":750.0,\"linked\":true,\"listPrice\":null,\"extensions\":[]}],\"quantityStart\":12,\"quantityEnd\":null,\"createdAt\":{\"date\":\"2020-04-04 21:05:18.653000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:18.662',NULL),(';ÏæºşB%ˆÈ#Ñcç­',8,'	¥\\\\v/M—¦	!rd«6','category_translation','{\"categoryId\":\"19ca405790ff4f07aac8c599d4317868\",\"languageId\":\"8b112f70f3a14c1086859e4de334d338\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"categoryId\":\"19ca405790ff4f07aac8c599d4317868\",\"languageId\":\"8b112f70f3a14c1086859e4de334d338\",\"categoryVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"name\":\"Backwaren\",\"createdAt\":{\"date\":\"2020-04-04 21:05:17.624000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:17.649',NULL),('=‹òäÔ KÊ±VaŒÒÕéú',2,')(aí14KÊ¬6µ­Œ6Õ','cms_slot_translation','{\"cmsSlotId\":\"bc4efa92b65a4ef487d666b0ff632fb2\",\"languageId\":\"2fbb5fe2e29a4d70aa5854ce7ce3e20b\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"cmsSlotId\":\"bc4efa92b65a4ef487d666b0ff632fb2\",\"languageId\":\"2fbb5fe2e29a4d70aa5854ce7ce3e20b\",\"cmsSlotVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"config\":{\"url\":{\"value\":null,\"source\":\"static\"},\"media\":{\"value\":\"de4b7dbe9d95435092cb85ce146ced28\",\"source\":\"static\"},\"newTab\":{\"value\":false,\"source\":\"static\"},\"minHeight\":{\"value\":\"340px\",\"source\":\"static\"},\"displayMode\":{\"value\":\"standard\",\"source\":\"static\"}},\"createdAt\":{\"date\":\"2020-04-04 21:05:17.593000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:17.596',NULL),('=åaÇôO£–Åùön†:',39,'é_+ÿ¢ G’½v¹Y>½×','product_category','{\"productId\":\"11dc680240b04f469ccba354cbf0b967\",\"categoryId\":\"251448b91bc742de85643f5fccd89051\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"productId\":\"11dc680240b04f469ccba354cbf0b967\",\"productVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"categoryId\":\"251448b91bc742de85643f5fccd89051\",\"categoryVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:18.662',NULL),('EoV,õÁFc´²÷­cË(',65,'EäÜ´_†B^¨±¾(xq‡9','product_category','{\"productId\":\"43a23e0c03bf4ceabc6055a2185faa87\",\"categoryId\":\"8de9b484c54f441c894774e5f57e485c\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"productId\":\"43a23e0c03bf4ceabc6055a2185faa87\",\"productVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"categoryId\":\"8de9b484c54f441c894774e5f57e485c\",\"categoryVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:19.114',NULL),('EğøiHIÊ¦Š…¼=Œ‹',19,'	¥\\\\v/M—¦	!rd«6','category_translation','{\"categoryId\":\"2185182cbbd4462ea844abeb2a438b33\",\"languageId\":\"2fbb5fe2e29a4d70aa5854ce7ce3e20b\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"categoryId\":\"2185182cbbd4462ea844abeb2a438b33\",\"languageId\":\"2fbb5fe2e29a4d70aa5854ce7ce3e20b\",\"categoryVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"name\":\"Men\",\"createdAt\":{\"date\":\"2020-04-04 21:05:17.637000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:17.649',NULL),('Jeåß]JÌtƒØm',89,'\\Ğ^€F÷›%án7Ü²','product','{\"id\":\"8697561a7cea4ace8a6ab59ddf9931be\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"id\":\"8697561a7cea4ace8a6ab59ddf9931be\",\"parentId\":\"c7bca22753c84d08b6178a50052b4146\",\"parentVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"stock\":50,\"productNumber\":\"SWDEMO10007.3\",\"createdAt\":{\"date\":\"2020-04-04 21:05:19.283000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:19.294',NULL),('KOÑb 9D~İöŞI',46,'uÒƒ)F\\º×\0×$ßã','product_media','{\"id\":\"6968ad64888844679918c638e449ffc5\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"id\":\"6968ad64888844679918c638e449ffc5\",\"productId\":\"1901dc5e888f4b1ea4168c2c5f005540\",\"productVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"mediaId\":\"6968ad64888844679918c638e449ffc5\",\"position\":1,\"createdAt\":{\"date\":\"2020-04-04 21:05:18.794000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:18.798',NULL),('UJ ë\núD×”†iC’ÊÜ',16,'	¥\\\\v/M—¦	!rd«6','category_translation','{\"categoryId\":\"8de9b484c54f441c894774e5f57e485c\",\"languageId\":\"8b112f70f3a14c1086859e4de334d338\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"categoryId\":\"8de9b484c54f441c894774e5f57e485c\",\"languageId\":\"8b112f70f3a14c1086859e4de334d338\",\"categoryVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"name\":\"Damen\",\"createdAt\":{\"date\":\"2020-04-04 21:05:17.633000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:17.649',NULL),('\\jÓ~?Lâ£&¢±ÏÜ(',37,'é_+ÿ¢ G’½v¹Y>½×','product_price','{\"id\":\"9f5ed616c788487da5705d21920e87d4\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"id\":\"9f5ed616c788487da5705d21920e87d4\",\"productId\":\"11dc680240b04f469ccba354cbf0b967\",\"productVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"ruleId\":\"28caae75a5624f0d985abd0eb32aa160\",\"price\":[{\"currencyId\":\"b7d2554b0ce847cd82f3ac9bd1c0dfca\",\"net\":672.26999999999998,\"gross\":800.0,\"linked\":true,\"listPrice\":null,\"extensions\":[]}],\"quantityStart\":1,\"quantityEnd\":11,\"createdAt\":{\"date\":\"2020-04-04 21:05:18.654000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:18.662',NULL),(']ìvDC,r‹bû³šu',71,'EäÜ´_†B^¨±¾(xq‡9','product','{\"id\":\"43a23e0c03bf4ceabc6055a2185faa87\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"id\":\"43a23e0c03bf4ceabc6055a2185faa87\",\"parentVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"manufacturerId\":\"7f24e96676e944b0a0addc20d56728cb\",\"productManufacturerVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"taxId\":\"d9483081c3b4468c8280c2ae45ac6774\",\"coverId\":\"102ac62ba27347a688030a05c1790db7\",\"active\":true,\"stock\":50,\"price\":[{\"currencyId\":\"b7d2554b0ce847cd82f3ac9bd1c0dfca\",\"net\":16.799999999999997,\"gross\":19.989999999999998,\"linked\":true,\"listPrice\":null,\"extensions\":[]}],\"productNumber\":\"SWDEMO10005\",\"isCloseout\":false,\"purchaseSteps\":1,\"minPurchase\":1,\"purchaseUnit\":1.0,\"referenceUnit\":1.0,\"shippingFree\":true,\"purchasePrice\":19.989999999999998,\"weight\":0.5,\"releaseDate\":{\"date\":\"2020-04-04 21:05:18.643000\",\"timezone_type\":3,\"timezone\":\"UTC\"},\"restockTime\":3,\"createdAt\":{\"date\":\"2020-04-04 21:05:19.097000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:19.114',NULL),('_p©\\ED“ˆ§—o¾aïø',53,'`	PhDG¶ša|À°‘­','product_manufacturer','{\"id\":\"7f24e96676e944b0a0addc20d56728cb\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"id\":\"7f24e96676e944b0a0addc20d56728cb\",\"createdAt\":{\"date\":\"2020-04-04 21:05:18.895000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:18.900',NULL),('bü˜ìõÍM[¨š»^ñ§‹',82,'\\Ğ^€F÷›%án7Ü²','product_configurator_setting','{\"id\":\"327a5f5acdbd4a80afaee03277d01ac2\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"id\":\"327a5f5acdbd4a80afaee03277d01ac2\",\"productId\":\"c7bca22753c84d08b6178a50052b4146\",\"productVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"optionId\":\"acfd7586d02848f1ac801f4776efa414\",\"createdAt\":{\"date\":\"2020-04-04 21:05:19.278000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:19.294',NULL),('cæhÌÆ A“ÌN¾‹S',13,'	¥\\\\v/M—¦	!rd«6','category_translation','{\"categoryId\":\"bb22b05bff9140f3808b1cff975b75eb\",\"languageId\":\"2fbb5fe2e29a4d70aa5854ce7ce3e20b\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"categoryId\":\"bb22b05bff9140f3808b1cff975b75eb\",\"languageId\":\"2fbb5fe2e29a4d70aa5854ce7ce3e20b\",\"categoryVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"name\":\"Sweets\",\"createdAt\":{\"date\":\"2020-04-04 21:05:17.629000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:17.649',NULL),('g°n0¼æFËBAn8¥\'',56,'`	PhDG¶ša|À°‘­','product','{\"id\":\"2a88d9b59d474c7e869d8071649be43c\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"id\":\"2a88d9b59d474c7e869d8071649be43c\",\"parentVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"manufacturerId\":\"7f24e96676e944b0a0addc20d56728cb\",\"productManufacturerVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"taxId\":\"d9483081c3b4468c8280c2ae45ac6774\",\"coverId\":\"70e352200b5c45098dc65a5b47094a2a\",\"active\":true,\"stock\":10,\"price\":[{\"currencyId\":\"b7d2554b0ce847cd82f3ac9bd1c0dfca\",\"net\":416.75999999999999,\"gross\":495.94999999999999,\"linked\":true,\"listPrice\":null,\"extensions\":[]}],\"productNumber\":\"SWDEMO10001\",\"isCloseout\":false,\"purchaseSteps\":1,\"minPurchase\":1,\"purchaseUnit\":1.0,\"referenceUnit\":1.0,\"shippingFree\":false,\"purchasePrice\":495.94999999999999,\"weight\":0.17000000000000001,\"releaseDate\":{\"date\":\"2020-04-04 21:05:18.643000\",\"timezone_type\":3,\"timezone\":\"UTC\"},\"restockTime\":3,\"createdAt\":{\"date\":\"2020-04-04 21:05:18.897000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:18.900',NULL),('hv%Ó#ôAâ°Sé`m2ø',73,'EäÜ´_†B^¨±¾(xq‡9','product','{\"id\":\"1221467f711947c280b5e496b4af4900\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"id\":\"1221467f711947c280b5e496b4af4900\",\"parentId\":\"43a23e0c03bf4ceabc6055a2185faa87\",\"parentVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"stock\":50,\"productNumber\":\"SWDEMO10005.2\",\"createdAt\":{\"date\":\"2020-04-04 21:05:19.099000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:19.114',NULL),('iÁI€ÑM»Ë“ÌPÇ•',4,'	¥\\\\v/M—¦	!rd«6','category_translation','{\"categoryId\":\"0c8312bca2c0411d82320304db4e9f28\",\"languageId\":\"8b112f70f3a14c1086859e4de334d338\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','update','{\"languageId\":\"8b112f70f3a14c1086859e4de334d338\",\"name\":\"Katalog #1\",\"updatedAt\":{\"date\":\"2020-04-04 21:05:17.618000\",\"timezone_type\":3,\"timezone\":\"UTC\"},\"categoryId\":\"0c8312bca2c0411d82320304db4e9f28\",\"categoryVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:17.649',NULL),('mÎgv“MJº…¤}x‹¼¶',38,'é_+ÿ¢ G’½v¹Y>½×','product_media','{\"id\":\"84356a71233d4b3e9f417dcc8850c82f\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"id\":\"84356a71233d4b3e9f417dcc8850c82f\",\"productId\":\"11dc680240b04f469ccba354cbf0b967\",\"productVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"mediaId\":\"84356a71233d4b3e9f417dcc8850c82f\",\"position\":1,\"createdAt\":{\"date\":\"2020-04-04 21:05:18.655000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:18.662',NULL),('n˜Š(êAKT¬»İ$®!t',23,'	¥\\\\v/M—¦	!rd«6','category','{\"id\":\"77b959cf66de4c1590c7f9b7da3982f3\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"id\":\"77b959cf66de4c1590c7f9b7da3982f3\",\"parentId\":\"0c8312bca2c0411d82320304db4e9f28\",\"parentVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"afterCategoryVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"cmsPageId\":\"5275dace8efd454281296eaac243a3fd\",\"displayNestedProducts\":true,\"type\":\"page\",\"visible\":true,\"active\":false,\"createdAt\":{\"date\":\"2020-04-04 21:05:17.622000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:17.649',NULL),('qP˜¢GL4©¦4·æˆA',67,'EäÜ´_†B^¨±¾(xq‡9','product_configurator_setting','{\"id\":\"6b301ff761b54fae8d86689a5b5a625e\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"id\":\"6b301ff761b54fae8d86689a5b5a625e\",\"productId\":\"43a23e0c03bf4ceabc6055a2185faa87\",\"productVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"mediaId\":\"6cbbdc03b43f4207be80b5f752d5a1c4\",\"optionId\":\"2bfd278e87204807a890da4a3e81dd90\",\"createdAt\":{\"date\":\"2020-04-04 21:05:19.095000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:19.114',NULL),('rÇ€~¶BJ£½NãLYÿ@>',85,'\\Ğ^€F÷›%án7Ü²','product_configurator_setting','{\"id\":\"5dec69a2747043a68fa64c68e2539c24\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"id\":\"5dec69a2747043a68fa64c68e2539c24\",\"productId\":\"c7bca22753c84d08b6178a50052b4146\",\"productVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"optionId\":\"54147692cbfb43419a6d11e26cad44dc\",\"createdAt\":{\"date\":\"2020-04-04 21:05:19.280000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:19.294',NULL),('xÄ(K	DÉ¡Ñgãğ2=',5,'	¥\\\\v/M—¦	!rd«6','category_translation','{\"categoryId\":\"0c8312bca2c0411d82320304db4e9f28\",\"languageId\":\"2fbb5fe2e29a4d70aa5854ce7ce3e20b\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','update','{\"languageId\":\"2fbb5fe2e29a4d70aa5854ce7ce3e20b\",\"name\":\"Catalogue #1\",\"updatedAt\":{\"date\":\"2020-04-04 21:05:17.619000\",\"timezone_type\":3,\"timezone\":\"UTC\"},\"categoryId\":\"0c8312bca2c0411d82320304db4e9f28\",\"categoryVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:17.649',NULL),('}¸c½ÛBÄM	BK2¥º',32,'é_+ÿ¢ G’½v¹Y>½×','product_translation','{\"productId\":\"11dc680240b04f469ccba354cbf0b967\",\"languageId\":\"2fbb5fe2e29a4d70aa5854ce7ce3e20b\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"productId\":\"11dc680240b04f469ccba354cbf0b967\",\"languageId\":\"2fbb5fe2e29a4d70aa5854ce7ce3e20b\",\"productVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"name\":\"Main product with advanced prices\",\"description\":\"Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\",\"createdAt\":{\"date\":\"2020-04-04 21:05:18.648000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:18.662',NULL),('€–Ã]’K>–sZÑvIçˆ',47,'uÒƒ)F\\º×\0×$ßã','product_category','{\"productId\":\"1901dc5e888f4b1ea4168c2c5f005540\",\"categoryId\":\"bb22b05bff9140f3808b1cff975b75eb\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"productId\":\"1901dc5e888f4b1ea4168c2c5f005540\",\"productVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"categoryId\":\"bb22b05bff9140f3808b1cff975b75eb\",\"categoryVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:18.798',NULL),('€û cıRJÛ‡×U—½;7',1,')(aí14KÊ¬6µ­Œ6Õ','cms_slot_translation','{\"cmsSlotId\":\"bc4efa92b65a4ef487d666b0ff632fb2\",\"languageId\":\"8b112f70f3a14c1086859e4de334d338\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"cmsSlotId\":\"bc4efa92b65a4ef487d666b0ff632fb2\",\"languageId\":\"8b112f70f3a14c1086859e4de334d338\",\"cmsSlotVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"config\":{\"url\":{\"value\":null,\"source\":\"static\"},\"media\":{\"value\":\"de4b7dbe9d95435092cb85ce146ced28\",\"source\":\"static\"},\"newTab\":{\"value\":false,\"source\":\"static\"},\"minHeight\":{\"value\":\"340px\",\"source\":\"static\"},\"displayMode\":{\"value\":\"standard\",\"source\":\"static\"}},\"createdAt\":{\"date\":\"2020-04-04 21:05:17.592000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:17.596',NULL),('†öm\"~ûHJ±\ZsÌn',42,'uÒƒ)F\\º×\0×$ßã','product_translation','{\"productId\":\"1901dc5e888f4b1ea4168c2c5f005540\",\"languageId\":\"2fbb5fe2e29a4d70aa5854ce7ce3e20b\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"productId\":\"1901dc5e888f4b1ea4168c2c5f005540\",\"languageId\":\"2fbb5fe2e29a4d70aa5854ce7ce3e20b\",\"productVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"name\":\"Main product with reviews\",\"description\":\"Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\",\"createdAt\":{\"date\":\"2020-04-04 21:05:18.790000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:18.798',NULL),('‰…1¿§¸OĞªK€ÿ‰',70,'EäÜ´_†B^¨±¾(xq‡9','product_configurator_setting','{\"id\":\"89808a84c4fc48ea8336ba2acd4e9061\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"id\":\"89808a84c4fc48ea8336ba2acd4e9061\",\"productId\":\"43a23e0c03bf4ceabc6055a2185faa87\",\"productVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"mediaId\":\"102ac62ba27347a688030a05c1790db7\",\"optionId\":\"ad735af1ebfb421e93e408b073c4a89a\",\"createdAt\":{\"date\":\"2020-04-04 21:05:19.096000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:19.114',NULL),('Œ\'ÑÊKˆIRO³&h–×Í',15,'	¥\\\\v/M—¦	!rd«6','category_translation','{\"categoryId\":\"a515ae260223466f8e37471d279e6406\",\"languageId\":\"2fbb5fe2e29a4d70aa5854ce7ce3e20b\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"categoryId\":\"a515ae260223466f8e37471d279e6406\",\"languageId\":\"2fbb5fe2e29a4d70aa5854ce7ce3e20b\",\"categoryVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"name\":\"Clothing\",\"createdAt\":{\"date\":\"2020-04-04 21:05:17.631000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:17.649',NULL),('ŒÿÔp¢I¿«²À\rüÔ<',30,'	¥\\\\v/M—¦	!rd«6','category','{\"id\":\"251448b91bc742de85643f5fccd89051\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"id\":\"251448b91bc742de85643f5fccd89051\",\"parentId\":\"0c8312bca2c0411d82320304db4e9f28\",\"parentVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"afterCategoryId\":\"a515ae260223466f8e37471d279e6406\",\"afterCategoryVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"cmsPageId\":\"5275dace8efd454281296eaac243a3fd\",\"displayNestedProducts\":true,\"type\":\"page\",\"visible\":true,\"active\":true,\"createdAt\":{\"date\":\"2020-04-04 21:05:17.641000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:17.649',NULL),('ºª6?A¡¤21†s\"³\n',29,'	¥\\\\v/M—¦	!rd«6','category','{\"id\":\"2185182cbbd4462ea844abeb2a438b33\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"id\":\"2185182cbbd4462ea844abeb2a438b33\",\"parentId\":\"a515ae260223466f8e37471d279e6406\",\"parentVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"afterCategoryId\":\"8de9b484c54f441c894774e5f57e485c\",\"afterCategoryVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"cmsPageId\":\"5275dace8efd454281296eaac243a3fd\",\"displayNestedProducts\":true,\"type\":\"page\",\"visible\":true,\"active\":true,\"createdAt\":{\"date\":\"2020-04-04 21:05:17.637000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:17.649',NULL),('‘4Y¦CHs½Ğùaêÿ',43,'uÒƒ)F\\º×\0×$ßã','product_manufacturer_translation','{\"productManufacturerId\":\"2326d67406134c88bcf80e52d9d2ecb7\",\"languageId\":\"8b112f70f3a14c1086859e4de334d338\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"productManufacturerId\":\"2326d67406134c88bcf80e52d9d2ecb7\",\"languageId\":\"8b112f70f3a14c1086859e4de334d338\",\"productManufacturerVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"name\":\"Shopware Lebensmittel\",\"createdAt\":{\"date\":\"2020-04-04 21:05:18.791000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:18.798',NULL),('š;r_)NR™qX×²ˆ',63,'EäÜ´_†B^¨±¾(xq‡9','product_translation','{\"productId\":\"43a23e0c03bf4ceabc6055a2185faa87\",\"languageId\":\"2fbb5fe2e29a4d70aa5854ce7ce3e20b\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"productId\":\"43a23e0c03bf4ceabc6055a2185faa87\",\"languageId\":\"2fbb5fe2e29a4d70aa5854ce7ce3e20b\",\"productVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"name\":\"Variant product\",\"description\":\"Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\",\"createdAt\":{\"date\":\"2020-04-04 21:05:19.091000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:19.114',NULL),(' íìk‰CØ‡ìèÇ‚',24,'	¥\\\\v/M—¦	!rd«6','category','{\"id\":\"19ca405790ff4f07aac8c599d4317868\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"id\":\"19ca405790ff4f07aac8c599d4317868\",\"parentId\":\"77b959cf66de4c1590c7f9b7da3982f3\",\"parentVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"afterCategoryVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"cmsPageId\":\"5275dace8efd454281296eaac243a3fd\",\"displayNestedProducts\":true,\"type\":\"page\",\"visible\":true,\"active\":true,\"createdAt\":{\"date\":\"2020-04-04 21:05:17.625000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:17.649',NULL),('¡³Ï·:LM¥(º¼UÉüz',31,'é_+ÿ¢ G’½v¹Y>½×','product_translation','{\"productId\":\"11dc680240b04f469ccba354cbf0b967\",\"languageId\":\"8b112f70f3a14c1086859e4de334d338\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"productId\":\"11dc680240b04f469ccba354cbf0b967\",\"languageId\":\"8b112f70f3a14c1086859e4de334d338\",\"productVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"name\":\"Hauptprodukt mit erweiterten Preisen\",\"description\":\"Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\",\"createdAt\":{\"date\":\"2020-04-04 21:05:18.648000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:18.662',NULL),('¡Õ<3wM²¯†ñ÷Ä]¹š',34,'é_+ÿ¢ G’½v¹Y>½×','product_manufacturer_translation','{\"productManufacturerId\":\"cc1c20c365d34cfb88bfab3c3e81d350\",\"languageId\":\"2fbb5fe2e29a4d70aa5854ce7ce3e20b\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"productManufacturerId\":\"cc1c20c365d34cfb88bfab3c3e81d350\",\"languageId\":\"2fbb5fe2e29a4d70aa5854ce7ce3e20b\",\"productManufacturerVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"name\":\"Shopware Freetime\",\"createdAt\":{\"date\":\"2020-04-04 21:05:18.651000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:18.662',NULL),('¢LQüÉC‹•óåM@œ',54,'`	PhDG¶ša|À°‘­','product_media','{\"id\":\"70e352200b5c45098dc65a5b47094a2a\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"id\":\"70e352200b5c45098dc65a5b47094a2a\",\"productId\":\"2a88d9b59d474c7e869d8071649be43c\",\"productVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"mediaId\":\"70e352200b5c45098dc65a5b47094a2a\",\"position\":1,\"createdAt\":{\"date\":\"2020-04-04 21:05:18.896000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:18.900',NULL),('¥Ò1’Iá‘=6±ˆ\"É',64,'EäÜ´_†B^¨±¾(xq‡9','product_media','{\"id\":\"102ac62ba27347a688030a05c1790db7\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"id\":\"102ac62ba27347a688030a05c1790db7\",\"productId\":\"43a23e0c03bf4ceabc6055a2185faa87\",\"productVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"mediaId\":\"102ac62ba27347a688030a05c1790db7\",\"position\":1,\"createdAt\":{\"date\":\"2020-04-04 21:05:19.092000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:19.114',NULL),('¦EM-A]¬”Û\0è',62,'EäÜ´_†B^¨±¾(xq‡9','product_translation','{\"productId\":\"43a23e0c03bf4ceabc6055a2185faa87\",\"languageId\":\"8b112f70f3a14c1086859e4de334d338\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"productId\":\"43a23e0c03bf4ceabc6055a2185faa87\",\"languageId\":\"8b112f70f3a14c1086859e4de334d338\",\"productVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"name\":\"Variantenprodukt\",\"description\":\"Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\",\"createdAt\":{\"date\":\"2020-04-04 21:05:19.089000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:19.114',NULL),('ªœj$.XC‡œ_èéüÔ',27,'	¥\\\\v/M—¦	!rd«6','category','{\"id\":\"a515ae260223466f8e37471d279e6406\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"id\":\"a515ae260223466f8e37471d279e6406\",\"parentId\":\"0c8312bca2c0411d82320304db4e9f28\",\"parentVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"afterCategoryId\":\"77b959cf66de4c1590c7f9b7da3982f3\",\"afterCategoryVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"cmsPageId\":\"5275dace8efd454281296eaac243a3fd\",\"displayNestedProducts\":true,\"type\":\"page\",\"visible\":true,\"active\":true,\"createdAt\":{\"date\":\"2020-04-04 21:05:17.632000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:17.649',NULL),('°Û\Z>7™Cr²eÉ¤¸ù9',14,'	¥\\\\v/M—¦	!rd«6','category_translation','{\"categoryId\":\"a515ae260223466f8e37471d279e6406\",\"languageId\":\"8b112f70f3a14c1086859e4de334d338\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"categoryId\":\"a515ae260223466f8e37471d279e6406\",\"languageId\":\"8b112f70f3a14c1086859e4de334d338\",\"categoryVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"name\":\"Bekleidung\",\"createdAt\":{\"date\":\"2020-04-04 21:05:17.631000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:17.649',NULL),('²µ£8%Â@»º·¾I[]',88,'\\Ğ^€F÷›%án7Ü²','product','{\"id\":\"70b9b4662a7143f1a80cb8ed151b4d8d\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"id\":\"70b9b4662a7143f1a80cb8ed151b4d8d\",\"parentId\":\"c7bca22753c84d08b6178a50052b4146\",\"parentVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"stock\":50,\"productNumber\":\"SWDEMO10007.2\",\"createdAt\":{\"date\":\"2020-04-04 21:05:19.282000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:19.294',NULL),('¶™TEÏ¹O0!JôiĞÛd',21,'	¥\\\\v/M—¦	!rd«6','category_translation','{\"categoryId\":\"251448b91bc742de85643f5fccd89051\",\"languageId\":\"2fbb5fe2e29a4d70aa5854ce7ce3e20b\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"categoryId\":\"251448b91bc742de85643f5fccd89051\",\"languageId\":\"2fbb5fe2e29a4d70aa5854ce7ce3e20b\",\"categoryVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"name\":\"Free time & electronics\",\"createdAt\":{\"date\":\"2020-04-04 21:05:17.641000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:17.649',NULL),('¹KÄí×ÌMÚ£—İˆ<äÄ]',58,'8‘EÆkI\r•ß®ëuæ‰','product_translation','{\"productId\":\"3ac014f329884b57a2cce5a29f34779c\",\"languageId\":\"2fbb5fe2e29a4d70aa5854ce7ce3e20b\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"productId\":\"3ac014f329884b57a2cce5a29f34779c\",\"languageId\":\"2fbb5fe2e29a4d70aa5854ce7ce3e20b\",\"productVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"name\":\"Main product, free shipping with highlighting\",\"description\":\"Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\",\"createdAt\":{\"date\":\"2020-04-04 21:05:18.985000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:18.991',NULL),('º¨LÌM6LØ°yÜ|#sºú',26,'	¥\\\\v/M—¦	!rd«6','category','{\"id\":\"bb22b05bff9140f3808b1cff975b75eb\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"id\":\"bb22b05bff9140f3808b1cff975b75eb\",\"parentId\":\"77b959cf66de4c1590c7f9b7da3982f3\",\"parentVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"afterCategoryId\":\"48f97f432fd041388b2630184139cf0e\",\"afterCategoryVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"cmsPageId\":\"5275dace8efd454281296eaac243a3fd\",\"displayNestedProducts\":true,\"type\":\"page\",\"visible\":true,\"active\":true,\"createdAt\":{\"date\":\"2020-04-04 21:05:17.630000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:17.649',NULL),('½PLòˆRC‡¤÷ra7ª',75,'EäÜ´_†B^¨±¾(xq‡9','product','{\"id\":\"96806d658f714f71b35248d03707313e\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"id\":\"96806d658f714f71b35248d03707313e\",\"parentId\":\"43a23e0c03bf4ceabc6055a2185faa87\",\"parentVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"stock\":50,\"productNumber\":\"SWDEMO10005.4\",\"createdAt\":{\"date\":\"2020-04-04 21:05:19.103000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:19.114',NULL),('È¼â?‰ƒE_•ò@İF\"Ç=',69,'EäÜ´_†B^¨±¾(xq‡9','product_configurator_setting','{\"id\":\"ae5240b0f2354d259f261d5c7e9ac077\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"id\":\"ae5240b0f2354d259f261d5c7e9ac077\",\"productId\":\"43a23e0c03bf4ceabc6055a2185faa87\",\"productVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"mediaId\":\"f69ab8ae42d04e17b2bab5ec2ff0a93c\",\"optionId\":\"52454db2adf942b2ac079a296f454a10\",\"createdAt\":{\"date\":\"2020-04-04 21:05:19.096000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:19.114',NULL),('Í\ZÍ/Ó@ù¯«Èşs3	',86,'\\Ğ^€F÷›%án7Ü²','product','{\"id\":\"c7bca22753c84d08b6178a50052b4146\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"id\":\"c7bca22753c84d08b6178a50052b4146\",\"parentVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"manufacturerId\":\"7f24e96676e944b0a0addc20d56728cb\",\"productManufacturerVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"taxId\":\"d9483081c3b4468c8280c2ae45ac6774\",\"coverId\":\"5808d194947f415495d9782d8fdc92ae\",\"active\":true,\"stock\":50,\"price\":[{\"currencyId\":\"b7d2554b0ce847cd82f3ac9bd1c0dfca\",\"net\":16.799999999999997,\"gross\":19.989999999999998,\"linked\":true,\"listPrice\":null,\"extensions\":[]}],\"productNumber\":\"SWDEMO10007\",\"isCloseout\":false,\"purchaseSteps\":1,\"minPurchase\":1,\"purchaseUnit\":1.0,\"referenceUnit\":1.0,\"shippingFree\":true,\"purchasePrice\":19.989999999999998,\"releaseDate\":{\"date\":\"2020-04-04 21:05:18.643000\",\"timezone_type\":3,\"timezone\":\"UTC\"},\"restockTime\":3,\"createdAt\":{\"date\":\"2020-04-04 21:05:19.280000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:19.294',NULL),('ÎgZ´şLƒ°y³Põÿ',33,'é_+ÿ¢ G’½v¹Y>½×','product_manufacturer_translation','{\"productManufacturerId\":\"cc1c20c365d34cfb88bfab3c3e81d350\",\"languageId\":\"8b112f70f3a14c1086859e4de334d338\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"productManufacturerId\":\"cc1c20c365d34cfb88bfab3c3e81d350\",\"languageId\":\"8b112f70f3a14c1086859e4de334d338\",\"productManufacturerVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"name\":\"Shopware Freizeit\",\"createdAt\":{\"date\":\"2020-04-04 21:05:18.650000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:18.662',NULL),('ÔĞHÄ/•Iz¼µ€úì\nô',87,'\\Ğ^€F÷›%án7Ü²','product','{\"id\":\"a984f5eca8aa4c81bc9eeac8ebb10aca\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"id\":\"a984f5eca8aa4c81bc9eeac8ebb10aca\",\"parentId\":\"c7bca22753c84d08b6178a50052b4146\",\"parentVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"stock\":50,\"productNumber\":\"SWDEMO10007.1\",\"createdAt\":{\"date\":\"2020-04-04 21:05:19.281000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:19.294',NULL),('Õe‘YÊóL6œp‘ı^ã',49,'`	PhDG¶ša|À°‘­','product_translation','{\"productId\":\"2a88d9b59d474c7e869d8071649be43c\",\"languageId\":\"8b112f70f3a14c1086859e4de334d338\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"productId\":\"2a88d9b59d474c7e869d8071649be43c\",\"languageId\":\"8b112f70f3a14c1086859e4de334d338\",\"productVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"name\":\"Hauptartikel\",\"description\":\"Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\",\"createdAt\":{\"date\":\"2020-04-04 21:05:18.893000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:18.900',NULL),('Õ˜¸ûÂ\'Ov ²bQAº‹',18,'	¥\\\\v/M—¦	!rd«6','category_translation','{\"categoryId\":\"2185182cbbd4462ea844abeb2a438b33\",\"languageId\":\"8b112f70f3a14c1086859e4de334d338\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"categoryId\":\"2185182cbbd4462ea844abeb2a438b33\",\"languageId\":\"8b112f70f3a14c1086859e4de334d338\",\"categoryVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"name\":\"Herren\",\"createdAt\":{\"date\":\"2020-04-04 21:05:17.636000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:17.649',NULL),('×UöŠõO¹œ#H:0èÓ',50,'`	PhDG¶ša|À°‘­','product_translation','{\"productId\":\"2a88d9b59d474c7e869d8071649be43c\",\"languageId\":\"2fbb5fe2e29a4d70aa5854ce7ce3e20b\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"productId\":\"2a88d9b59d474c7e869d8071649be43c\",\"languageId\":\"2fbb5fe2e29a4d70aa5854ce7ce3e20b\",\"productVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"name\":\"Main product\",\"description\":\"Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\",\"createdAt\":{\"date\":\"2020-04-04 21:05:18.894000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:18.900',NULL),('äW1{(wJ´µ|I»Ê«æp',77,'EäÜ´_†B^¨±¾(xq‡9','product','{\"id\":\"9858b0c8ec204fa3bb11cf8cfc860285\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"id\":\"9858b0c8ec204fa3bb11cf8cfc860285\",\"parentId\":\"43a23e0c03bf4ceabc6055a2185faa87\",\"parentVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"stock\":50,\"productNumber\":\"SWDEMO10005.6\",\"createdAt\":{\"date\":\"2020-04-04 21:05:19.106000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:19.114',NULL),('å“ÑlÚ»Nºe1Àr‚Õ',51,'`	PhDG¶ša|À°‘­','product_manufacturer_translation','{\"productManufacturerId\":\"7f24e96676e944b0a0addc20d56728cb\",\"languageId\":\"8b112f70f3a14c1086859e4de334d338\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"productManufacturerId\":\"7f24e96676e944b0a0addc20d56728cb\",\"languageId\":\"8b112f70f3a14c1086859e4de334d338\",\"productManufacturerVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"name\":\"Shopware Kleidung\",\"createdAt\":{\"date\":\"2020-04-04 21:05:18.895000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:18.900',NULL),('æRóNÑH)Œf ßLÕı',84,'\\Ğ^€F÷›%án7Ü²','product_configurator_setting','{\"id\":\"6d76255c8787466091348a36bc802752\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"id\":\"6d76255c8787466091348a36bc802752\",\"productId\":\"c7bca22753c84d08b6178a50052b4146\",\"productVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"optionId\":\"5997d91dc0784997bdef68dfc5a08912\",\"createdAt\":{\"date\":\"2020-04-04 21:05:19.279000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:19.294',NULL),('è¶j]PO±¨ÏG+ÂJÅÛ',79,'\\Ğ^€F÷›%án7Ü²','product_translation','{\"productId\":\"c7bca22753c84d08b6178a50052b4146\",\"languageId\":\"2fbb5fe2e29a4d70aa5854ce7ce3e20b\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"productId\":\"c7bca22753c84d08b6178a50052b4146\",\"languageId\":\"2fbb5fe2e29a4d70aa5854ce7ce3e20b\",\"productVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"name\":\"Main product with properties\",\"description\":\"Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\",\"createdAt\":{\"date\":\"2020-04-04 21:05:19.275000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:19.294',NULL),('ì¸f65B³TœBˆñ',68,'EäÜ´_†B^¨±¾(xq‡9','product_configurator_setting','{\"id\":\"c19ef50d99ca4226bcd684571dfe12da\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"id\":\"c19ef50d99ca4226bcd684571dfe12da\",\"productId\":\"43a23e0c03bf4ceabc6055a2185faa87\",\"productVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"optionId\":\"5997d91dc0784997bdef68dfc5a08912\",\"createdAt\":{\"date\":\"2020-04-04 21:05:19.096000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:19.114',NULL),('ìëÚä°†Gk½Òæ½±z',41,'uÒƒ)F\\º×\0×$ßã','product_translation','{\"productId\":\"1901dc5e888f4b1ea4168c2c5f005540\",\"languageId\":\"8b112f70f3a14c1086859e4de334d338\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"productId\":\"1901dc5e888f4b1ea4168c2c5f005540\",\"languageId\":\"8b112f70f3a14c1086859e4de334d338\",\"productVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"name\":\"Hauptprodukt mit Bewertungen\",\"description\":\"Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\",\"createdAt\":{\"date\":\"2020-04-04 21:05:18.789000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:18.798',NULL),('íDò}±@C¦Nª\\€ÚËj',40,'é_+ÿ¢ G’½v¹Y>½×','product','{\"id\":\"11dc680240b04f469ccba354cbf0b967\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"id\":\"11dc680240b04f469ccba354cbf0b967\",\"parentVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"manufacturerId\":\"cc1c20c365d34cfb88bfab3c3e81d350\",\"productManufacturerVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"taxId\":\"d9483081c3b4468c8280c2ae45ac6774\",\"coverId\":\"84356a71233d4b3e9f417dcc8850c82f\",\"active\":true,\"stock\":10,\"price\":[{\"currencyId\":\"b7d2554b0ce847cd82f3ac9bd1c0dfca\",\"net\":798.31999999999994,\"gross\":950.0,\"linked\":true,\"listPrice\":null,\"extensions\":[]}],\"productNumber\":\"SWDEMO10002\",\"isCloseout\":false,\"purchaseSteps\":1,\"minPurchase\":1,\"purchaseUnit\":1.0,\"referenceUnit\":1.0,\"shippingFree\":true,\"purchasePrice\":950.0,\"weight\":45.0,\"width\":590.0,\"height\":600.0,\"length\":840.0,\"releaseDate\":{\"date\":\"2020-04-04 21:05:18.643000\",\"timezone_type\":3,\"timezone\":\"UTC\"},\"restockTime\":3,\"createdAt\":{\"date\":\"2020-04-04 21:05:18.657000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:18.662',NULL),('î\"ÀI1½Üö<ƒ~ë',61,'8‘EÆkI\r•ß®ëuæ‰','product','{\"id\":\"3ac014f329884b57a2cce5a29f34779c\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"id\":\"3ac014f329884b57a2cce5a29f34779c\",\"parentVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"manufacturerId\":\"cc1c20c365d34cfb88bfab3c3e81d350\",\"productManufacturerVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"taxId\":\"d9483081c3b4468c8280c2ae45ac6774\",\"coverId\":\"2de02991cd0548a4ac6cc35cb11773a0\",\"active\":true,\"stock\":50,\"price\":[{\"currencyId\":\"b7d2554b0ce847cd82f3ac9bd1c0dfca\",\"net\":15.0,\"gross\":20.0,\"linked\":true,\"listPrice\":null,\"extensions\":[]}],\"productNumber\":\"SWDEMO10006\",\"isCloseout\":false,\"purchaseSteps\":1,\"minPurchase\":1,\"purchaseUnit\":1.0,\"referenceUnit\":1.0,\"shippingFree\":true,\"purchasePrice\":20.0,\"weight\":0.14999999999999999,\"releaseDate\":{\"date\":\"2020-04-04 21:05:18.643000\",\"timezone_type\":3,\"timezone\":\"UTC\"},\"restockTime\":3,\"createdAt\":{\"date\":\"2020-04-04 21:05:18.988000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:18.991',NULL),('òÉ‡\\F•˜ÈXsˆßş„',66,'EäÜ´_†B^¨±¾(xq‡9','product_configurator_setting','{\"id\":\"bfb22fb2ae254c5f989dce0f71a86e63\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"id\":\"bfb22fb2ae254c5f989dce0f71a86e63\",\"productId\":\"43a23e0c03bf4ceabc6055a2185faa87\",\"productVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"optionId\":\"acfd7586d02848f1ac801f4776efa414\",\"createdAt\":{\"date\":\"2020-04-04 21:05:19.094000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:19.114',NULL),('÷íwí·,@ğ• ËáX•\'Ì',72,'EäÜ´_†B^¨±¾(xq‡9','product','{\"id\":\"1d246bc02e204be88c4b58d44b4dbf0a\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"id\":\"1d246bc02e204be88c4b58d44b4dbf0a\",\"parentId\":\"43a23e0c03bf4ceabc6055a2185faa87\",\"parentVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"stock\":50,\"productNumber\":\"SWDEMO10005.1\",\"createdAt\":{\"date\":\"2020-04-04 21:05:19.098000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:19.114',NULL),('ø,§ˆÑ¶J˜—ªĞ:¾åo',60,'8‘EÆkI\r•ß®ëuæ‰','product_category','{\"productId\":\"3ac014f329884b57a2cce5a29f34779c\",\"categoryId\":\"2185182cbbd4462ea844abeb2a438b33\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"productId\":\"3ac014f329884b57a2cce5a29f34779c\",\"productVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"categoryId\":\"2185182cbbd4462ea844abeb2a438b33\",\"categoryVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:18.991',NULL),('ù1ÁåØK‚D5Sªù¼³',6,'	¥\\\\v/M—¦	!rd«6','category_translation','{\"categoryId\":\"77b959cf66de4c1590c7f9b7da3982f3\",\"languageId\":\"8b112f70f3a14c1086859e4de334d338\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"categoryId\":\"77b959cf66de4c1590c7f9b7da3982f3\",\"languageId\":\"8b112f70f3a14c1086859e4de334d338\",\"categoryVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"name\":\"Lebensmittel\",\"createdAt\":{\"date\":\"2020-04-04 21:05:17.621000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:17.649',NULL),('ú9Ï×Mï®-mìµ',83,'\\Ğ^€F÷›%án7Ü²','product_configurator_setting','{\"id\":\"2fa8e6a1cdd24c80b029bee2ff315024\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"id\":\"2fa8e6a1cdd24c80b029bee2ff315024\",\"productId\":\"c7bca22753c84d08b6178a50052b4146\",\"productVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"optionId\":\"41e5013b67d64d3a92b7a275da8af441\",\"createdAt\":{\"date\":\"2020-04-04 21:05:19.279000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:19.294',NULL),('úuôû~MIŠ†ŸìÏzà> ',55,'`	PhDG¶ša|À°‘­','product_category','{\"productId\":\"2a88d9b59d474c7e869d8071649be43c\",\"categoryId\":\"251448b91bc742de85643f5fccd89051\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"productId\":\"2a88d9b59d474c7e869d8071649be43c\",\"productVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"categoryId\":\"251448b91bc742de85643f5fccd89051\",\"categoryVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:18.900',NULL),('ÿï¾Â1Eê‰ÀÊröo',11,'	¥\\\\v/M—¦	!rd«6','category_translation','{\"categoryId\":\"48f97f432fd041388b2630184139cf0e\",\"languageId\":\"2fbb5fe2e29a4d70aa5854ce7ce3e20b\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"categoryId\":\"48f97f432fd041388b2630184139cf0e\",\"languageId\":\"2fbb5fe2e29a4d70aa5854ce7ce3e20b\",\"categoryVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"name\":\"Fish\",\"createdAt\":{\"date\":\"2020-04-04 21:05:17.627000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:17.649',NULL),('ÿıâŸ‰ÁJY¶¦Åc!>',28,'	¥\\\\v/M—¦	!rd«6','category','{\"id\":\"8de9b484c54f441c894774e5f57e485c\",\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\"}','insert','{\"versionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"id\":\"8de9b484c54f441c894774e5f57e485c\",\"parentId\":\"a515ae260223466f8e37471d279e6406\",\"parentVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"afterCategoryVersionId\":\"0fa91ce3e96a4bc2be4bd9ce752c3425\",\"cmsPageId\":\"5275dace8efd454281296eaac243a3fd\",\"displayNestedProducts\":true,\"type\":\"page\",\"visible\":true,\"active\":true,\"createdAt\":{\"date\":\"2020-04-04 21:05:17.634000\",\"timezone_type\":3,\"timezone\":\"UTC\"}}','+BĞ[Bl½Ø5ºà|:Í',NULL,'2020-04-04 21:05:17.649',NULL);
-/*!40000 ALTER TABLE `version_commit_data` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2020-04-05 17:38:49
