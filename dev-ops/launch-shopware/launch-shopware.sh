@@ -1,8 +1,13 @@
 #!/bin/bash
 
+# This script is standalone. This means you can use the launch-shopware script to install shopware on any server.
+# You only must change the db credentials.
+# In case of Shopware6PluginTester: This script will be fired INSIDE the ddev container.
+
 SW_VERSION=$1;
 SW_URL=$2;
 SW_PATH=$3;
+PLUGIN_PATH=$4
 DIR="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )";
 
 checkArguments() {
@@ -35,7 +40,7 @@ prepareInstallation() {
     echo "Prepare Files"
 
     # Composer load packages
-    cd $SW_PATH && composer install --no-scripts
+    # cd $SW_PATH && composer install --no-scripts
 
     # Move ENV File
     cd $SW_PATH && rm -rf .env
@@ -66,7 +71,22 @@ finishInstalltion() {
 }
 
 installPlugin() {
-    echo "tbd"
+    if [ -z "$PLUGIN_PATH" ]; then
+        echo "No Plugin to install"
+    else
+        PLUGIN_NAME="$( basename $PLUGIN_PATH )";
+
+        # Remove other plugins
+        rm -rf $SW_PATH/custom/plugins
+        mkdir $SW_PATH/custom/plugins
+
+        #copy Plugin
+        cp -R $PLUGIN_PATH $SW_PATH/custom/plugins/$PLUGIN_NAME
+
+        # Install and activate plugin in sw
+        cd $SW_PATH && ./bin/console plugin:refresh
+        cd $SW_PATH && ./bin/console plugin:install --activate $PLUGIN_NAME
+    fi
 }
 
 clearCaches() {
@@ -82,8 +102,3 @@ prepareInstallation
 finishInstalltion
 installPlugin
 clearCaches
-
-
-#     cd $SW_PATH && ddev exec ./bin/console plugin:refresh
-#     cd $SW_PATH && ddev exec ./bin/console plugin:install --activate $PLUGIN_NAME
-
