@@ -86,6 +86,7 @@ installPlugin() {
         # Install and activate plugin in sw
         cd $SW_PATH && ./bin/console plugin:refresh
         cd $SW_PATH && ./bin/console plugin:install --activate $PLUGIN_NAME
+        cd $SW_PATH && ./bin/console plugin:update $PLUGIN_NAME
     fi
 }
 
