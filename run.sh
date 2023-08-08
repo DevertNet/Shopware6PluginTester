@@ -54,7 +54,7 @@ createAndStartDdev() {
 
         # Create folder and init DDEV
         mkdir -p $DDEV_PATH
-        cd $DDEV_PATH && ddev config --project-name=sw$SW_SHORT_VERSION --create-docroot --docroot=htdocs/public --project-type=php --webserver-type=apache-fpm --composer-version=2
+        cd $DDEV_PATH && ddev config --project-name=sw$SW_SHORT_VERSION --php-version=8.1 --create-docroot --docroot=htdocs/public --project-type=php --webserver-type=apache-fpm --composer-version=2
     fi
 
     # Start DDEV

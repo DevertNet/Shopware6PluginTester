@@ -30,8 +30,10 @@ checkArguments() {
 cloneAndInstallShopwareIfNotReady() {
     if [ ! -f "$SW_PATH/READY" ]; then
         echo "Clone Shopware"
-        rm -rf $SW_PATH/public
-        git clone --branch v$SW_VERSION https://github.com/shopware/production.git $SW_PATH
+        rm -rf $SW_PATH/
+        #git clone --branch v$SW_VERSION https://github.com/shopware/production.git $SW_PATH
+        composer create-project shopware/production $SW_PATH
+        composer req shopware/core:$SW_VERSION shopware/administration:$SW_VERSION shopware/elasticsearch:$SW_VERSION shopware/storefront:$SW_VERSION -W
         touch $SW_PATH/READY
     fi
 }
